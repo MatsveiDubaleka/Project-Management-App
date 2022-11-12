@@ -61,27 +61,5 @@
     "eslint-plugin-react": "^7.31.8",
     "prettier": "2.7.1",
     "typescript": "^4.8.3"
-  },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "index.tsx",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MatsveiDubaleka/Project-Management-App.git"
-  },
-  "keywords": [
-    "react",
-    "typescript",
-    "git",
-    "github",
-    "redux",
-    "eslint",
-    "prettier",
-    "babel"
-  ],
-  "author": "Pavel Priladyshev, Alexandr Klychnikov, Matsvei Dubaleka",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MatsveiDubaleka/Project-Management-App/issues"
-  },
-  "homepage": "https://github.com/MatsveiDubaleka/Project-Management-App#readme"
+  }
 }
