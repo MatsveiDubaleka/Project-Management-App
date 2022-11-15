@@ -1,6 +1,7 @@
 import React from 'react';
 import notFound from './../assets/img/error.png';
 import styled from 'styled-components';
+import Footer from '../components/Footer';
 
 export const NotFound = () => {
   return (
@@ -9,6 +10,7 @@ export const NotFound = () => {
       <Wrapper>
         <img src={notFound} alt="404" />
       </Wrapper>
+      <Footer />
     </Wrapper>
   );
 };
