@@ -1,16 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Title } from 'styles/TitleStyled';
 
 export function Boards() {
-  const Title = styled.h1`
-    font-size: 2em;
-    text-align: center;
-    color: green;
-    margin-top: 15vw;
-  `;
   return (
     <main>
-      <Title>А здесь творится управляют проектами</Title>
+      <Title>Boards</Title>
     </main>
   );
 }

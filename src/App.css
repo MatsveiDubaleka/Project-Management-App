@@ -1,11 +1,4 @@
 .App {
-  text-align: center;
-}
-
-.wrapper {
-  width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #5d626d;
+  min-height: 100vh;
 }
