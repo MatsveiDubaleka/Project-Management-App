@@ -7,10 +7,22 @@ import { Welcome } from 'pages/Welcome';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import Footer from 'components/Footer';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: Open-Sans, Helvetica, Sans-Serif;
+    box-sizing: border-box;
+  }
+`;
 
 function App() {
   return (
     <div className="App">
+      <GlobalStyle />
       <Header />
       <Routes>
         <Route path="/" element={<Welcome />} />
@@ -19,6 +31,7 @@ function App() {
         <Route path="/boards" element={<Boards />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
