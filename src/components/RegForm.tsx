@@ -35,7 +35,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             login: user.login,
             password: data.password,
           })) as IAuthorizationResult;
-          localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(authUser));
+          localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(authUser));
           dispatch(setToken(authUser.token));
         } else {
           console.log('Something went wrongю');
@@ -44,11 +44,12 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
     } else {
       (async () => {
         const authUser = await loginUser(data);
+        console.log(authUser);
         if (authUser) {
           localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(authUser));
           dispatch(setToken(authUser.token));
         } else {
-          console.log('Something went wrongю');
+          console.log('Something went wrong.');
         }
       })();
     }
