@@ -11,12 +11,14 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
+import { LOCAL_STORAGE_DATA } from 'constants/registration';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
   const handleClickLogOut = () => {
     dispatch(setToken(''));
+    localStorage.setItem(`${LOCAL_STORAGE_DATA}`, '');
   };
   return (
     <AppHeader>
