@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -26,7 +26,11 @@ function Header() {
     localStorage.setItem(`${LOCAL_STORAGE_DATA}`, '');
   };
 
-  const addNewBoard = () => {};
+  const addNewBoard = (event: FormEvent) => {
+    event.preventDefault();
+    alert('submit');
+    handleClose();
+  };
 
   return (
     <AppHeader>
@@ -86,40 +90,44 @@ function Header() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            fontWeight="bold"
+            color="primary"
+          >
             ADD BOARD
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <Box component="form" onSubmit={() => console.log('Submit')}>
-              <TextField
-                margin="normal"
-                type="text"
-                placeholder="Title"
-                fullWidth
-                label="Title"
-                autoComplete="off"
-              />
-              <TextField
-                margin="normal"
-                type="text"
-                placeholder="Description"
-                fullWidth
-                label="Description"
-                autoComplete="off"
-                multiline={true}
-                rows="5"
-              />
+          <Box component="form" onSubmit={addNewBoard}>
+            <TextField
+              margin="normal"
+              type="text"
+              placeholder="Title"
+              fullWidth
+              label="Title"
+              autoComplete="off"
+            />
+            <TextField
+              margin="normal"
+              type="text"
+              placeholder="Description"
+              fullWidth
+              label="Description"
+              autoComplete="off"
+              multiline={true}
+              rows="5"
+            />
 
-              <Box sx={{ display: 'flex' }}>
-                <Button sx={{ ml: 'auto' }} color="success" type="submit">
-                  SUBMIT
-                </Button>
-                <Button color="warning" onClick={() => handleClose()}>
-                  CANCEL
-                </Button>
-              </Box>
+            <Box sx={{ display: 'flex' }}>
+              <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                SUBMIT
+              </Button>
+              <Button color="warning" onClick={() => handleClose()}>
+                CANCEL
+              </Button>
             </Box>
-          </Typography>
+          </Box>
         </Box>
       </Modal>
     </AppHeader>
@@ -187,11 +195,11 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '30vw',
   minWidth: '300px',
-  height: '40vh',
   minHeight: '300px',
-  bgcolor: 'background.paper',
+  bgcolor: 'lightgray',
   border: '2px solid #000',
-  boxShadow: 24,
+  borderRadius: '7px',
+  boxShadow: '2px 2px 2px #433f39',
   p: 4,
 };
 
