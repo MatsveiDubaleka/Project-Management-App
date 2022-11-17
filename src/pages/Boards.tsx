@@ -5,7 +5,10 @@ import styled from 'styled-components';
 import { Title } from 'styles/TitleStyled';
 import Footer from '../components/Footer';
 
-const BoardBackground = styled.div`
+export const BoardBackground = styled.div`
+   {
+    margin: 0 auto;
+  }
   .background {
     width: 1280px;
     height: 520px;
@@ -20,7 +23,6 @@ const BoardBackground = styled.div`
     position: absolute;
     border-radius: 50%;
     z-index: -10;
-    opacity: 0.8;
   }
   .shape:first-child {
     background: linear-gradient(#1845ad, #23a2f6);
@@ -33,6 +35,7 @@ const BoardBackground = styled.div`
     background: linear-gradient(#1845ad, #23a2f6);
     left: 250px;
     top: 300px;
+    opacity: 0.8;
   }
   .shape:nth-child(3) {
     height: 150px;
@@ -42,6 +45,7 @@ const BoardBackground = styled.div`
     top: 150px;
   }
   .shape:last-child {
+    opacity: 0.8;
     background: linear-gradient(to right, #ff512f, #f09819);
     right: -30px;
     bottom: -10px;
@@ -68,9 +72,9 @@ export function Boards() {
           <Wrapper>
             <Container maxWidth="xl" sx={{ paddingTop: 30 }}>
               <Grid container spacing={3}>
-                {Array.from(Array(2)).map((_, index) => (
+                {Array.from(Array(8)).map((_, index) => (
                   <Grid item xs={3} key={index}>
-                    <BoardElement _id={''} title={''} owner={''} users={[]} description={''} />
+                    <BoardElement />
                   </Grid>
                 ))}
               </Grid>

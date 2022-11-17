@@ -1,5 +1,6 @@
 import { getAllBoardOfUser } from 'api/registerService';
 import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'store/hook';
 import styled from 'styled-components';
 
@@ -25,6 +26,11 @@ const Board = styled.div`
     outline: none;
     border: none;
     justify-content: space-between;
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .board h3 {
     font-size: 32px;
@@ -57,24 +63,27 @@ const Board = styled.div`
 `;
 
 interface IBoardElement {
-  _id: string;
-  title: string;
-  description: string;
-  owner: string;
-  users: string[];
+  _id?: string;
+  title?: string;
+  description?: string;
+  owner?: string;
+  users?: string[];
 }
 
 const BoardElement = ({
-  _id = '',
-  title = '',
-  description = '',
-  owner = '',
-  users = [],
+  _id = '1',
+  title = 'Board Title',
+  description = 'Description',
+  owner = 'user',
+  users = ['user1', 'user2'],
 }: IBoardElement) => {
   // const token = useAppSelector((state) => state.auth.token);
+  const navigate = useNavigate();
 
-  const handleClick = () => {
-    console.log('open board');
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const boardId: string = (e.target as HTMLDivElement).id;
+    console.log(boardId);
+    navigate(`/${boardId}`);
   };
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -93,20 +102,16 @@ const BoardElement = ({
 
   return (
     <>
-      <Board id={_id} onClick={() => handleClick()}>
-        <h3 className="board-title">Board title: {title}</h3>
+      <Board id={_id} onClick={(e) => handleClick(e)}>
+        <h3 className="board-title">{title}</h3>
         <div className="info">
-          <div>Description: {description}</div>
+          <div>{description}</div>
           <div>{owner}</div>
           <div>{users}</div>
         </div>
         <div className="button-block">
-          <button onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleChange(e)}>
-            Change
-          </button>
-          <button onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleDelete(e)}>
-            Delete
-          </button>
+          <button onClick={(e) => handleChange(e)}>Change</button>
+          <button onClick={(e) => handleDelete(e)}>Delete</button>
         </div>
       </Board>
     </>
