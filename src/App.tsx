@@ -9,6 +9,7 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Footer from 'components/Footer';
 import { createGlobalStyle } from 'styled-components';
+import BoardPage from 'pages/BoardPage';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/boards" element={<Boards />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/:id" element={<BoardPage />} />
       </Routes>
       <Footer />
     </div>

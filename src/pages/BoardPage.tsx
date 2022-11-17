@@ -1,0 +1,116 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { BoardBackground } from './Boards';
+
+const BoardItem = styled.div`
+   {
+    margin-top: 50px;
+    min-height: max-content;
+    max-width: 100%;
+    background-color: rgba(255, 255, 255, 0.13);
+    position: relative;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .board h3 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+  }
+  .board-title {
+    margin-bottom: 30px;
+  }
+  .button-block {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+  }
+  button {
+    outline: none;
+    border: none;
+    margin-top: 20px;
+    width: 100%;
+    background-color: #23a2f6;
+    color: white;
+    padding: 25px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+`;
+
+const Wrapper = styled.div`
+   {
+    width: 1280px;
+    margin: 10vh auto;
+  }
+`;
+
+const BoardPage = () => {
+  const { id } = useParams();
+
+  const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    console.log('change');
+  };
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    console.log('delete');
+  };
+
+  const handleAddList = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    console.log('add list');
+  };
+
+  return (
+    <>
+      <BoardBackground>
+        <div className="background">
+          {Array.from(Array(4)).map((_, index) => (
+            <div className="shape" key={index}></div>
+          ))}
+        </div>
+        <Wrapper>
+          <BoardItem id={id}>
+            <h3 className="board-title">Board title</h3>
+            <div className="info">
+              <div>Description</div>
+              <div>owner</div>
+              <div>users</div>
+            </div>
+            <div></div>
+            <div className="button-block">
+              <button onClick={(e) => handleChange(e)}>Change</button>
+              <button onClick={(e) => handleDelete(e)}>Delete</button>
+            </div>
+            <button onClick={(e) => handleAddList(e)}>Add list</button>
+          </BoardItem>
+        </Wrapper>
+      </BoardBackground>
+    </>
+  );
+};
+
+export default BoardPage;
