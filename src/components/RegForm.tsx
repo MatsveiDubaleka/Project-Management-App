@@ -146,6 +146,9 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             },
           })}
         />
+        {type === 'signup' ? (
+          <p>Password must consists of uppercase letter, symbol and numbers</p>
+        ) : null}
         {type === 'signup' ? <button>Sign Up</button> : <button>Log In</button>}
       </form>
       {token !== '' ? <Navigate to="/boards" /> : null}
@@ -256,5 +259,9 @@ const Register = styled.div`
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  p {
+    margin-top: 10px;
   }
 `;
