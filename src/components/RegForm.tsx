@@ -6,7 +6,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import styled from 'styled-components';
 import { IAuthorizationResult, IFormInputs } from 'types/types';
 import { LOCAL_STORAGE_DATA, nameRegex, passwordRegex } from 'constants/registration';
-import { createUser, loginUser } from 'api/registerService';
+import { createUser, getUserDataByLogin, loginUser } from 'api/registerService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import { Navigate } from 'react-router-dom';
@@ -30,23 +30,36 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
     if (type === 'signup') {
       (async () => {
         const user = await createUser(data);
-        if (user) {
+        if (user._id) {
+          const currentUser = Object.assign(user, { token: '' });
+          localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUser));
           const authUser = (await loginUser({
             login: user.login,
             password: data.password,
           })) as IAuthorizationResult;
-          localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(authUser));
-          dispatch(setToken(authUser.token));
+          if (authUser.token) {
+            const currentUserWithToken = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`));
+            currentUserWithToken.token = authUser.token;
+            localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUserWithToken));
+            dispatch(setToken(authUser.token));
+          }
+        } else if (user.login === 'Login already exist') {
+          console.log('Login already exist');
         } else {
-          console.log('Something went wrongю');
+          console.log('Something went wrong.');
         }
       })();
     } else {
       (async () => {
         const authUser = await loginUser(data);
-        console.log(authUser);
-        if (authUser) {
-          localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(authUser));
+        if (authUser.token) {
+          const currentUserData =
+            localStorage.getItem(LOCAL_STORAGE_DATA) &&
+            JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token !== ''
+              ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))
+              : await getUserDataByLogin(data.login, authUser.token);
+          currentUserData.token = authUser.token;
+          localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(currentUserData));
           dispatch(setToken(authUser.token));
         } else {
           console.log('Something went wrong.');

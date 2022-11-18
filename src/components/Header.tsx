@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -13,6 +13,15 @@ import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { useForm } from 'react-hook-form';
+
+import { getAllUsers } from 'api/usersServices';
+import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
+
+interface IAddBoardForm {
+  title: string;
+  description: string;
+}
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
@@ -21,16 +30,33 @@ function Header() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid, isSubmitted },
+  } = useForm<IAddBoardForm>();
+
   const handleClickLogOut = () => {
     dispatch(setToken(''));
     localStorage.setItem(`${LOCAL_STORAGE_DATA}`, '');
   };
-
-  const addNewBoard = (event: FormEvent) => {
-    event.preventDefault();
-    alert('submit');
+  const onSubmit = handleSubmit(async (data) => {
+    const currentUserId = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`))._id;
+    await addNewBoard(
+      {
+        title: data.title,
+        description: data.description,
+        owner: currentUserId,
+        users: [],
+      },
+      token
+    );
+    getAllBoardsOfServer(token);
+    getAllUsers(token);
+    reset();
     handleClose();
-  };
+  });
 
   return (
     <AppHeader>
@@ -99,7 +125,7 @@ function Header() {
           >
             ADD BOARD
           </Typography>
-          <Box component="form" onSubmit={addNewBoard}>
+          <Box component="form" onSubmit={onSubmit}>
             <TextField
               margin="normal"
               type="text"
@@ -107,6 +133,20 @@ function Header() {
               fullWidth
               label="Title"
               autoComplete="off"
+              {...register('title', {
+                required: {
+                  value: true,
+                  message: '*this field must be filled in',
+                },
+                minLength: {
+                  value: 3,
+                  message: '*at least 3 characters',
+                },
+                maxLength: {
+                  value: 30,
+                  message: '*maximum of 30 characters',
+                },
+              })}
             />
             <TextField
               margin="normal"
@@ -117,6 +157,16 @@ function Header() {
               autoComplete="off"
               multiline={true}
               rows="5"
+              {...register('description', {
+                required: {
+                  value: true,
+                  message: '*this field must be filled in',
+                },
+                maxLength: {
+                  value: 500,
+                  message: '*maximum of 500 characters',
+                },
+              })}
             />
 
             <Box sx={{ display: 'flex' }}>
