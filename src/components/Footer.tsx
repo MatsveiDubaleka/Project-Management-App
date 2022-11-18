@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import { Flex } from 'styles/Flex';
 import Logo from 'assets/svg/course-logo.svg';
 import styled from 'styled-components';
@@ -16,7 +15,7 @@ const StyledFlex = styled(Flex)`
   color: #fff;
 `;
 
-const StyledLink = styled(NavLink)`
+const StyledLink = styled.a`
   text-decoration: none;
   color: #fff;
 `;
@@ -26,9 +25,15 @@ const Footer = () => {
     <StyledFlex justify="space-between">
       <div className="creation-year">2022 &#169;</div>
       <Flex gap="50px" className="authors">
-        <StyledLink to="https://github.com/aibolit666">Pavel Priladyshev</StyledLink>
-        <StyledLink to="https://github.com/AlexandrKlychnikov">Alexandr Klychnikov</StyledLink>
-        <StyledLink to="https://github.com/MatsveiDubaleka">Matsvei Dubaleka</StyledLink>
+        <StyledLink href="https://github.com/aibolit666" target="_blank" rel="noreferrer">
+          Pavel Priladyshev
+        </StyledLink>
+        <StyledLink href="https://github.com/AlexandrKlychnikov" target="_blank" rel="noreferrer">
+          Alexandr Klychnikov
+        </StyledLink>
+        <StyledLink href="https://github.com/MatsveiDubaleka" target="_blank" rel="noreferrer">
+          Matsvei Dubaleka
+        </StyledLink>
       </Flex>
       <div className="course-logo">
         <a href="https://rs.school" target="_blank" rel="noreferrer">
