@@ -46,7 +46,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/boards" element={<Boards />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/:index" element={<BoardPage />} />
+        <Route path="/:id" element={<BoardPage />} />
       </Routes>
       <Footer />
     </div>

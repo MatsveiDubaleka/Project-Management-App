@@ -1,8 +1,10 @@
-import { deleteBoard } from 'api/boardsService';
+import { deleteBoard, getBoardById } from 'api/boardsService';
 import { Endpoint } from 'constants/endpoints';
-import React from 'react';
+import { LOCAL_STORAGE_DATA } from 'constants/registration';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from 'store/hook';
+import { useAppDispatch, useAppSelector } from 'store/hook';
+import { setBoard } from 'store/slices/authSlice';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
 import { BoardBackground } from './Boards';
@@ -71,11 +73,23 @@ const Wrapper = styled.div`
 `;
 
 const BoardPage = () => {
-  const { index } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const token = useAppSelector((state) => state.auth.token);
-  const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
-  const boardData: IBoardsOfUser = storeBoards[Number(index)];
+  const dispatch = useAppDispatch();
+
+  let token: string;
+  const tokenFromState = useAppSelector((state) => state.auth.token);
+  JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token !== null
+    ? (token = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token)
+    : tokenFromState; // Validate token from localStorage or from store (when page reload)
+
+  let boardData: IBoardsOfUser;
+  boardData = useAppSelector((store) => store.auth.board);
+
+  if (boardData === null) {
+    boardData = JSON.parse(localStorage.getItem('boardFromId'));
+  }
+  console.log(boardData);
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
@@ -94,6 +108,15 @@ const BoardPage = () => {
     e.stopPropagation();
     console.log('add list');
   };
+
+  useEffect(() => {
+    async function dispatchBoards() {
+      const data: IBoardsOfUser = await getBoardById(id, token);
+      dispatch(setBoard(data));
+      localStorage.setItem('boardFromId', JSON.stringify(data));
+    }
+    dispatchBoards();
+  }, [dispatch]);
 
   return (
     <>

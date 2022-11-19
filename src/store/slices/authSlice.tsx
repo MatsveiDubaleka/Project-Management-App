@@ -5,6 +5,7 @@ const initialState = {
   token: '',
   boards: [] as IBoardsOfUser[],
   isLoaded: false,
+  board: [] as IBoardsOfUser,
 };
 
 const slices = createSlice({
@@ -20,9 +21,12 @@ const slices = createSlice({
     setIsLoaded(state: Record<string, unknown>, action: PayloadAction<boolean>) {
       state.isLoaded = action.payload;
     },
+    setBoard(state: Record<string, unknown>, action: PayloadAction<IBoardsOfUser>) {
+      state.board = action.payload;
+    },
   },
 });
 
-export const { setToken, setBoards, setIsLoaded } = slices.actions;
+export const { setToken, setBoards, setIsLoaded, setBoard } = slices.actions;
 
 export default slices.reducer;
