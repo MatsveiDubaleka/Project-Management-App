@@ -1,9 +1,8 @@
-import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
+import { deleteBoard } from 'api/boardsService';
 import { Endpoint } from 'constants/endpoints';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setBoards } from 'store/slices/authSlice';
+import { useAppSelector } from 'store/hook';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
 import { BoardBackground } from './Boards';
@@ -74,7 +73,6 @@ const Wrapper = styled.div`
 const BoardPage = () => {
   const { index } = useParams();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
   const boardData: IBoardsOfUser = storeBoards[Number(index)];
