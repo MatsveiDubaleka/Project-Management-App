@@ -1,6 +1,9 @@
+import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
+import { Endpoint } from 'constants/endpoints';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useAppSelector } from 'store/hook';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store/hook';
+import { setBoards } from 'store/slices/authSlice';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
 import { BoardBackground } from './Boards';
@@ -70,6 +73,9 @@ const Wrapper = styled.div`
 
 const BoardPage = () => {
   const { index } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
   const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
   const boardData: IBoardsOfUser = storeBoards[Number(index)];
 
@@ -78,9 +84,12 @@ const BoardPage = () => {
     console.log('change');
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-    console.log('delete');
+
+    await deleteBoard(boardData._id, token);
+
+    navigate(`${Endpoint.BOARDS}`);
   };
 
   const handleAddList = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
