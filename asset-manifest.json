@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/Project-Management-App/static/css/main.749af6ff.css",
-    "main.js": "/Project-Management-App/static/js/main.bae1d62e.js",
+    "main.js": "/Project-Management-App/static/js/main.c8e4a3ed.js",
     "static/media/error.png": "/Project-Management-App/static/media/error.ef7f91fcf69e57dcca32.png",
     "static/media/kanban.png": "/Project-Management-App/static/media/kanban.79e3b561afdaa12a0eb9.png",
     "static/media/course-logo.svg": "/Project-Management-App/static/media/course-logo.ad178c0df28bc133be34b982d62f431d.svg",
     "index.html": "/Project-Management-App/index.html",
     "main.749af6ff.css.map": "/Project-Management-App/static/css/main.749af6ff.css.map",
-    "main.bae1d62e.js.map": "/Project-Management-App/static/js/main.bae1d62e.js.map"
+    "main.c8e4a3ed.js.map": "/Project-Management-App/static/js/main.c8e4a3ed.js.map"
   },
   "entrypoints": [
     "static/css/main.749af6ff.css",
-    "static/js/main.bae1d62e.js"
+    "static/js/main.c8e4a3ed.js"
   ]
 }
