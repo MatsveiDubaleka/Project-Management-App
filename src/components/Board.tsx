@@ -1,8 +1,10 @@
-import { getAllBoardOfUser } from 'api/registerService';
+import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
+import { getAllUsers } from 'api/usersServices';
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector } from 'store/hook';
+import { useAppDispatch, useAppSelector } from 'store/hook';
+import { setBoards } from 'store/slices/authSlice';
 import styled from 'styled-components';
+import { IBoardsOfUser } from 'types/types';
 
 const Board = styled.div`
    {
@@ -77,32 +79,29 @@ const BoardElement = ({
   owner = 'user',
   users = ['user1', 'user2'],
 }: IBoardElement) => {
-  // const token = useAppSelector((state) => state.auth.token);
-  const navigate = useNavigate();
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const boardId: string = (e.target as HTMLDivElement).id;
-    console.log(boardId);
-    navigate(`/${boardId}`);
-  };
+  const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
+    e.preventDefault();
     console.log('change');
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    console.log('delete');
-  };
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
 
-  // useEffect(() => {
-  //   getAllBoardOfUser('1', token);
-  // }, [token]);
+    await deleteBoard(_id, token);
+
+    async function dispatchBoards() {
+      const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
+      dispatch(setBoards(data));
+    }
+    dispatchBoards();
+  };
 
   return (
     <>
-      <Board id={_id} onClick={(e) => handleClick(e)}>
+      <Board id={_id}>
         <h3 className="board-title">{title}</h3>
         <div className="info">
           <div>{description}</div>

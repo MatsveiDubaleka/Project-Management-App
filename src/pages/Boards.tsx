@@ -1,17 +1,23 @@
 import { Container, Grid } from '@mui/material';
 import BoardElement from 'components/Board';
-import React from 'react';
 import styled from 'styled-components';
 import { Title } from 'styles/TitleStyled';
-import Footer from '../components/Footer';
+import { getAllBoardsOfServer } from 'api/boardsService';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from 'store/hook';
+import { setBoards, setIsLoaded } from 'store/slices/authSlice';
+import { IBoardsOfUser } from 'types/types';
+import { Link } from 'react-router-dom';
+import { LOCAL_STORAGE_DATA } from 'constants/registration';
 
 export const BoardBackground = styled.div`
    {
     margin: 0 auto;
+    min-height: 100vh;
   }
   .background {
     width: 1280px;
-    height: 520px;
+    min-height: 520px;
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
@@ -58,7 +64,32 @@ const Wrapper = styled.div`
   }
 `;
 
+const Loader = styled.div`
+  color: white;
+  font-size: 56px;
+  margin: 10% 33%;
+`;
+
 export function Boards() {
+  const dispatch = useAppDispatch();
+
+  let token: string;
+  const tokenFromState = useAppSelector((state) => state.auth.token);
+  JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token !== null
+    ? (token = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token)
+    : tokenFromState; // Validate token from localStorage or from store (when page reload)
+
+  const store = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    async function dispatchBoards() {
+      const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
+      dispatch(setBoards(data));
+    }
+    dispatchBoards();
+    dispatch(setIsLoaded(true));
+  }, []);
+
   return (
     <>
       <main>
@@ -71,18 +102,29 @@ export function Boards() {
           </div>
           <Wrapper>
             <Container maxWidth="xl" sx={{ paddingTop: 30 }}>
-              <Grid container spacing={3}>
-                {Array.from(Array(8)).map((_, index) => (
-                  <Grid item xs={3} key={index}>
-                    <BoardElement />
-                  </Grid>
-                ))}
-              </Grid>
+              {!store.isLoaded ? (
+                <Loader>Loading...</Loader>
+              ) : (
+                <Grid container spacing={3}>
+                  {store.boards.map((board: IBoardsOfUser, index: number) => (
+                    <Grid item xs={3} key={index}>
+                      <Link style={{ textDecoration: 'none' }} key={board._id} to={`/${index}`}>
+                        <BoardElement
+                          _id={board._id}
+                          title={board.title}
+                          description={board.description}
+                          owner={board.owner}
+                          users={board.users}
+                        />
+                      </Link>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
             </Container>
           </Wrapper>
         </BoardBackground>
       </main>
-      <Footer />
     </>
   );
 }

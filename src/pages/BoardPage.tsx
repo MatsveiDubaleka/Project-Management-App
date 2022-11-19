@@ -1,6 +1,10 @@
+import { deleteBoard } from 'api/boardsService';
+import { Endpoint } from 'constants/endpoints';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAppSelector } from 'store/hook';
 import styled from 'styled-components';
+import { IBoardsOfUser } from 'types/types';
 import { BoardBackground } from './Boards';
 
 const BoardItem = styled.div`
@@ -67,16 +71,23 @@ const Wrapper = styled.div`
 `;
 
 const BoardPage = () => {
-  const { id } = useParams();
+  const { index } = useParams();
+  const navigate = useNavigate();
+  const token = useAppSelector((state) => state.auth.token);
+  const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
+  const boardData: IBoardsOfUser = storeBoards[Number(index)];
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     console.log('change');
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-    console.log('delete');
+
+    await deleteBoard(boardData._id, token);
+
+    navigate(`${Endpoint.BOARDS}`);
   };
 
   const handleAddList = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -93,12 +104,12 @@ const BoardPage = () => {
           ))}
         </div>
         <Wrapper>
-          <BoardItem id={id}>
-            <h3 className="board-title">Board title</h3>
+          <BoardItem id={boardData._id}>
+            <h3 className="board-title">{boardData.title}</h3>
             <div className="info">
-              <div>Description</div>
-              <div>owner</div>
-              <div>users</div>
+              <div>{boardData.description}</div>
+              <div>{boardData.owner}</div>
+              <div>{boardData.users}</div>
             </div>
             <div></div>
             <div className="button-block">
