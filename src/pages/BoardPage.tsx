@@ -86,9 +86,10 @@ const BoardPage = () => {
   let boardData: IBoardsOfUser;
   boardData = useAppSelector((store) => store.auth.board);
 
-  if (!boardData._id) {
+  if (boardData === null) {
     boardData = JSON.parse(localStorage.getItem('boardFromId'));
   }
+  console.log(boardData);
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
