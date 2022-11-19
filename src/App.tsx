@@ -6,7 +6,7 @@ import { NotFound } from 'pages/NotFound';
 import { SignUp } from 'pages/SignUp';
 import { Welcome } from 'pages/Welcome';
 import React, { useEffect } from 'react';
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import './App.css';
@@ -40,7 +40,6 @@ function App() {
     <div className="App">
       <GlobalStyle />
       <Header />
-      {/* To see/test deploy use <BrowserRouter> */}
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<LogIn />} />
