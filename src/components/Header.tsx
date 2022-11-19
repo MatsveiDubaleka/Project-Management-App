@@ -10,13 +10,14 @@ import AddchartIcon from '@mui/icons-material/Addchart';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setToken } from 'store/slices/authSlice';
+import { setBoards, setToken } from 'store/slices/authSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
+import { IBoardsOfUser } from 'types/types';
 
 interface IAddBoardForm {
   title: string;
@@ -52,7 +53,13 @@ function Header() {
       },
       token
     );
-    getAllBoardsOfServer(token);
+
+    async function dispatchBoards() {
+      const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
+      dispatch(setBoards(data));
+    }
+    dispatchBoards();
+
     getAllUsers(token);
     reset();
     handleClose();

@@ -19,8 +19,9 @@ export interface IAuthorizationResult {
 }
 
 export interface IBoardsOfUser {
-  _id: string;
-  title: string;
-  owner: string;
-  users: string[];
+  _id?: string;
+  title?: string;
+  description?: string;
+  owner?: string;
+  users?: string[];
 }

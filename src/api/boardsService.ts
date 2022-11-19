@@ -21,7 +21,7 @@ export async function getAllBoardsOfUser(
   userId: string,
   token: string
 ): Promise<IBoardsOfUser[] | undefined> {
-  const response = await fetch(`${API_URL}${Endpoint.BOARDS}`, {
+  const response = await fetch(`${API_URL}${Endpoint.BOARDSSET}/${userId}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -81,6 +81,28 @@ export async function addNewBoard(
   try {
     const board = await response.json();
     return board;
+  } catch (error) {
+    if (response.status === 403) {
+      console.log('Access token is missing or invalid');
+    } else {
+      console.log('Some error');
+    }
+  }
+}
+
+export async function deleteBoard(boardId: string, token: string): Promise<void> {
+  const response = await fetch(`${API_URL}${Endpoint.BOARDS}/${boardId}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    redirect: 'follow',
+  });
+  try {
+    const deletedBoard = await response.text();
+    console.log(deletedBoard);
   } catch (error) {
     if (response.status === 403) {
       console.log('Access token is missing or invalid');
