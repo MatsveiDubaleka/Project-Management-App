@@ -108,7 +108,7 @@ export function Boards() {
                 <Grid container spacing={3}>
                   {store.boards.map((board: IBoardsOfUser, index: number) => (
                     <Grid item xs={3} key={index}>
-                      <Link style={{ textDecoration: 'none' }} key={board._id} to={`/${index}`}>
+                      <Link style={{ textDecoration: 'none' }} key={board._id} to={`/${board._id}`}>
                         <BoardElement
                           _id={board._id}
                           title={board.title}
