@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LanguageSwitcher from './LanguageSwitcher';
 import LoginIcon from '@mui/icons-material/Login';
@@ -14,10 +14,10 @@ import { setBoards, setToken } from 'store/slices/authSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-
 import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
 import { IBoardsOfUser } from 'types/types';
+import Navigation from '../constants/navigation';
 
 interface IAddBoardForm {
   title: string;
@@ -26,10 +26,12 @@ interface IAddBoardForm {
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
+  const isValidated = useAppSelector((state) => state.auth.isValidated);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -39,9 +41,11 @@ function Header() {
   } = useForm<IAddBoardForm>();
 
   const handleClickLogOut = () => {
+    navigate(Navigation.HOME);
     dispatch(setToken(''));
     localStorage.setItem(`${LOCAL_STORAGE_DATA}`, '');
   };
+
   const onSubmit = handleSubmit(async (data) => {
     const currentUserId = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`))._id;
     await addNewBoard(
@@ -74,7 +78,7 @@ function Header() {
               <HomeIcon />
               Home
             </Link>
-            {token !== '' ? (
+            {isValidated ? (
               <>
                 {' '}
                 <Link to="/boards">
@@ -93,11 +97,17 @@ function Header() {
             kanKan
           </Logo>
           <RegisterBlock>
-            {token !== '' ? (
-              <Link to="/" onClick={handleClickLogOut}>
-                <LogoutIcon />
-                Log Out
-              </Link>
+            {isValidated ? (
+              <>
+                <Link to="/boards">
+                  <HomeIcon />
+                  Go to Main Page
+                </Link>
+                <Link to="/" onClick={handleClickLogOut}>
+                  <LogoutIcon />
+                  Log Out
+                </Link>
+              </>
             ) : (
               <>
                 <Link to="logIn">
