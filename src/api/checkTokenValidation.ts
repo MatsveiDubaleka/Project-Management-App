@@ -7,18 +7,22 @@ const instance = axios.create({
 });
 
 export const checkTokenValidation = async () => {
-  const token = JSON.parse(localStorage.getItem('kanKan_currentUser#')).token;
-  if (token) {
+  try {
+    const LOCAL_STORAGE = localStorage.getItem('kanKan_currentUser#');
+
+    if (LOCAL_STORAGE === null || LOCAL_STORAGE === '' || LOCAL_STORAGE === undefined) {
+      return false;
+    }
+
+    const token = JSON.parse(LOCAL_STORAGE).token;
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    return false;
-  }
 
-  const response = await instance.get('/users');
+    const response = await instance.get('/users');
 
-  if (response.status === 200) {
-    return true;
-  } else {
+    if (response.status === 200) {
+      return true;
+    }
+  } catch (e) {
     return false;
   }
 };
