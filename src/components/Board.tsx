@@ -87,7 +87,6 @@ const BoardElement = ({
   users = ['user1', 'user2'],
 }: IBoardElement) => {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
@@ -116,7 +115,6 @@ const BoardElement = ({
     }
     dispatchBoards();
     setOpen(false);
-    navigate(`${Endpoint.BOARDS}`);
   };
 
   return (
