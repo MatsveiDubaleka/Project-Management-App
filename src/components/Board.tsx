@@ -1,10 +1,15 @@
 import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
-import { getAllUsers } from 'api/usersServices';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setBoards } from 'store/slices/authSlice';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const Board = styled.div`
    {
@@ -79,8 +84,19 @@ const BoardElement = ({
   owner = 'user',
   users = ['user1', 'user2'],
 }: IBoardElement) => {
+  const [open, setOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
+
+  const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setOpen(true);
+  };
+
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setOpen(false);
+  };
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -89,7 +105,6 @@ const BoardElement = ({
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-
     await deleteBoard(_id, token);
 
     async function dispatchBoards() {
@@ -97,6 +112,7 @@ const BoardElement = ({
       dispatch(setBoards(data));
     }
     dispatchBoards();
+    setOpen(false);
   };
 
   return (
@@ -110,9 +126,23 @@ const BoardElement = ({
         </div>
         <div className="button-block">
           <button onClick={(e) => handleChange(e)}>Change</button>
-          <button onClick={(e) => handleDelete(e)}>Delete</button>
+          <button onClick={(e) => handleClickOpen(e)}>Delete</button>
         </div>
       </Board>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Delete board permanently?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
+            DELETE
+          </Button>
+          <Button variant="contained" autoFocus onClick={(e) => handleClose(e)}>
+            CANCEL
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
