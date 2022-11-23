@@ -23,6 +23,7 @@ export async function getAllBoardOfUser(
     const boards = await response.json();
     return boards;
   } catch (error) {
+    console.error(error);
     if (response.status === 403) {
       console.log('Access token is missing or invalid');
     } else {
@@ -49,6 +50,7 @@ export async function createUser(newuser: IFormInputs): Promise<INewUserResponse
     }
     return newUser;
   } catch (error) {
+    console.log(error);
     console.log('Some error');
   }
 }
@@ -66,6 +68,7 @@ export async function loginUser(user: IFormInputs): Promise<IAuthorizationResult
     const authUser = await response.json();
     return authUser;
   } catch (error) {
+    console.log(error);
     console.log('Some error');
   }
 }
@@ -87,6 +90,7 @@ export async function getUserDataByLogin(
     const userData = users.find((user: INewUserResponse) => user.login === login);
     return userData;
   } catch (error) {
+    console.log(error);
     if (response.status === 403) {
       console.log('Access token is missing or invalid');
     } else {
