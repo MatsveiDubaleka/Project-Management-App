@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { LOCAL_STORAGE_DATA } from 'constants/registration';
 
 const instance = axios.create({
   baseURL: 'https://projectmanagementappbackend.herokuapp.com',
@@ -8,25 +7,22 @@ const instance = axios.create({
 });
 
 export const checkTokenValidation = async () => {
-  if (
-    localStorage.getItem(`${LOCAL_STORAGE_DATA}`) === null ||
-    localStorage.getItem(`${LOCAL_STORAGE_DATA}`) !== undefined
-  ) {
-    return;
-  } else {
-    const token = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token;
-    if (token) {
-      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
+  try {
+    const LOCAL_STORAGE = localStorage.getItem('kanKan_currentUser#');
+
+    if (LOCAL_STORAGE === null || LOCAL_STORAGE === '' || LOCAL_STORAGE === undefined) {
       return false;
     }
+
+    const token = JSON.parse(LOCAL_STORAGE).token;
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     const response = await instance.get('/users');
 
     if (response.status === 200) {
       return true;
-    } else {
-      return false;
     }
+  } catch (e) {
+    return false;
   }
 };
