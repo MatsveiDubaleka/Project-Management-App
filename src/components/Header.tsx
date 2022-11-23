@@ -24,13 +24,14 @@ interface IAddBoardForm {
   description: string;
 }
 
-function Header() {
+const Header: React.FC = () => {
   const token = useAppSelector((state) => state.auth.token);
   const isValidated = useAppSelector((state) => state.auth.isValidated);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [state, setState] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const {
@@ -69,8 +70,12 @@ function Header() {
     handleClose();
   });
 
+  const handleChange = () => {
+    console.log(state);
+  };
+
   return (
-    <AppHeader>
+    <AppHeader onChange={handleChange}>
       <Wrapper>
         <Navigator>
           <RegisterBlock>
@@ -199,11 +204,13 @@ function Header() {
       </Modal>
     </AppHeader>
   );
-}
+};
 
 const AppHeader = styled.header`
-  position: relative;
+  position: sticky;
   z-index: 2;
+  top: 0;
+  right: 0;
   background: #282c34;
 
   .box {
@@ -236,7 +243,7 @@ const Wrapper = styled.div`
   gap: 20px;
   font-size: 1.25em;
   color: #61dafb;
-  height: 70px;
+  height: 100px;
   background: #282c34;
 `;
 
