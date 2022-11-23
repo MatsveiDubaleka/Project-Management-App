@@ -70,7 +70,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const BoardPage = () => {
+const BoardPageCopy = () => {
   const { index } = useParams();
   const navigate = useNavigate();
   const token = useAppSelector((state) => state.auth.token);
@@ -124,4 +124,4 @@ const BoardPage = () => {
   );
 };
 
-export default BoardPage;
+export default BoardPageCopy;

@@ -1,20 +1,22 @@
+import { Endpoint } from './../constants/endpoints';
+import { API_URL, LOCAL_STORAGE_DATA } from 'constants/registration';
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://projectmanagementappbackend.herokuapp.com',
-  timeout: 0,
+  baseURL: API_URL,
+  timeout: 500,
   headers: {},
 });
 
 export const checkTokenValidation = async () => {
-  const token = JSON.parse(localStorage.getItem('kanKan_currentUser#')).token;
+  const token = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token;
   if (token) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   } else {
     return false;
   }
 
-  const response = await instance.get('/users');
+  const response = await instance.get(Endpoint.USERS);
 
   if (response.status === 200) {
     return true;

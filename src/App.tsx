@@ -12,7 +12,7 @@ import { setToken } from 'store/slices/authSlice';
 import './App.css';
 import Footer from 'components/Footer';
 import { createGlobalStyle } from 'styled-components';
-import BoardPage from 'pages/BoardPage';
+import BoardPage from 'pages/BoardPageCopy';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -46,7 +46,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/boards" element={<Boards />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/:index" element={<BoardPage />} />
+        <Route path="/bord_:index" element={<BoardPage />} />
       </Routes>
       <Footer />
     </div>

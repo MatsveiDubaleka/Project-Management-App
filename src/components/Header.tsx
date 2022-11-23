@@ -17,12 +17,7 @@ import { useForm } from 'react-hook-form';
 
 import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
-import { IBoardsOfUser } from 'types/types';
-
-interface IAddBoardForm {
-  title: string;
-  description: string;
-}
+import { IAddBoardForm, IBoardsOfUser } from 'types/types';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);

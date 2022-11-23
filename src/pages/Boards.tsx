@@ -11,10 +11,8 @@ import { Link } from 'react-router-dom';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 
 export const BoardBackground = styled.div`
-   {
-    margin: 0 auto;
-    min-height: 100vh;
-  }
+  margin: 0 auto;
+  min-height: 100vh;
   .background {
     width: 1280px;
     min-height: 520px;
@@ -59,9 +57,7 @@ export const BoardBackground = styled.div`
 `;
 
 const Wrapper = styled.div`
-   {
-    margin-left: 350px;
-  }
+  margin-left: 350px;
 `;
 
 const Loader = styled.div`
@@ -88,7 +84,7 @@ export function Boards() {
     }
     dispatchBoards();
     dispatch(setIsLoaded(true));
-  }, []);
+  }, [dispatch, token]);
 
   return (
     <>
@@ -106,19 +102,25 @@ export function Boards() {
                 <Loader>Loading...</Loader>
               ) : (
                 <Grid container spacing={3}>
-                  {store.boards.map((board: IBoardsOfUser, index: number) => (
-                    <Grid item xs={3} key={index}>
-                      <Link style={{ textDecoration: 'none' }} key={board._id} to={`/${index}`}>
-                        <BoardElement
-                          _id={board._id}
-                          title={board.title}
-                          description={board.description}
-                          owner={board.owner}
-                          users={board.users}
-                        />
-                      </Link>
-                    </Grid>
-                  ))}
+                  {Array.isArray(store.boards)
+                    ? store.boards.map((board: IBoardsOfUser, index: number) => (
+                        <Grid item xs={3} key={index}>
+                          <Link
+                            style={{ textDecoration: 'none' }}
+                            key={board._id}
+                            to={`/bord_${board._id}`}
+                          >
+                            <BoardElement
+                              _id={board._id}
+                              title={board.title}
+                              description={board.description}
+                              owner={board.owner}
+                              users={board.users}
+                            />
+                          </Link>
+                        </Grid>
+                      ))
+                    : null}
                 </Grid>
               )}
             </Container>
