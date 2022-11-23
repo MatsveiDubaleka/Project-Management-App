@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import LockIcon from '@mui/icons-material/Lock';
-
 import styled from 'styled-components';
 import { IAuthorizationResult, IFormInputs } from 'types/types';
 import { LOCAL_STORAGE_DATA, nameRegex, passwordRegex } from 'constants/registration';
@@ -10,6 +9,7 @@ import { createUser, getUserDataByLogin, loginUser } from 'api/registerService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import { Navigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
 
 interface IRegForm {
   type: string;
@@ -25,7 +25,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
 
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-
+  const [error, setError] = useState<string>('');
   const onFormSubmit = handleSubmit((data: IFormInputs) => {
     if (type === 'signup') {
       (async () => {
@@ -44,6 +44,10 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             dispatch(setToken(authUser.token));
           }
         } else if (user.login === 'Login already exist') {
+          setError('Login already exist');
+          setTimeout(() => {
+            setError('');
+          }, 5000);
           console.log('Login already exist');
         } else {
           console.log('Something went wrong.');
@@ -68,104 +72,108 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
     }
     reset();
   });
+
   return (
     <Register>
-      <div className="background">
-        <div className="shape"></div>
-        <div className="shape"></div>
+      <div>
+        <div className="background">
+          <div className="shape"></div>
+          <div className="shape"></div>
+        </div>
+        <form onSubmit={onFormSubmit}>
+          {type === 'signup' ? (
+            <LockPersonIcon sx={{ fontSize: '50px', alignSelf: 'center' }} />
+          ) : (
+            <LockIcon sx={{ fontSize: '50px', alignSelf: 'center' }} />
+          )}
+
+          {type === 'signup' ? (
+            <>
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                placeholder="Name"
+                id="username"
+                {...register('name', {
+                  required: {
+                    value: true,
+                    message: '*this field must be filled in',
+                  },
+                  minLength: {
+                    value: 3,
+                    message: '*at least 3 characters',
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: '*maximum of 30 characters',
+                  },
+                  pattern: {
+                    value: nameRegex,
+                    message: '*login must contain only Latin characters',
+                  },
+                })}
+              />
+            </>
+          ) : null}
+
+          <label htmlFor="login">Login</label>
+          <input
+            type="text"
+            placeholder="Login"
+            id="login"
+            {...register('login', {
+              required: {
+                value: true,
+                message: '*this field must be filled in',
+              },
+              minLength: {
+                value: 3,
+                message: '*at least 3 characters',
+              },
+              maxLength: {
+                value: 30,
+                message: '*maximum of 30 characters',
+              },
+              pattern: {
+                value: nameRegex,
+                message: '*login must contain only Latin characters',
+              },
+            })}
+          />
+
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            placeholder="Password"
+            id="password"
+            {...register('password', {
+              required: {
+                value: true,
+                message: '*this field must be filled in',
+              },
+              minLength: {
+                value: 8,
+                message: '*at least 8 characters',
+              },
+              maxLength: {
+                value: 30,
+                message: '*maximum of 30 characters',
+              },
+              pattern: {
+                value: passwordRegex,
+                message:
+                  '*password must contain 8 characters and at least one number, one letter and one unique character such as !#$%&? "',
+              },
+            })}
+          />
+          {type === 'signup' ? (
+            <p>Password must consists of uppercase letter, symbol and numbers</p>
+          ) : null}
+          {type === 'signup' ? <button>Sign Up</button> : <button>Log In</button>}
+        </form>
+        {token !== '' ? <Navigate to="/boards" /> : null}
+        {error !== '' ? <Alert severity="error">{error}</Alert> : null}
       </div>
-      <form onSubmit={onFormSubmit}>
-        {type === 'signup' ? (
-          <LockPersonIcon sx={{ fontSize: '50px', alignSelf: 'center' }} />
-        ) : (
-          <LockIcon sx={{ fontSize: '50px', alignSelf: 'center' }} />
-        )}
-
-        {type === 'signup' ? (
-          <>
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              placeholder="Name"
-              id="username"
-              {...register('name', {
-                required: {
-                  value: true,
-                  message: '*this field must be filled in',
-                },
-                minLength: {
-                  value: 3,
-                  message: '*at least 3 characters',
-                },
-                maxLength: {
-                  value: 30,
-                  message: '*maximum of 30 characters',
-                },
-                pattern: {
-                  value: nameRegex,
-                  message: '*login must contain only Latin characters',
-                },
-              })}
-            />
-          </>
-        ) : null}
-
-        <label htmlFor="login">Login</label>
-        <input
-          type="text"
-          placeholder="Login"
-          id="login"
-          {...register('login', {
-            required: {
-              value: true,
-              message: '*this field must be filled in',
-            },
-            minLength: {
-              value: 3,
-              message: '*at least 3 characters',
-            },
-            maxLength: {
-              value: 30,
-              message: '*maximum of 30 characters',
-            },
-            pattern: {
-              value: nameRegex,
-              message: '*login must contain only Latin characters',
-            },
-          })}
-        />
-
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          {...register('password', {
-            required: {
-              value: true,
-              message: '*this field must be filled in',
-            },
-            minLength: {
-              value: 8,
-              message: '*at least 8 characters',
-            },
-            maxLength: {
-              value: 30,
-              message: '*maximum of 30 characters',
-            },
-            pattern: {
-              value: passwordRegex,
-              message:
-                '*password must contain 8 characters and at least one number, one letter and one unique character such as !#$%&? "',
-            },
-          })}
-        />
-        {type === 'signup' ? (
-          <p>Password must consists of uppercase letter, symbol and numbers</p>
-        ) : null}
-        {type === 'signup' ? <button>Sign Up</button> : <button>Log In</button>}
-      </form>
-      {token !== '' ? <Navigate to="/boards" /> : null}
     </Register>
   );
 };
