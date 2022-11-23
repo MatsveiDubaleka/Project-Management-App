@@ -14,6 +14,7 @@ const StyledFlex = styled(Flex)`
 `;
 
 const StyledFooter = styled.footer`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;

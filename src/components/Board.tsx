@@ -14,11 +14,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 const Board = styled.div`
    {
     cursor: pointer;
-    min-height: 350px;
-    width: 350px;
+    min-height: 300px;
     background-color: rgba(255, 255, 255, 0.13);
     position: relative;
-    transform: translate(-50%, -50%);
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -33,11 +31,24 @@ const Board = styled.div`
     outline: none;
     border: none;
     justify-content: space-between;
+    overflow: auto;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
   }
   .info {
+    font-size: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .description {
+    max-width: max-content;
+    max-height: 100px;
+    margin: 0;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .board h3 {
     font-size: 32px;
@@ -120,8 +131,7 @@ const BoardElement = ({
       <Board id={_id}>
         <h3 className="board-title">{title}</h3>
         <div className="info">
-          <div>{description}</div>
-          <div>{owner}</div>
+          <div className="description">{description}</div>
           <div>{users}</div>
         </div>
         <div className="button-block">
