@@ -16,10 +16,10 @@ export const BoardBackground = styled.div`
     min-height: 100vh;
   }
   .background {
-    width: 1280px;
+    max-width: 1280px;
     min-height: 520px;
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -100%);
     left: 50%;
     top: 50%;
   }
