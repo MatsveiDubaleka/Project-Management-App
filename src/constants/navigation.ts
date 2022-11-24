@@ -1,10 +1,11 @@
-export enum Endpoint {
+export enum Navigation {
   BOARDS = '/boards',
   BOARDSSET = '/boardsSet',
   COLUMNS = '/columns',
-  SIGN_IN = '/auth/signin',
-  SIGN_UP = '/auth/signup',
+  SIGN_IN = '/signin',
+  SIGN_UP = '/signup',
   TASKS = '/tasks',
-  USERS = '/users',
   HOME = '/',
 }
+
+export default Navigation;

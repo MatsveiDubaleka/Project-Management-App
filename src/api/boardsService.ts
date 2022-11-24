@@ -41,6 +41,32 @@ export async function getAllBoardsOfUser(
   }
 }
 
+export async function getBoardById(
+  boardId: string,
+  token: string
+): Promise<IBoardsOfUser | undefined> {
+  const response = await fetch(`${API_URL}${Endpoint.BOARDS}/${boardId}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      redirect: 'follow',
+    },
+  });
+  try {
+    const board = await response.json();
+    console.log(board);
+    return board;
+  } catch (error) {
+    if (response.status === 403) {
+      console.log('Access token is missing or invalid');
+    } else {
+      console.log('Some error');
+    }
+  }
+}
+
 export async function getAllBoardsOfServer(token: string): Promise<IBoardsOfUser[] | undefined> {
   const response = await fetch(`${API_URL}${Endpoint.BOARDS}`, {
     method: 'GET',

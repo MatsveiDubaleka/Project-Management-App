@@ -1,24 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import kanban from '../assets/img/kanban.png';
-import { checkTokenValidation } from 'api/checkTokenValidation';
 
 export function Welcome() {
-  const [isLogin, setIsLogin] = React.useState(false);
-
-  checkTokenValidation().then((res) => {
-    if (res === true) {
-      console.log(res);
-      setIsLogin(true);
-      return true;
-    } else {
-      console.log(res);
-      return false;
-    }
-  });
-
-  console.log(isLogin);
-
   return (
     <main>
       <RowContainer>

@@ -14,10 +14,10 @@ export const BoardBackground = styled.div`
   margin: 0 auto;
   min-height: 100vh;
   .background {
-    width: 1280px;
+    max-width: 1280px;
     min-height: 520px;
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -100%);
     left: 50%;
     top: 50%;
   }
@@ -57,7 +57,7 @@ export const BoardBackground = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin-left: 350px;
+  margin-bottom: 60px;
 `;
 
 const Loader = styled.div`
@@ -97,14 +97,14 @@ export function Boards() {
             ))}
           </div>
           <Wrapper>
-            <Container maxWidth="xl" sx={{ paddingTop: 30 }}>
+            <Container sx={{ paddingTop: 6 }}>
               {!store.isLoaded ? (
                 <Loader>Loading...</Loader>
               ) : (
                 <Grid container spacing={3}>
                   {Array.isArray(store.boards)
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
-                        <Grid item xs={3} key={index}>
+                    <Grid item xs={6} md={3} sm={5} key={index}>
                           <Link
                             style={{ textDecoration: 'none' }}
                             key={board._id}

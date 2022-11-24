@@ -1,19 +1,22 @@
 import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
-import { getAllUsers } from 'api/usersServices';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setBoards } from 'store/slices/authSlice';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const Board = styled.div`
    {
     cursor: pointer;
-    min-height: 350px;
-    width: 350px;
+    min-height: 300px;
     background-color: rgba(255, 255, 255, 0.13);
     position: relative;
-    transform: translate(-50%, -50%);
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -28,11 +31,24 @@ const Board = styled.div`
     outline: none;
     border: none;
     justify-content: space-between;
+    overflow: auto;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
   }
   .info {
+    font-size: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .description {
+    max-width: max-content;
+    max-height: 100px;
+    margin: 0;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .board h3 {
     font-size: 32px;
@@ -79,8 +95,19 @@ const BoardElement = ({
   owner = 'user',
   users = ['user1', 'user2'],
 }: IBoardElement) => {
+  const [open, setOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
+
+  const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setOpen(true);
+  };
+
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setOpen(false);
+  };
 
   const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -89,7 +116,6 @@ const BoardElement = ({
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-
     await deleteBoard(_id, token);
 
     async function dispatchBoards() {
@@ -97,6 +123,7 @@ const BoardElement = ({
       dispatch(setBoards(data));
     }
     dispatchBoards();
+    setOpen(false);
   };
 
   return (
@@ -104,15 +131,28 @@ const BoardElement = ({
       <Board id={_id}>
         <h3 className="board-title">{title}</h3>
         <div className="info">
-          <div>{description}</div>
-          <div>{owner}</div>
+          <div className="description">{description}</div>
           <div>{users}</div>
         </div>
         <div className="button-block">
           <button onClick={(e) => handleChange(e)}>Change</button>
-          <button onClick={(e) => handleDelete(e)}>Delete</button>
+          <button onClick={(e) => handleClickOpen(e)}>Delete</button>
         </div>
       </Board>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Delete board permanently?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
+            DELETE
+          </Button>
+          <Button variant="contained" autoFocus onClick={(e) => handleClose(e)}>
+            CANCEL
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
