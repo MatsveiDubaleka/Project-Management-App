@@ -104,7 +104,7 @@ export function Boards() {
                 <Grid container spacing={3}>
                   {Array.isArray(store.boards)
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
-                    <Grid item xs={6} md={3} sm={5} key={index}>
+                        <Grid item xs={6} md={3} sm={5} key={index}>
                           <Link
                             style={{ textDecoration: 'none' }}
                             key={board._id}

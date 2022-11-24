@@ -12,7 +12,7 @@ import { setToken, setValidation } from 'store/slices/authSlice';
 import './App.css';
 import Footer from 'components/Footer';
 import { createGlobalStyle } from 'styled-components';
-import BoardPage from 'pages/BoardPageCopy';
+import BoardPage from 'pages/BoardPage';
 import { checkTokenValidation } from 'api/checkTokenValidation';
 import { CircularProgress } from '@mui/material';
 import Navigation from 'constants/navigation';

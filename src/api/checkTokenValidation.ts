@@ -17,7 +17,7 @@ export const checkTokenValidation = async () => {
     }
     const token = JSON.parse(LOCAL_STORAGE).token;
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  const response = await instance.get(Endpoint.USERS);
+    const response = await instance.get(Endpoint.USERS);
     if (response.status === 200) {
       return true;
     }
