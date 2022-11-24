@@ -104,7 +104,9 @@ const BoardPage = () => {
     handleClose();
   });
 
-  const showDescription = () => {};
+  const showDescription = () => {
+    setOpen(true);
+  };
 
   const editBoard = () => {};
 
@@ -218,6 +220,23 @@ const BoardPage = () => {
                 </Button>
               </Box>
             </Box>
+          </Box>
+        </Modal>
+
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              BOARD
+              <div>{boardData.title}</div>
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 6 }}>
+              {boardData.description}
+            </Typography>
           </Box>
         </Modal>
       </BoardBackground>
