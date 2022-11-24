@@ -31,7 +31,6 @@ export async function getAllBoardsOfUser(
   });
   try {
     const boards = await response.json();
-    console.log(boards);
     return boards;
   } catch (error) {
     if (response.status === 403) {
@@ -79,7 +78,6 @@ export async function getAllBoardsOfServer(token: string): Promise<IBoardsOfUser
   });
   try {
     const boards = await response.json();
-    console.log(boards);
     return boards;
   } catch (error) {
     if (response.status === 403) {

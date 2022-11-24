@@ -147,4 +147,4 @@ const BoardPage = () => {
   );
 };
 
-export default BoardPage;
+export default BoardPageCopy;

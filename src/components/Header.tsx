@@ -16,13 +16,7 @@ import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
-import { IBoardsOfUser } from 'types/types';
-import Navigation from '../constants/navigation';
-
-interface IAddBoardForm {
-  title: string;
-  description: string;
-}
+import { IAddBoardForm, IBoardsOfUser } from 'types/types';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);

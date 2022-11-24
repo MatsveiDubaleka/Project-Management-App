@@ -12,7 +12,7 @@ import { setToken, setValidation } from 'store/slices/authSlice';
 import './App.css';
 import Footer from 'components/Footer';
 import { createGlobalStyle } from 'styled-components';
-import BoardPage from 'pages/BoardPage';
+import BoardPage from 'pages/BoardPageCopy';
 import { checkTokenValidation } from 'api/checkTokenValidation';
 import { CircularProgress } from '@mui/material';
 import Navigation from 'constants/navigation';
@@ -67,7 +67,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/boards" element={<Boards />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/:id" element={<BoardPage />} />
+            <Route path="/bord_:index" element={<BoardPage />} />
           </Routes>
           <Footer />
         </>
