@@ -103,6 +103,11 @@ const BoardPage = () => {
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IAddColumnForm>();
 
+  const handleClickClose = () => {
+    reset();
+    handleClose();
+  };
+
   const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLTextAreaElement;
     switch (target.id as string) {
@@ -110,16 +115,16 @@ const BoardPage = () => {
         setModal('description');
         handleOpen();
         break;
-      case 'add':
-        setModal('add');
+      case 'edit':
+        setModal('edit');
         handleOpen();
         break;
       case 'delete':
         setModal('delete');
         handleOpen();
         break;
-      case 'edit':
-        setModal('edit');
+      case 'add':
+        setModal('add');
         handleOpen();
         break;
       default:
@@ -133,11 +138,13 @@ const BoardPage = () => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+
     await createColumn(boardData._id, { title: data.title, order: 1 });
     const columns = await getColumns(boardData._id, token);
+
     dispatch(columnSlice.actions.setColumns(columns));
-    reset();
-    handleClose();
+    handleClickClose();
   });
 
   const editBoard = handleSubmit(async (data) => {
@@ -160,8 +167,7 @@ const BoardPage = () => {
     dispatchBoards();
 
     getAllUsers(token);
-    reset();
-    handleClose();
+    handleClickClose();
   });
 
   useEffect(() => {
@@ -232,13 +238,13 @@ const BoardPage = () => {
         </Wrapper>
         <Modal
           open={modal === 'add' ? open : false}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+          onClose={handleClickClose}
+          aria-labelledby="modal-modal-title-addlist"
+          aria-describedby="modal-modal-description-addlist"
         >
           <Box sx={modalStyle}>
             <Typography
-              id="modal-modal-title"
+              id="modal-modal-title-addlist"
               variant="h6"
               component="h2"
               fontWeight="bold"
@@ -273,7 +279,7 @@ const BoardPage = () => {
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
                   SUBMIT
                 </Button>
-                <Button color="warning" onClick={() => handleClose()}>
+                <Button color="warning" onClick={handleClickClose}>
                   CANCEL
                 </Button>
               </Box>
@@ -283,7 +289,7 @@ const BoardPage = () => {
 
         <Modal
           open={modal === 'description' ? open : false}
-          onClose={handleClose}
+          onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -302,7 +308,7 @@ const BoardPage = () => {
 
         <Dialog
           open={modal === 'delete' ? open : false}
-          onClose={handleClose}
+          onClose={handleClickClose}
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle
@@ -320,7 +326,7 @@ const BoardPage = () => {
             <Button variant="contained" onClick={handleDelete} autoFocus>
               DELETE
             </Button>
-            <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+            <Button color="warning" variant="contained" autoFocus onClick={handleClickClose}>
               CANCEL
             </Button>
           </DialogActions>
@@ -328,7 +334,7 @@ const BoardPage = () => {
 
         <Modal
           open={modal === 'edit' ? open : false}
-          onClose={handleClose}
+          onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -390,7 +396,7 @@ const BoardPage = () => {
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
                   SUBMIT
                 </Button>
-                <Button color="warning" onClick={() => handleClose()}>
+                <Button color="warning" onClick={() => handleClickClose()}>
                   CANCEL
                 </Button>
               </Box>
