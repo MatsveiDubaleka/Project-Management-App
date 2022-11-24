@@ -6,16 +6,18 @@ export const NotFound = () => {
   return (
     <Wrapper>
       Page not found: Error 404
-      <Wrapper>
+      <div>
         <img src={notFound} alt="404" />
-      </Wrapper>
+      </div>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
+  color: white;
+  flex-direction: column;
+  align-items: center;
   margin-top: 90px;
   font-size: 48px;
   font-weight: 700;
