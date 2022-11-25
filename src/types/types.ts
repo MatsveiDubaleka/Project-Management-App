@@ -25,6 +25,8 @@ export interface IFormInputs {
   name?: string;
   login: string;
   password: string;
+  exist?: string;
+  wrong?: string;
 }
 
 export interface INewUserResponse {
@@ -35,6 +37,7 @@ export interface INewUserResponse {
 
 export interface IAuthorizationResult {
   token: string;
+  error?: { message: string };
 }
 
 export interface IBoardsOfUser {

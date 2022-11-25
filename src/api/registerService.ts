@@ -54,16 +54,21 @@ export async function createUser(newuser: IFormInputs): Promise<INewUserResponse
 }
 
 export async function loginUser(user: IFormInputs): Promise<IAuthorizationResult | undefined> {
+  const response = await fetch(`${API_URL}${Endpoint.SIGN_IN}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  });
   try {
-    const response = await fetch(`${API_URL}${Endpoint.SIGN_IN}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-    const authUser = await response.json();
+    let authUser;
+    if (response.ok) {
+      authUser = await response.json();
+    } else if (response.status >= 400) {
+      authUser = { error: await response.json() };
+    }
     return authUser;
   } catch (error) {
     console.log('Some error');
