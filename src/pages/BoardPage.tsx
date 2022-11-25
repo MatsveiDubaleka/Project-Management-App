@@ -28,7 +28,7 @@ import ColumnsList from 'components/ColumnsList';
 import { useForm } from 'react-hook-form';
 import columnSlice from 'store/slices/columnSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
-import { setBoards } from 'store/slices/authSlice';
+import { setBoards, setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
 
 const BoardItem = styled.div`
@@ -86,12 +86,13 @@ interface IAddColumnForm {
 const BoardPage = () => {
   const dispatch = useAppDispatch();
   const columns = useAppSelector((state) => state.columns);
+  const modal: string = useAppSelector((store) => store.auth.modal);
   const { index } = useParams();
   const navigate = useNavigate();
   const token = useAppSelector((state) => state.auth.token);
   const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
   const boardData: IBoardsOfUser = storeBoards.find((board) => board._id === index);
-  const [modal, setModal] = useState('');
+  // const [modal, setModal] = useState('');
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
@@ -111,20 +112,20 @@ const BoardPage = () => {
   const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLTextAreaElement;
     switch (target.id as string) {
-      case 'description':
-        setModal('description');
+      case 'showDescription':
+        dispatch(setModal('showDescription'));
         handleOpen();
         break;
-      case 'edit':
-        setModal('edit');
+      case 'editBoard':
+        dispatch(setModal('editBoard'));
         handleOpen();
         break;
-      case 'delete':
-        setModal('delete');
+      case 'deleteBoard':
+        dispatch(setModal('deleteBoard'));
         handleOpen();
         break;
-      case 'add':
-        setModal('add');
+      case 'addColumn':
+        dispatch(setModal('addColumn'));
         handleOpen();
         break;
       default:
@@ -139,7 +140,6 @@ const BoardPage = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
-
     await createColumn(boardData._id, { title: data.title, order: 1 });
     const columns = await getColumns(boardData._id, token);
 
@@ -148,6 +148,7 @@ const BoardPage = () => {
   });
 
   const editBoard = handleSubmit(async (data) => {
+    console.log(data);
     const currentUserId = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`))._id;
     await updateBoard(
       boardData._id,
@@ -194,7 +195,7 @@ const BoardPage = () => {
               <Box component="div" sx={{ display: 'flex', gap: '10px', height: '2em' }}>
                 <h3 className="board-title">{boardData.title}</h3>
                 <Button
-                  id="description"
+                  id="showDescription"
                   variant="contained"
                   onClick={(e) => handleClickOpen(e)}
                   startIcon={<PageviewIcon />}
@@ -204,7 +205,7 @@ const BoardPage = () => {
                 </Button>
                 <ButtonGroup>
                   <Button
-                    id="edit"
+                    id="editBoard"
                     variant="contained"
                     startIcon={<EditIcon />}
                     color="warning"
@@ -213,7 +214,7 @@ const BoardPage = () => {
                     Edit
                   </Button>
                   <Button
-                    id="delete"
+                    id="deleteBoard"
                     variant="contained"
                     startIcon={<DeleteIcon />}
                     color="warning"
@@ -223,7 +224,7 @@ const BoardPage = () => {
                   </Button>
                 </ButtonGroup>
                 <Button
-                  id="add"
+                  id="addColumn"
                   variant="contained"
                   startIcon={<PlaylistAddIcon />}
                   color="warning"
@@ -237,14 +238,14 @@ const BoardPage = () => {
           ) : null}
         </Wrapper>
         <Modal
-          open={modal === 'add' ? open : false}
-          onClose={handleClickClose}
-          aria-labelledby="modal-modal-title-addlist"
-          aria-describedby="modal-modal-description-addlist"
+          open={modal === 'addColumn' ? open : false}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
             <Typography
-              id="modal-modal-title-addlist"
+              id="modal-modal-title"
               variant="h6"
               component="h2"
               fontWeight="bold"
@@ -275,11 +276,31 @@ const BoardPage = () => {
                   },
                 })}
               />
+              <TextField
+                margin="normal"
+                type="text"
+                placeholder="Description"
+                fullWidth
+                label="Description"
+                autoComplete="off"
+                multiline={true}
+                rows="3"
+                {...register('description', {
+                  required: {
+                    value: true,
+                    message: '*this field must be filled in',
+                  },
+                  maxLength: {
+                    value: 500,
+                    message: '*maximum of 500 characters',
+                  },
+                })}
+              />
               <Box sx={{ display: 'flex' }}>
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
                   SUBMIT
                 </Button>
-                <Button color="warning" onClick={handleClickClose}>
+                <Button color="warning" onClick={() => handleClose()}>
                   CANCEL
                 </Button>
               </Box>
@@ -288,7 +309,7 @@ const BoardPage = () => {
         </Modal>
 
         <Modal
-          open={modal === 'description' ? open : false}
+          open={modal === 'showDescription' ? open : false}
           onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -307,7 +328,7 @@ const BoardPage = () => {
         </Modal>
 
         <Dialog
-          open={modal === 'delete' ? open : false}
+          open={modal === 'deleteBoard' ? open : false}
           onClose={handleClickClose}
           aria-labelledby="responsive-dialog-title"
         >
@@ -333,7 +354,7 @@ const BoardPage = () => {
         </Dialog>
 
         <Modal
-          open={modal === 'edit' ? open : false}
+          open={modal === 'editBoard' ? open : false}
           onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -348,7 +369,7 @@ const BoardPage = () => {
             >
               EDIT BOARD
             </Typography>
-            <Box component="form" onSubmit={editBoard}>
+            <Box id="edit" component="form" onSubmit={editBoard}>
               <TextField
                 margin="normal"
                 type="text"
