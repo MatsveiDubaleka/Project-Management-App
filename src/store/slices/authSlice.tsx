@@ -7,6 +7,7 @@ const initialState = {
   isLoaded: false,
   board: [] as IBoardsOfUser,
   isValidated: false,
+  modal: '',
 };
 
 const slices = createSlice({
@@ -28,9 +29,13 @@ const slices = createSlice({
     setValidation(state: Record<string, unknown>, action: PayloadAction<boolean>) {
       state.isValidated = action.payload;
     },
+    setModal(state: Record<string, unknown>, action: PayloadAction<string>) {
+      state.modal = action.payload;
+    },
   },
 });
 
-export const { setToken, setBoards, setIsLoaded, setBoard, setValidation } = slices.actions;
+export const { setToken, setBoards, setIsLoaded, setBoard, setValidation, setModal } =
+  slices.actions;
 
 export default slices.reducer;

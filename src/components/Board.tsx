@@ -142,7 +142,7 @@ const BoardElement = ({
       <Dialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
         <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Delete board permanently?</DialogContentText>
+          <DialogContentText>Delete a board permanently?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
