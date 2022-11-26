@@ -99,3 +99,20 @@ export async function getUserDataByLogin(
     }
   }
 }
+
+export async function getUserDataById(
+  id: string,
+  token: string
+): Promise<INewUserResponse | undefined> {
+  const response = await fetch(`${API_URL}${Endpoint.USERS}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const users = await response.json();
+  const userData = users.find((user: INewUserResponse) => user._id === id);
+  return userData;
+}

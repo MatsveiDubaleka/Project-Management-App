@@ -8,17 +8,18 @@ import {
   DialogTitle,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { IBoardColumnTasks, IItem, ITaskOutputData } from 'types/types';
+import { IBoardColumnTasks, IItem } from 'types/types';
 import Task from './Task';
 import { deleteTask, getTasks } from 'api/taskService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setModal } from 'store/slices/authSlice';
+import { getAllUsers } from 'api/usersServices';
 
 function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const modal: string = useAppSelector((store) => store.auth.modal);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
 
@@ -38,15 +39,20 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
     (async () => {
       const data = await getTasks(boardId, columnId, token);
       if (data && data.length > 0) {
+        const users = await getAllUsers(token);
+        console.log('Users', users);
         setTaskList(data);
+        setUsers((state) => {
+          state = [...users];
+          return state;
+        });
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-      {isLoading
-        ? 'Loading...'
-        : taskList.length > 0
+      {taskList.length > 0
         ? [...taskList].map((task, i) => {
             return (
               <>
@@ -57,6 +63,11 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
                   taskId={task._id}
                   taskTitle={task.title}
                   taskDescription={task.description}
+                  userId={
+                    users.find((user) => user._id === task.userId)
+                      ? users.find((user) => user._id === task.userId).name
+                      : ''
+                  }
                   token={token}
                   deleteItem={async () => handleClickOpen()}
                 />
