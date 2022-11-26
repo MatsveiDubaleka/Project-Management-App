@@ -10,7 +10,7 @@ import AddchartIcon from '@mui/icons-material/Addchart';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setBoards, setToken } from 'store/slices/authSlice';
+import { setBoards, setToken, setValidation } from 'store/slices/authSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -37,7 +37,7 @@ function Header() {
 
   const handleClickLogOut = () => {
     navigate(Navigation.HOME);
-    dispatch(setToken(''));
+    dispatch(setValidation(false));
     localStorage.setItem(`${LOCAL_STORAGE_DATA}`, '');
   };
 
@@ -148,7 +148,7 @@ function Header() {
               {...register('title', {
                 required: {
                   value: true,
-                  message: '*this field must be filled in',
+                  message: '*title must be filled in',
                 },
                 minLength: {
                   value: 3,
@@ -160,6 +160,7 @@ function Header() {
                 },
               })}
             />
+            {errors.title ? <span style={{ color: '#ff512f' }}>{errors.title.message}</span> : ' '}
             <TextField
               margin="normal"
               type="text"
@@ -172,7 +173,7 @@ function Header() {
               {...register('description', {
                 required: {
                   value: true,
-                  message: '*this field must be filled in',
+                  message: '*description must be filled in',
                 },
                 maxLength: {
                   value: 500,
@@ -180,6 +181,9 @@ function Header() {
                 },
               })}
             />
+            {errors.description && (
+              <span style={{ color: '#ff512f' }}>{errors.description.message}</span>
+            )}
 
             <Box sx={{ display: 'flex' }}>
               <Button sx={{ ml: 'auto' }} color="primary" type="submit">

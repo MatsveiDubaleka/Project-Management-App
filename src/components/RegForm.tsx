@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import LockIcon from '@mui/icons-material/Lock';
@@ -10,6 +10,7 @@ import { createUser, getUserDataByLogin, loginUser } from 'api/registerService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import { Navigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 
 interface IRegForm {
   type: string;
@@ -20,15 +21,19 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
     register,
     handleSubmit,
     reset,
-    // formState: { errors, isDirty, isValid, isSubmitted },
+    setError,
+    clearErrors,
+    formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IFormInputs>();
 
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  const isValidated = useAppSelector((state) => state.auth.isValidated);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const onFormSubmit = handleSubmit((data: IFormInputs) => {
     if (type === 'signup') {
       (async () => {
+        setLoading(true);
         const user = await createUser(data);
         if (user._id) {
           const currentUser = Object.assign(user, { token: '' });
@@ -43,14 +48,17 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUserWithToken));
             dispatch(setToken(authUser.token));
           }
+          reset();
         } else if (user.login === 'Login already exist') {
-          console.log('Login already exist');
+          setError('exist', { message: ' already exists' }, { shouldFocus: true });
         } else {
           console.log('Something went wrong.');
         }
+        setLoading(false);
       })();
     } else {
       (async () => {
+        setLoading(true);
         const authUser = await loginUser(data);
         if (authUser.token) {
           const currentUserData =
@@ -61,12 +69,15 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
           currentUserData.token = authUser.token;
           localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(currentUserData));
           dispatch(setToken(authUser.token));
+          reset();
+        } else if (authUser.error.message) {
+          setError('wrong', { message: `Login or password is not correct` });
         } else {
           console.log('Something went wrong.');
         }
+        setLoading(false);
       })();
     }
-    reset();
   });
   return (
     <Register>
@@ -101,21 +112,24 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
                   value: 30,
                   message: '*maximum of 30 characters',
                 },
-                pattern: {
-                  value: nameRegex,
-                  message: '*login must contain only Latin characters',
-                },
               })}
             />
           </>
         ) : null}
+        {type === 'signup' ? errors.name && <Tip>{errors.name.message}</Tip> : null}
 
-        <label htmlFor="login">Login</label>
+        <label htmlFor="login">
+          Login
+          {type === 'signup'
+            ? errors.exist && <span style={{ color: 'red' }}>{errors.exist.message}</span>
+            : null}
+        </label>
         <input
           type="text"
           placeholder="Login"
           id="login"
           {...register('login', {
+            onChange: () => clearErrors('exist'),
             required: {
               value: true,
               message: '*this field must be filled in',
@@ -134,6 +148,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             },
           })}
         />
+        {errors.login && <Tip>{errors.login.message}</Tip>}
 
         <label htmlFor="password">Password</label>
         <input
@@ -141,9 +156,15 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
           placeholder="Password"
           id="password"
           {...register('password', {
+            onChange: () => clearErrors('wrong'),
             required: {
               value: true,
               message: '*this field must be filled in',
+            },
+            pattern: {
+              value: passwordRegex,
+              message:
+                '*at least one number, one letter (latin only) and one character such as !@#$%',
             },
             minLength: {
               value: 8,
@@ -153,19 +174,24 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
               value: 30,
               message: '*maximum of 30 characters',
             },
-            pattern: {
-              value: passwordRegex,
-              message:
-                '*password must contain 8 characters and at least one number, one letter and one unique character such as !#$%&? "',
-            },
           })}
         />
-        {type === 'signup' ? (
-          <p>Password must consists of uppercase letter, symbol and numbers</p>
-        ) : null}
-        {type === 'signup' ? <button>Sign Up</button> : <button>Log In</button>}
+        {type === 'login'
+          ? errors.wrong && <p style={{ color: 'red' }}>{errors.wrong.message}</p>
+          : null}
+
+        {errors.password && <Tip>{errors.password.message}</Tip>}
+        {!isLoading ? (
+          type === 'signup' ? (
+            <button>Sign Up</button>
+          ) : (
+            <button>Log In</button>
+          )
+        ) : (
+          <CircularProgress sx={{ alignSelf: 'center' }} />
+        )}
       </form>
-      {token !== '' ? <Navigate to="/boards" /> : null}
+      {isValidated ? <Navigate to="/boards" /> : null}
     </Register>
   );
 };
@@ -278,4 +304,10 @@ const Register = styled.div`
   p {
     margin-top: 10px;
   }
+`;
+
+const Tip = styled.span`
+  color: #383434 !important;
+  font-size: 14px;
+  font-weight: 200;
 `;

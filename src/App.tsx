@@ -35,6 +35,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('rerender');
     checkTokenValidation().then((res) => {
       if (res) {
         const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)!);
@@ -72,7 +73,7 @@ function App() {
           <Footer />
         </>
       ) : (
-        <CircularProgress />
+        <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />
       )}
     </div>
   );

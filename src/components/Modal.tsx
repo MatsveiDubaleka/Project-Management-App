@@ -38,7 +38,6 @@ const ModalWindow: FC<IModalTask> = ({
       userId,
       users: [''], // TODO Надо реализовать добавление связанных юзеров
     };
-    console.log(inputData);
     await createTask(boardId, columnId, inputData);
     const tasks = await getTasks(boardId, columnId, token);
     setTaskList((state) => {
