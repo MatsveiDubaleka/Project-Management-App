@@ -29,7 +29,6 @@ export const getColumns = async (boardId: string, token: string) => {
   const response = await instance.get(`${Endpoint.BOARDS}/${boardId}${Endpoint.COLUMNS}`);
 
   if (response.status === 200) {
-    console.log('Columns:', response);
     return response.data;
   } else {
     return false;

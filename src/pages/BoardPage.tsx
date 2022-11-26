@@ -139,7 +139,6 @@ const BoardPage = () => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     await createColumn(boardData._id, { title: data.title, order: 1 });
     const columns = await getColumns(boardData._id, token);
 
@@ -148,7 +147,6 @@ const BoardPage = () => {
   });
 
   const editBoard = handleSubmit(async (data) => {
-    console.log(data);
     const currentUserId = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`))._id;
     await updateBoard(
       boardData._id,
