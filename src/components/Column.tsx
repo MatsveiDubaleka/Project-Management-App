@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { IItem } from 'types/types';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import TaskList from './TaskList';
 import { useAppSelector } from 'store/hook';
 import ModalWindow from './Modal';
@@ -73,11 +74,16 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem })
     setClickedButtonId(e.currentTarget.id);
   };
 
+  const editItem = () => {};
+
   return (
     <ColumnItem>
       <ColumnTitle>
         {columnTitle}
-        <DeleteIcon onClick={deleteItem} />
+        <div>
+          <EditIcon sx={{ fontSize: '1.25em' }} onClick={editItem} />
+          <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
+        </div>
       </ColumnTitle>
       <TaskList
         boardId={boardId}

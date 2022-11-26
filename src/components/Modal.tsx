@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { IAddBoardForm, ITaskOutputData } from 'types/types';
@@ -38,7 +38,6 @@ const ModalWindow: FC<IModalTask> = ({
       userId,
       users: [''], // TODO Надо реализовать добавление связанных юзеров
     };
-    console.log(inputData);
     await createTask(boardId, columnId, inputData);
     const tasks = await getTasks(boardId, columnId, token);
     setTaskList((state) => {

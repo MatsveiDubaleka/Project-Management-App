@@ -8,6 +8,8 @@ import { updateTaskColumn } from 'api/taskService';
 import { ITaskPutData } from '../types/types';
 import { useAppDispatch } from 'store/hook';
 import { setLoading } from 'store/slices/loadingSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 const TaskItem = styled.div`
   height: max-content;
@@ -39,6 +41,31 @@ const TaskTitle = styled.div`
   color: black;
   background-color: rgb(191, 182, 179);
   padding: 0 5px;
+`;
+
+const TaskDescription = styled.p`
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  width: 100%;
+  color: black;
+  padding: 5px 5px;
+  overflow-y: auto;
+  word-break: break-all;
+`;
+
+const TaskFooter = styled.div`
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  width: 100%;
+  color: black;
+  font-size: 1em;
+  border-top: 2px solid gray;
 `;
 
 const Task: React.FC<IItem> = ({
@@ -92,13 +119,20 @@ const Task: React.FC<IItem> = ({
   const opacity = isDragging ? 0.4 : 1;
 
   return (
-    <TaskItem className="movable-item" ref={drag} style={{ opacity }}>
-      <TaskTitle>
-        {taskTitle}
-        <DeleteIcon onClick={deleteItem} />
-      </TaskTitle>
-      {taskDescription}
-    </TaskItem>
+    <TaskItem>
+      <TaskTitle>{taskTitle}</TaskTitle>
+      <TaskDescription>{taskDescription}</TaskDescription>
+      <TaskFooter>
+        <div>
+          <ManageAccountsIcon />
+          {userId}
+        </div>
+        <div>
+          <EditIcon sx={{ fontSize: '1.25em' }} />
+          <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
+        </div>
+      </TaskFooter>
+     </TaskItem>
   );
 };
 

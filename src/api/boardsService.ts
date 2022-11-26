@@ -135,3 +135,30 @@ export async function deleteBoard(boardId: string, token: string): Promise<void>
     }
   }
 }
+
+export async function updateBoard(
+  boardId: string,
+  updatedBoard: INewBoard,
+  token: string
+): Promise<INewBoardResponse | undefined> {
+  const response = await fetch(`${API_URL}${Endpoint.BOARDS}/${boardId}`, {
+    method: 'PUT',
+    body: JSON.stringify(updatedBoard),
+    mode: 'cors',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  try {
+    const board = await response.json();
+    return board;
+  } catch (error) {
+    if (response.status === 403) {
+      console.log('Access token is missing or invalid');
+    } else {
+      console.log('Some error');
+    }
+  }
+}
