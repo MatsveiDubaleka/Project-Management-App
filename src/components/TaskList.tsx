@@ -1,12 +1,10 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { IBoardColumnTasks, IItem, ITaskOutputData } from 'types/types';
+import React, { useEffect } from 'react';
+import { IBoardColumnTasks, IItem } from 'types/types';
 import Task from './Task';
 import { deleteTask, getTasks } from 'api/taskService';
-
-function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+import { useDrop } from 'react-dnd';
+const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTaskList }) => {
   const handleDeleteTask = async (taskId: string) => {
     const answer = confirm('Are you sure?');
     if (answer) {
@@ -23,29 +21,45 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
         setTaskList(data);
       }
     })();
-  }, []);
+  }, [boardId, columnId, token, setTaskList]);
+
+  const [, drop] = useDrop({
+    accept: 'Our first type',
+    drop: () => ({ name: columnId }),
+  });
+
+  const returnItemsForColumn = (columnId: string) => {
+    const tasks = taskList.filter((task) => task.columnId === columnId);
+    return [...tasks].map((task) => {
+      return (
+        <Task
+          key={task._id}
+          taskTitle={task.title}
+          taskDescription={task.description}
+          columnId={task.columnId}
+          taskUsers={task.users}
+          userId={task.userId}
+          taskOrder={task.order}
+          taskId={task._id}
+        />
+      );
+    });
+  };
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-      {isLoading
-        ? 'Loading...'
-        : taskList.length > 0
-        ? [...taskList].map((task, i) => {
-            return (
-              <Task
-                key={i}
-                boardId={task.boardId}
-                columnId={task.columnId}
-                taskId={task._id}
-                taskTitle={task.title}
-                taskDescription={task.description}
-                token={token}
-                deleteItem={() => handleDeleteTask(task._id)}
-              />
-            );
-          })
-        : null}
+    <Box
+      ref={drop}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        width: '100%',
+        minHeight: '25vh',
+      }}
+    >
+      {taskList.length > 0 ? returnItemsForColumn(columnId) : null}
     </Box>
   );
-}
+};
 
 export default TaskList;
