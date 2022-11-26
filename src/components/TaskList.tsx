@@ -40,7 +40,6 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
       const data = await getTasks(boardId, columnId, token);
       if (data && data.length > 0) {
         const users = await getAllUsers(token);
-        console.log('Users', users);
         setTaskList(data);
         setUsers((state) => {
           state = [...users];
@@ -49,7 +48,7 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [taskList]);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
       {taskList.length > 0
