@@ -1,7 +1,13 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IItem } from 'types/types';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDrag } from 'react-dnd';
+import { DragSourceMonitor } from 'react-dnd/dist/types';
+import { updateTaskColumn } from 'api/taskService';
+import { ITaskPutData } from '../types/types';
+import { useAppDispatch } from 'store/hook';
+import { setLoading } from 'store/slices/loadingSlice';
 
 const TaskItem = styled.div`
   height: max-content;
@@ -35,9 +41,58 @@ const TaskTitle = styled.div`
   padding: 0 5px;
 `;
 
-function Task({ taskTitle, taskDescription, deleteItem }: IItem) {
+const Task: React.FC<IItem> = ({
+  taskTitle,
+  taskDescription,
+  deleteItem,
+  columnId,
+  boardId,
+  userId,
+  taskId,
+  taskUsers,
+  taskOrder,
+}) => {
+  const renderTaskColumn = async (newColumnId: string) => {
+    dispatch(setLoading(true));
+
+    const data: ITaskPutData = {
+      title: taskTitle,
+      order: taskOrder,
+      description: taskDescription,
+      columnId: newColumnId,
+      userId: userId,
+      users: taskUsers,
+    };
+    const response = await updateTaskColumn(boardId, columnId, taskId, data);
+    console.log(response);
+
+    dispatch(setLoading(false));
+  };
+
+  const dispatch = useAppDispatch();
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'Our first type',
+    item: { name: taskTitle, type: 'Our first type' },
+    end: (item, monitor: DragSourceMonitor) => {
+      const dropResult: { name: string } = monitor.getDropResult();
+      console.log(`Drop result`, dropResult);
+      if (dropResult.name === columnId) {
+        console.log('1 column', columnId);
+      } else {
+        console.log('2 column', dropResult.name);
+        renderTaskColumn(dropResult.name);
+      }
+    },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0.4 : 1;
+
   return (
-    <TaskItem>
+    <TaskItem className="movable-item" ref={drag} style={{ opacity }}>
       <TaskTitle>
         {taskTitle}
         <DeleteIcon onClick={deleteItem} />
@@ -45,6 +100,6 @@ function Task({ taskTitle, taskDescription, deleteItem }: IItem) {
       {taskDescription}
     </TaskItem>
   );
-}
+};
 
 export default Task;
