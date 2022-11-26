@@ -20,6 +20,8 @@ export interface IItem {
   deleteItem?: () => Promise<void>;
   taskList?: ITaskOutputData[];
   setTaskList?: Dispatch<SetStateAction<ITaskOutputData[]>>;
+  taskUsers?: string[];
+  taskOrder?: number;
 }
 export interface IFormInputs {
   name?: string;
@@ -85,4 +87,13 @@ export interface ITaskOutputData {
 export interface IAddBoardForm {
   title: string;
   description: string;
+}
+
+export interface ITaskPutData {
+  title: string;
+  order: number;
+  description: string;
+  columnId: string;
+  userId: string;
+  users: string[];
 }
