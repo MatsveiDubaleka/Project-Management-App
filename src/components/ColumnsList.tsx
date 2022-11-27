@@ -102,7 +102,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
             return (
               <>
                 <Column
-                  key={i}
+                  key={Date.now()}
                   boardId={column.boardId}
                   columnId={column._id}
                   columnTitle={column.title}
@@ -164,7 +164,6 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                         fullWidth
                         label="Title"
                         autoComplete="off"
-                        defaultValue={column.title}
                         {...register('title', {
                           required: {
                             value: true,

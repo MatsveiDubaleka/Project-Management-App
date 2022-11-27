@@ -78,10 +78,10 @@ export interface ITaskInputData {
 }
 
 export interface ITaskOutputData {
-  _id: string;
+  _id?: string;
   title: string;
   order: number;
-  boardId: string;
+  boardId?: string;
   columnId: string;
   description: string;
   userId: string;

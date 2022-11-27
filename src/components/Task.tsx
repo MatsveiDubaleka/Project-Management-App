@@ -129,8 +129,8 @@ const Task: React.FC<IItem> = ({
           {userId}
         </div>
         <div>
-          <EditIcon sx={{ fontSize: '1.25em' }} onClick={editItem} />
-          <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
+          <EditIcon id="editTask" sx={{ fontSize: '1.25em' }} onClick={editItem} />
+          <DeleteIcon id="deleteTask" sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
         </div>
       </TaskFooter>
     </TaskItem>
