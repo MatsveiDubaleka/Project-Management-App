@@ -66,7 +66,11 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
             taskDescription={task.description}
             columnId={task.columnId}
             taskUsers={task.users}
-            userId={task.userId}
+            userId={
+              users.find((user) => user._id === task.userId)
+                ? users.find((user) => user._id === task.userId).name
+                : ''
+            }
             taskOrder={task.order}
             taskId={task._id}
             deleteItem={async () => handleClickOpen()}
