@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  CircularProgress,
 } from '@mui/material';
 import { deleteColumn, getColumns } from 'api/columnService';
 import React, { useEffect, useState } from 'react';
@@ -14,16 +15,18 @@ import { setModal } from 'store/slices/authSlice';
 import columnSlice from 'store/slices/columnSlice';
 import { IBoardColumns, IItem } from 'types/types';
 import Column from './Column';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { setLoading } from 'store/slices/loadingSlice';
 
-function ColumnsList({ boardId, token }: IItem) {
+function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const columns: IBoardColumns[] = useAppSelector((state) => state.columns);
+  const isLoading = useAppSelector((state) => state.loading.isLoading);
   const modal: string = useAppSelector((store) => store.auth.modal);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     dispatch(setModal('deleteColumn'));
@@ -31,20 +34,23 @@ function ColumnsList({ boardId, token }: IItem) {
   };
 
   const handleDeleteColumn = async (columnId: string) => {
+    dispatch(setLoading(true));
     await deleteColumn(boardId, columnId);
     const data: IBoardColumns[] = await getColumns(boardId, token);
     dispatch(columnSlice.actions.setColumns(data));
     handleClose();
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {}, [columns]);
 
   return (
     <Box sx={{ display: 'flex', gap: '10px' }}>
-      {isLoading
-        ? 'Loading...'
-        : columns.length > 0
-        ? [...columns].map((column, i) => {
+      <DndProvider backend={HTML5Backend}>
+        {isLoading ? (
+          <CircularProgress />
+        ) : columns.length > 0 ? (
+          [...columns].map((column, i) => {
             return (
               <>
                 <Column
@@ -87,7 +93,10 @@ function ColumnsList({ boardId, token }: IItem) {
               </>
             );
           })
-        : 'The board does not have lists yet'}
+        ) : (
+          'The board does not have lists yet'
+        )}
+      </DndProvider>
     </Box>
   );
 }

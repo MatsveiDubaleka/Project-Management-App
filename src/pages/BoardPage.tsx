@@ -295,6 +295,11 @@ const BoardPage = () => {
                 })}
               />
               <Box sx={{ display: 'flex' }}>
+                {errors.title ? (
+                  <span style={{ color: '#ff512f' }}>{errors.title.message}</span>
+                ) : (
+                  ' '
+                )}
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
                   SUBMIT
                 </Button>

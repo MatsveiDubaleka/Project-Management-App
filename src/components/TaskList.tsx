@@ -14,8 +14,10 @@ import { deleteTask, getTasks } from 'api/taskService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
+import { useDrop } from 'react-dnd';
 
-function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
+
+const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTaskList }) => {
   const modal: string = useAppSelector((store) => store.auth.modal);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
@@ -47,29 +49,27 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
         });
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskList]);
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-      {taskList.length > 0
-        ? [...taskList].map((task, i) => {
-            return (
-              <>
-                <Task
-                  key={i}
-                  boardId={task.boardId}
-                  columnId={task.columnId}
-                  taskId={task._id}
-                  taskTitle={task.title}
-                  taskDescription={task.description}
-                  userId={
-                    users.find((user) => user._id === task.userId)
-                      ? users.find((user) => user._id === task.userId).name
-                      : ''
-                  }
-                  token={token}
-                  deleteItem={async () => handleClickOpen()}
-                />
+  }, [setTaskList]);
+
+  const [, drop] = useDrop({
+    accept: 'Our first type',
+    drop: () => ({ name: columnId }),
+  });
+
+  const returnItemsForColumn = (columnId: string) => {
+    const tasks = taskList.filter((task) => task.columnId === columnId);
+    return [...tasks].map((task) => {
+      return (
+        <Task
+          key={task._id}
+          taskTitle={task.title}
+          taskDescription={task.description}
+          columnId={task.columnId}
+          taskUsers={task.users}
+          userId={task.userId}
+          taskOrder={task.order}
+          taskId={task._id}
+        />
                 <Dialog
                   open={modal === 'deleteTask' ? open : false}
                   onClose={handleClose}
@@ -99,12 +99,24 @@ function TaskList({ boardId, columnId, token, taskList, setTaskList }: IItem) {
                     </Button>
                   </DialogActions>
                 </Dialog>
-              </>
-            );
-          })
-        : null}
+      );
+    });
+  };
+
+  return (
+    <Box
+      ref={drop}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        width: '100%',
+        minHeight: '25vh',
+      }}
+    >
+      {taskList.length > 0 ? returnItemsForColumn(columnId) : null}
     </Box>
   );
-}
+};
 
 export default TaskList;

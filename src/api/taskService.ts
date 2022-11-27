@@ -2,6 +2,7 @@ import { Endpoint } from './../constants/endpoints';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { instance } from './axios';
 import { ITaskInputData } from 'types/types';
+import { ITaskPutData } from '../types/types';
 
 export const createTask = async (boardId: string, columnId: string, data: ITaskInputData) => {
   const token = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token;
@@ -51,6 +52,31 @@ export const deleteTask = async (boardId: string, columnId: string, taskId: stri
 
   const response = await instance.delete(
     `${Endpoint.BOARDS}/${boardId}${Endpoint.COLUMNS}/${columnId}${Endpoint.TASKS}/${taskId}`
+  );
+
+  if (response.status === 200) {
+    return response;
+  } else {
+    return false;
+  }
+};
+
+export const updateTaskColumn = async (
+  boardId: string,
+  columnId: string,
+  taskId: string,
+  data: ITaskPutData
+) => {
+  const token = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token;
+  if (token) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    return false;
+  }
+
+  const response = await instance.put(
+    `${Endpoint.BOARDS}/${boardId}${Endpoint.COLUMNS}/${columnId}${Endpoint.TASKS}/${taskId}`,
+    data
   );
 
   if (response.status === 200) {

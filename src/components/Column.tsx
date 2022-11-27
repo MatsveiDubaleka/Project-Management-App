@@ -9,6 +9,8 @@ import TaskList from './TaskList';
 import { useAppSelector } from 'store/hook';
 import ModalWindow from './Modal';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
+import { useDrop } from 'react-dnd';
+import { DropTargetMonitor } from 'react-dnd/dist/types';
 
 const ColumnItem = styled.div`
   cursor: pointer;
@@ -59,7 +61,7 @@ const ColumnTitle = styled.div`
   padding: 0 5px;
 `;
 
-function Column({ boardId, columnId, columnTitle, deleteItem }: IItem) {
+const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem }) => {
   const userId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))._id;
   const token = useAppSelector((state) => state.auth.token);
   const [taskList, setTaskList] = useState([]);
@@ -105,6 +107,6 @@ function Column({ boardId, columnId, columnTitle, deleteItem }: IItem) {
       />
     </ColumnItem>
   );
-}
+};
 
 export default Column;
