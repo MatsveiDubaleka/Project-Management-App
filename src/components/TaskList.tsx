@@ -16,7 +16,6 @@ import { setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
 import { useDrop } from 'react-dnd';
 
-
 const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTaskList }) => {
   const modal: string = useAppSelector((store) => store.auth.modal);
   const dispatch = useAppDispatch();
@@ -60,45 +59,44 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
     const tasks = taskList.filter((task) => task.columnId === columnId);
     return [...tasks].map((task) => {
       return (
-        <Task
-          key={task._id}
-          taskTitle={task.title}
-          taskDescription={task.description}
-          columnId={task.columnId}
-          taskUsers={task.users}
-          userId={task.userId}
-          taskOrder={task.order}
-          taskId={task._id}
-        />
-                <Dialog
-                  open={modal === 'deleteTask' ? open : false}
-                  onClose={handleClose}
-                  aria-labelledby="responsive-dialog-title"
-                >
-                  <DialogTitle
-                    sx={{ bgcolor: 'lightgray' }}
-                    id="responsive-dialog-title"
-                    variant="h5"
-                    component="h2"
-                  >
-                    {'Confirm delete a task'}
-                  </DialogTitle>
-                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>Delete a task permanently?</DialogContentText>
-                  </DialogContent>
-                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleDeleteTask(task._id)}
-                      autoFocus
-                    >
-                      DELETE
-                    </Button>
-                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                      CANCEL
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+        <>
+          <Task
+            key={task._id}
+            taskTitle={task.title}
+            taskDescription={task.description}
+            columnId={task.columnId}
+            taskUsers={task.users}
+            userId={task.userId}
+            taskOrder={task.order}
+            taskId={task._id}
+            deleteItem={async () => handleClickOpen()}
+          />
+          <Dialog
+            open={modal === 'deleteTask' ? open : false}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle
+              sx={{ bgcolor: 'lightgray' }}
+              id="responsive-dialog-title"
+              variant="h5"
+              component="h2"
+            >
+              {'Confirm delete a task'}
+            </DialogTitle>
+            <DialogContent sx={{ bgcolor: 'lightgray' }}>
+              <DialogContentText>Delete a task permanently?</DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{ bgcolor: 'lightgray' }}>
+              <Button variant="contained" onClick={() => handleDeleteTask(task._id)} autoFocus>
+                DELETE
+              </Button>
+              <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                CANCEL
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       );
     });
   };
