@@ -10,9 +10,9 @@ import AddchartIcon from '@mui/icons-material/Addchart';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setBoards, setToken, setValidation } from 'store/slices/authSlice';
+import { setBoards, setValidation } from 'store/slices/authSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
-import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography, useScrollTrigger } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
@@ -27,6 +27,10 @@ function Header() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+  const trigger = useScrollTrigger({
+    threshold: 1,
+    disableHysteresis: true,
+  });
 
   const {
     register,
@@ -65,8 +69,8 @@ function Header() {
   });
 
   return (
-    <AppHeader>
-      <Wrapper>
+    <AppHeader style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
+      <Wrapper style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
         <Navigator>
           <RegisterBlock>
             <Link to="/" end>
@@ -201,10 +205,10 @@ function Header() {
 }
 
 const AppHeader = styled.header`
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 2;
-  background: #282c34;
-
+  box-shadow: 0px 3px 3px black;
   .box {
     display: flex;
     align-items: center;
@@ -236,7 +240,6 @@ const Wrapper = styled.div`
   font-size: 1.25em;
   color: #61dafb;
   height: 70px;
-  background: #282c34;
 `;
 
 const RegisterBlock = styled.div`
