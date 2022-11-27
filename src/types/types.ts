@@ -18,6 +18,7 @@ export interface IItem {
   taskDescription?: string;
   userId?: string;
   deleteItem?: () => Promise<void>;
+  editItem?: () => Promise<void>;
   taskList?: ITaskOutputData[];
   setTaskList?: Dispatch<SetStateAction<ITaskOutputData[]>>;
   taskUsers?: string[];

@@ -53,3 +53,27 @@ export const deleteColumn = async (boardId: string, columnId: string) => {
     return false;
   }
 };
+
+export const updateColumn = async (
+  boardId: string,
+  columnId: string,
+  data: { title: string; order: number }
+) => {
+  const token = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token;
+  if (token) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    return false;
+  }
+
+  const response = await instance.put(
+    `${Endpoint.BOARDS}/${boardId}${Endpoint.COLUMNS}/${columnId}`,
+    data
+  );
+
+  if (response.status === 200) {
+    return response;
+  } else {
+    return false;
+  }
+};

@@ -61,7 +61,7 @@ const ColumnTitle = styled.div`
   padding: 0 5px;
 `;
 
-const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem }) => {
+const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, editItem }) => {
   const userId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))._id;
   const token = useAppSelector((state) => state.auth.token);
   const [taskList, setTaskList] = useState([]);
@@ -74,15 +74,13 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem })
     setClickedButtonId(e.currentTarget.id);
   };
 
-  const editItem = () => {};
-
   return (
     <ColumnItem>
       <ColumnTitle>
         {columnTitle}
         <div>
-          <EditIcon sx={{ fontSize: '1.25em' }} onClick={editItem} />
-          <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
+          <EditIcon id="editColumn" sx={{ fontSize: '1.25em' }} onClick={editItem} />
+          <DeleteIcon id="deleteColumn" sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
         </div>
       </ColumnTitle>
       <TaskList
