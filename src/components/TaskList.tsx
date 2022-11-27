@@ -54,14 +54,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const tasks: IBoardColumns[] = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
   const [taskId, setTaskId] = useState('');
-  const [taskData, setTaskData] = useState({
-    title: '',
-    order: 0,
-    description: '',
-    columnId: '',
-    userId: '',
-    users: [''],
-  });
+  const [currentUserId, setCurrentUserId] = useState('');
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const handleClose = () => setOpen(false);
@@ -79,9 +72,9 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
     handleOpen();
   };
 
-  const handleClickEdit = (taskId: string, task: ITaskPutData) => {
+  const handleClickEdit = (taskId: string, userId: string) => {
     setTaskId(taskId);
-    setTaskData(task);
+    setCurrentUserId(userId);
     dispatch(setModal('editTask'));
     handleOpen();
   };
@@ -99,9 +92,10 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
       order: 0,
       description: data.description,
       columnId: columnId,
-      userId: '',
+      userId: currentUserId,
       users: [''],
     };
+    console.log(updatedData.userId);
     await updateTaskColumn(boardId, columnId, taskId, updatedData);
     const taskData: IBoardColumns[] = await getTasks(boardId, columnId, token);
     dispatch(taskSlice.actions.setTasks(taskData));
@@ -145,7 +139,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
             }
             taskOrder={task.order}
             taskId={task._id}
-            editItem={async () => handleClickEdit(task._id, task)}
+            editItem={async () => handleClickEdit(task._id, task.userId)} // Dont work user id
             deleteItem={async () => handleClickDelete()}
           />
           <Dialog
