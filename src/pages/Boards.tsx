@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setBoards, setIsLoaded } from 'store/slices/authSlice';
 import { IBoardsOfUser } from 'types/types';
-import { Link } from 'react-router-dom';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { getAllUsers } from 'api/usersServices';
 
@@ -114,23 +113,17 @@ export function Boards() {
                   {Array.isArray(store.boards)
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
                         <Grid item xs={6} md={3} sm={5} key={index}>
-                          <Link
-                            style={{ textDecoration: 'none' }}
-                            key={board._id}
-                            to={`/bord_${board._id}`}
-                          >
-                            <BoardElement
-                              _id={board._id}
-                              title={board.title}
-                              description={board.description}
-                              owner={
-                                users.find((user) => user._id === board.owner)
-                                  ? users.find((user) => user._id === board.owner).name
-                                  : ''
-                              }
-                              users={board.users}
-                            />
-                          </Link>
+                          <BoardElement
+                            _id={board._id}
+                            title={board.title}
+                            description={board.description}
+                            owner={
+                              users.find((user) => user._id === board.owner)
+                                ? users.find((user) => user._id === board.owner).name
+                                : ''
+                            }
+                            users={board.users}
+                          />
                         </Grid>
                       ))
                     : null}

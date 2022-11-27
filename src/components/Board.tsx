@@ -1,7 +1,7 @@
-import { deleteBoard, getAllBoardsOfServer } from 'api/boardsService';
+import { deleteBoard, getAllBoardsOfServer, updateBoard } from 'api/boardsService';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setBoards } from 'store/slices/authSlice';
+import { setBoards, setModal } from 'store/slices/authSlice';
 import styled from 'styled-components';
 import { IBoardsOfUser } from 'types/types';
 import Button from '@mui/material/Button';
@@ -10,6 +10,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { LOCAL_STORAGE_DATA } from 'constants/registration';
+import { getAllUsers } from 'api/usersServices';
+import { Box, Modal, TextField, Typography } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { Endpoint } from 'constants/endpoints';
 
 const Board = styled.div`
    {
@@ -89,12 +95,32 @@ const Board = styled.div`
   }
 `;
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '30vw',
+  minWidth: '300px',
+  minHeight: '200px',
+  bgcolor: 'lightgray',
+  border: '2px solid #000',
+  borderRadius: '7px',
+  boxShadow: '2px 2px 2px #433f39',
+  p: 4,
+};
+
 interface IBoardElement {
   _id?: string;
   title?: string;
   description?: string;
   owner?: string;
   users?: string[];
+}
+
+interface IEditBoardForm {
+  title: string;
+  description?: string;
 }
 
 const BoardElement = ({
@@ -104,24 +130,69 @@ const BoardElement = ({
   owner = 'user',
   users = ['user1', 'user2'],
 }: IBoardElement) => {
+  const modal: string = useAppSelector((store) => store.auth.modal);
+  const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
+  const boardData: IBoardsOfUser = storeBoards.find((board) => board._id === _id);
+
   const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid, isSubmitted },
+  } = useForm<IEditBoardForm>();
+
+  const handleClickClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    reset();
+    handleClose();
+  };
+
   const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    setOpen(true);
+    const target = e.target as HTMLTextAreaElement;
+    switch (target.id as string) {
+      case 'editBoardOnBoardPage':
+        dispatch(setModal('editBoardOnBoardPage'));
+        handleOpen();
+        break;
+      case 'deleteBoardOnBoardPage':
+        dispatch(setModal('deleteBoardOnBoardPage'));
+        handleOpen();
+        break;
+      default:
+        throw new Error();
+    }
   };
 
-  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const editBoard = handleSubmit(async (data, e) => {
     e.preventDefault();
-    setOpen(false);
-  };
+    const currentUserId = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`))._id;
+    await updateBoard(
+      boardData._id,
+      {
+        title: data.title,
+        description: data.description,
+        owner: currentUserId,
+        users: [],
+      },
+      token
+    );
 
-  const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    console.log('change');
-  };
+    async function dispatchBoards() {
+      const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
+      dispatch(setBoards(data));
+    }
+    dispatchBoards();
+
+    getAllUsers(token);
+    handleClose();
+  });
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -137,20 +208,30 @@ const BoardElement = ({
 
   return (
     <>
-      <Board id={_id}>
-        <h3 className="board-title">{title}</h3>
-        <div className="info">
-          <div className="description-title">Description</div>
-          <div className="description">{description}</div>
-          <div className="owner">Owner: {owner}</div>
-          <div className="users">{users}</div>
-        </div>
-        <div className="button-block">
-          <button onClick={(e) => handleChange(e)}>Change</button>
-          <button onClick={(e) => handleClickOpen(e)}>Delete</button>
-        </div>
-      </Board>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+      <NavLink style={{ textDecoration: 'none' }} key={_id} to={`/bord_${_id}`}>
+        <Board id={_id}>
+          <h3 className="board-title">{title}</h3>
+          <div className="info">
+            <div className="description-title">Description</div>
+            <div className="description">{description}</div>
+            <div className="owner">Owner: {owner}</div>
+            <div className="users">{users}</div>
+          </div>
+          <div className="button-block">
+            <button id="editBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
+              Change
+            </button>
+            <button id="deleteBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
+              Delete
+            </button>
+          </div>
+        </Board>
+      </NavLink>
+      <Dialog
+        open={modal === 'deleteBoardOnBoardPage' ? open : false}
+        onClose={handleClickClose}
+        aria-labelledby="responsive-dialog-title"
+      >
         <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
         <DialogContent>
           <DialogContentText>Delete a board permanently?</DialogContentText>
@@ -159,11 +240,85 @@ const BoardElement = ({
           <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
             DELETE
           </Button>
-          <Button variant="contained" autoFocus onClick={(e) => handleClose(e)}>
+          <Button variant="contained" autoFocus onClick={(e) => handleClickClose(e)}>
             CANCEL
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Modal
+        open={modal === 'editBoardOnBoardPage' ? open : false}
+        onClose={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleClickClose(e)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            fontWeight="bold"
+            color="primary"
+          >
+            EDIT BOARD
+          </Typography>
+          <Box component="form" onSubmit={editBoard}>
+            <TextField
+              margin="normal"
+              type="text"
+              placeholder="Title"
+              fullWidth
+              label="Title"
+              autoComplete="off"
+              defaultValue={title}
+              {...register('title', {
+                required: {
+                  value: true,
+                  message: '*this field must be filled in',
+                },
+                minLength: {
+                  value: 3,
+                  message: '*at least 3 characters',
+                },
+                maxLength: {
+                  value: 30,
+                  message: '*maximum of 30 characters',
+                },
+              })}
+            />
+            <TextField
+              margin="normal"
+              type="text"
+              placeholder="Description"
+              fullWidth
+              label="Description"
+              autoComplete="off"
+              defaultValue={description}
+              multiline={true}
+              rows="5"
+              {...register('description', {
+                required: {
+                  value: true,
+                  message: '*this field must be filled in',
+                },
+                maxLength: {
+                  value: 500,
+                  message: '*maximum of 500 characters',
+                },
+              })}
+            />
+
+            <Box sx={{ display: 'flex' }}>
+              <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                SUBMIT
+              </Button>
+              <Button color="warning" onClick={(e) => handleClickClose(e)}>
+                CANCEL
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 };
