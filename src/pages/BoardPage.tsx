@@ -380,6 +380,7 @@ const BoardPage = () => {
                 fullWidth
                 label="Title"
                 autoComplete="off"
+                defaultValue={boardData.title}
                 {...register('title', {
                   required: {
                     value: true,
@@ -404,6 +405,7 @@ const BoardPage = () => {
                 autoComplete="off"
                 multiline={true}
                 rows="5"
+                defaultValue={boardData.description}
                 {...register('description', {
                   required: {
                     value: true,

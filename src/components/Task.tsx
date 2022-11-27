@@ -71,6 +71,7 @@ const TaskFooter = styled.div`
 const Task: React.FC<IItem> = ({
   taskTitle,
   taskDescription,
+  editItem,
   deleteItem,
   columnId,
   boardId,
@@ -128,7 +129,7 @@ const Task: React.FC<IItem> = ({
           {userId}
         </div>
         <div>
-          <EditIcon sx={{ fontSize: '1.25em' }} />
+          <EditIcon sx={{ fontSize: '1.25em' }} onClick={editItem} />
           <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
         </div>
       </TaskFooter>

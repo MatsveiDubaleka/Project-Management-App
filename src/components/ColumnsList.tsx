@@ -81,7 +81,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
 
   const handleEditColumn = handleSubmit(async (data) => {
     dispatch(setLoading(true));
-    const exitData = Object.assign(data, { order: 1 });
+    const exitData = Object.assign(data, { order: 0 });
 
     await updateColumn(boardId, clickedButtonId, exitData);
     const columnData: IBoardColumns[] = await getColumns(boardId, token);
