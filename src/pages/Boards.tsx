@@ -26,7 +26,7 @@ export const BoardBackground = styled.div`
     width: 200px;
     position: absolute;
     border-radius: 50%;
-    z-index: -10;
+    z-index: 0;
   }
   .shape:first-child {
     background: linear-gradient(#1845ad, #23a2f6);

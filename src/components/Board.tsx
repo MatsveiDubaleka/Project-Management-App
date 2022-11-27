@@ -14,34 +14,32 @@ import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { getAllUsers } from 'api/usersServices';
 import { Box, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Endpoint } from 'constants/endpoints';
 
 const Board = styled.div`
-   {
-    cursor: pointer;
-    min-height: 300px;
-    background-color: rgba(255, 255, 255, 0.13);
-    position: relative;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-    padding: 20px 20px;
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    outline: none;
-    border: none;
-    justify-content: space-between;
-    overflow: auto;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-  }
+  cursor: pointer;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.13);
+  position: relative;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 20px 20px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
+  justify-content: space-between;
+  overflow: auto;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
   .info {
     font-size: 18px;
     display: flex;
@@ -49,11 +47,16 @@ const Board = styled.div`
     align-items: center;
   }
   .description-title {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 20px;
   }
   .description {
-    max-width: max-content;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding-left: 5px;
+    color: black;
+    border-radius: 3px;
+    text-align: left;
+    min-width: 230px;
     max-height: 100px;
     margin: 0;
     -webkit-line-clamp: 4;

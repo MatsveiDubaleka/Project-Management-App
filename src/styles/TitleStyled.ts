@@ -5,4 +5,6 @@ export const Title = styled.h1`
   text-align: center;
   color: white;
   margin-top: 2vw;
+  z-index: 1000;
+  position: relative;
 `;
