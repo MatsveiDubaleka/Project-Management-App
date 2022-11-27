@@ -119,7 +119,7 @@ const Task: React.FC<IItem> = ({
   const opacity = isDragging ? 0.4 : 1;
 
   return (
-    <TaskItem>
+    <TaskItem className="movable-item" ref={drag} style={{ opacity }}>
       <TaskTitle>{taskTitle}</TaskTitle>
       <TaskDescription>{taskDescription}</TaskDescription>
       <TaskFooter>
@@ -132,7 +132,7 @@ const Task: React.FC<IItem> = ({
           <DeleteIcon sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
         </div>
       </TaskFooter>
-     </TaskItem>
+    </TaskItem>
   );
 };
 
