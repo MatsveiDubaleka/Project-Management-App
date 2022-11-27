@@ -18,6 +18,7 @@ export interface IItem {
   taskDescription?: string;
   userId?: string;
   deleteItem?: () => Promise<void>;
+  editItem?: () => Promise<void>;
   taskList?: ITaskOutputData[];
   setTaskList?: Dispatch<SetStateAction<ITaskOutputData[]>>;
   taskUsers?: string[];
@@ -77,10 +78,10 @@ export interface ITaskInputData {
 }
 
 export interface ITaskOutputData {
-  _id: string;
+  _id?: string;
   title: string;
   order: number;
-  boardId: string;
+  boardId?: string;
   columnId: string;
   description: string;
   userId: string;

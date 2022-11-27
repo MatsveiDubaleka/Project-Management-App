@@ -3,12 +3,12 @@ import BoardElement from 'components/Board';
 import styled from 'styled-components';
 import { Title } from 'styles/TitleStyled';
 import { getAllBoardsOfServer } from 'api/boardsService';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setBoards, setIsLoaded } from 'store/slices/authSlice';
 import { IBoardsOfUser } from 'types/types';
-import { Link } from 'react-router-dom';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
+import { getAllUsers } from 'api/usersServices';
 
 export const BoardBackground = styled.div`
   margin: 0 auto;
@@ -26,7 +26,7 @@ export const BoardBackground = styled.div`
     width: 200px;
     position: absolute;
     border-radius: 50%;
-    z-index: -10;
+    z-index: 0;
   }
   .shape:first-child {
     background: linear-gradient(#1845ad, #23a2f6);
@@ -68,7 +68,7 @@ const Loader = styled.div`
 
 export function Boards() {
   const dispatch = useAppDispatch();
-
+  const [users, setUsers] = useState([]);
   let token: string;
   const tokenFromState = useAppSelector((state) => state.auth.token);
   JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token !== null
@@ -80,7 +80,15 @@ export function Boards() {
   useEffect(() => {
     async function dispatchBoards() {
       const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
-      dispatch(setBoards(data));
+
+      if (data && data.length > 0) {
+        const users = await getAllUsers(token);
+        dispatch(setBoards(data));
+        setUsers((state) => {
+          state = [...users];
+          return state;
+        });
+      }
     }
     dispatchBoards();
     dispatch(setIsLoaded(true));
@@ -105,19 +113,17 @@ export function Boards() {
                   {Array.isArray(store.boards)
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
                         <Grid item xs={6} md={3} sm={5} key={index}>
-                          <Link
-                            style={{ textDecoration: 'none' }}
-                            key={board._id}
-                            to={`/bord_${board._id}`}
-                          >
-                            <BoardElement
-                              _id={board._id}
-                              title={board.title}
-                              description={board.description}
-                              owner={board.owner}
-                              users={board.users}
-                            />
-                          </Link>
+                          <BoardElement
+                            _id={board._id}
+                            title={board.title}
+                            description={board.description}
+                            owner={
+                              users.find((user) => user._id === board.owner)
+                                ? users.find((user) => user._id === board.owner).name
+                                : ''
+                            }
+                            users={board.users}
+                          />
                         </Grid>
                       ))
                     : null}
