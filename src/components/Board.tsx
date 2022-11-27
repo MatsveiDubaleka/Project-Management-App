@@ -23,6 +23,7 @@ const Board = styled.div`
     box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
     padding: 20px 20px;
     display: flex;
+    text-align: center;
     flex-direction: column;
     align-items: center;
     font-family: 'Poppins', sans-serif;
@@ -41,6 +42,10 @@ const Board = styled.div`
     flex-direction: column;
     align-items: center;
   }
+  .description-title {
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
   .description {
     max-width: max-content;
     max-height: 100px;
@@ -49,6 +54,10 @@ const Board = styled.div`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .owner {
+    margin-top: 30px;
+    font-size: 20px;
   }
   .board h3 {
     font-size: 32px;
@@ -131,8 +140,10 @@ const BoardElement = ({
       <Board id={_id}>
         <h3 className="board-title">{title}</h3>
         <div className="info">
+          <div className="description-title">Description</div>
           <div className="description">{description}</div>
-          <div>{users}</div>
+          <div className="owner">Owner: {owner}</div>
+          <div className="users">{users}</div>
         </div>
         <div className="button-block">
           <button onClick={(e) => handleChange(e)}>Change</button>
