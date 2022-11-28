@@ -55,6 +55,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const dispatch = useAppDispatch();
   const [taskId, setTaskId] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
+  const [currentTask, setCurrentTask] = useState('');
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const handleClose = () => setOpen(false);
@@ -67,20 +68,22 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IEditTaskForm>();
 
-  const handleClickDelete = () => {
+  const handleClickDelete = (task: ITaskOutputData) => {
     dispatch(setModal('deleteTask'));
+    setCurrentTask(task._id);
     handleOpen();
   };
 
-  const handleClickEdit = (taskId: string, userId: string) => {
-    setTaskId(taskId);
+  const handleClickEdit = (task: ITaskOutputData, userId: string) => {
+    setCurrentTask(task._id);
     setCurrentUserId(userId);
     dispatch(setModal('editTask'));
     handleOpen();
   };
 
-  const handleDeleteTask = async (taskId: string) => {
-    await deleteTask(boardId, columnId, taskId);
+  const handleDeleteTask = async () => {
+    await deleteTask(boardId, columnId, currentTask);
+
     const data: IBoardColumnTasks[] = await getTasks(boardId, columnId, token);
     setTaskList(data);
     handleClose();
@@ -89,14 +92,14 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const handleEditTask = handleSubmit(async (data) => {
     const updatedData: ITaskOutputData = {
       title: data.title,
-      order: 0,
+      order: 1,
       description: data.description,
       columnId: columnId,
       userId: currentUserId,
       users: [''],
     };
     console.log(updatedData.userId);
-    await updateTaskColumn(boardId, columnId, taskId, updatedData);
+    await updateTaskColumn(boardId, columnId, currentTask, updatedData);
     const taskData: IBoardColumns[] = await getTasks(boardId, columnId, token);
     dispatch(taskSlice.actions.setTasks(taskData));
     handleClose();
@@ -114,7 +117,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
         });
       }
     })();
-  }, [setTaskList, tasks]);
+  }, [dispatch, tasks, setUsers]);
 
   const [, drop] = useDrop({
     accept: 'Our first type',
@@ -123,11 +126,11 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
 
   const returnItemsForColumn = (columnId: string) => {
     const tasks = taskList.filter((task) => task.columnId === columnId);
-    return [...tasks].map((task) => {
+    return [...tasks].map((task, i) => {
       return (
         <>
           <Task
-            key={Date.now()}
+            key={i}
             taskTitle={task.title}
             taskDescription={task.description}
             columnId={task.columnId}
@@ -139,11 +142,11 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
             }
             taskOrder={task.order}
             taskId={task._id}
-            editItem={async () => handleClickEdit(task._id, task.userId)} // Dont work user id
-            deleteItem={async () => handleClickDelete()}
+            editItem={async () => handleClickEdit(task, task.userId)}
+            deleteItem={async () => handleClickDelete(task)}
           />
           <Dialog
-            open={modal === 'deleteTask' ? open : false}
+            open={modal === 'deleteTask' && open}
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
           >
@@ -159,7 +162,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
               <DialogContentText>Delete a task permanently?</DialogContentText>
             </DialogContent>
             <DialogActions sx={{ bgcolor: 'lightgray' }}>
-              <Button variant="contained" onClick={() => handleDeleteTask(task._id)} autoFocus>
+              <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
                 DELETE
               </Button>
               <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
@@ -169,7 +172,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
           </Dialog>
 
           <Modal
-            open={modal === 'editTask' ? open : false}
+            open={modal === 'editTask' && open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
