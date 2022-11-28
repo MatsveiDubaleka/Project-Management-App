@@ -236,7 +236,7 @@ const BoardPage = () => {
           ) : null}
         </Wrapper>
         <Modal
-          open={modal === 'addColumn' ? open : false}
+          open={modal === 'addColumn' && open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -312,7 +312,7 @@ const BoardPage = () => {
         </Modal>
 
         <Modal
-          open={modal === 'showDescription' ? open : false}
+          open={modal === 'showDescription' && open}
           onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -331,7 +331,7 @@ const BoardPage = () => {
         </Modal>
 
         <Dialog
-          open={modal === 'deleteBoard' ? open : false}
+          open={modal === 'deleteBoard' && open}
           onClose={handleClickClose}
           aria-labelledby="responsive-dialog-title"
         >
@@ -357,7 +357,7 @@ const BoardPage = () => {
         </Dialog>
 
         <Modal
-          open={modal === 'editBoard' ? open : false}
+          open={modal === 'editBoard' && open}
           onClose={handleClickClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"

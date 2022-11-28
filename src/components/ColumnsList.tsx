@@ -102,7 +102,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
             return (
               <>
                 <Column
-                  key={Date.now()}
+                  key={i}
                   boardId={column.boardId}
                   columnId={column._id}
                   columnTitle={column.title}
@@ -111,7 +111,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                   deleteItem={async () => handleClickDelete()}
                 />
                 <Dialog
-                  open={modal === 'deleteColumn' ? open : false}
+                  open={modal === 'deleteColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="responsive-dialog-title"
                 >
@@ -141,7 +141,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                 </Dialog>
 
                 <Modal
-                  open={modal === 'editColumn' ? open : false}
+                  open={modal === 'editColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
