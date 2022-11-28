@@ -74,6 +74,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
 
   const handleClickEdit = (taskId: string, userId: string) => {
     setTaskId(taskId);
+
     setCurrentUserId(userId);
     dispatch(setModal('editTask'));
     handleOpen();
@@ -89,7 +90,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const handleEditTask = handleSubmit(async (data) => {
     const updatedData: ITaskOutputData = {
       title: data.title,
-      order: 0,
+      order: 1,
       description: data.description,
       columnId: columnId,
       userId: currentUserId,
@@ -114,7 +115,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
         });
       }
     })();
-  }, [setTaskList, tasks]);
+  }, [dispatch, tasks, setUsers]);
 
   const [, drop] = useDrop({
     accept: 'Our first type',
@@ -139,7 +140,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
             }
             taskOrder={task.order}
             taskId={task._id}
-            editItem={async () => handleClickEdit(task._id, task.userId)} // Dont work user id
+            editItem={async () => handleClickEdit(task._id, task.userId)}
             deleteItem={async () => handleClickDelete()}
           />
           <Dialog
