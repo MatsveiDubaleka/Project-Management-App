@@ -169,96 +169,96 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   }
                   taskOrder={task.order}
                   taskId={task._id}
-                  editItem={async () => handleClickEdit(task._id, task.userId)} // Dont work user id
-                  deleteItem={async () => handleClickDelete()}
+                  editItem={async () => handleClickEdit(task, task.userId)} // Dont work user id
+                  deleteItem={async () => handleClickDelete(task)}
                   index={index}
                   moveCardHandler={moveCardHandler}
                 />
                 <Dialog
-            open={modal === 'deleteTask' && open}
-            onClose={handleClose}
-            aria-labelledby="responsive-dialog-title"
-          >
-            <DialogTitle
-              sx={{ bgcolor: 'lightgray' }}
-              id="responsive-dialog-title"
-              variant="h5"
-              component="h2"
-            >
-              {'Confirm delete a task'}
-            </DialogTitle>
-            <DialogContent sx={{ bgcolor: 'lightgray' }}>
-              <DialogContentText>Delete a task permanently?</DialogContentText>
-            </DialogContent>
-            <DialogActions sx={{ bgcolor: 'lightgray' }}>
-              <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
-                DELETE
-              </Button>
-              <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                CANCEL
-              </Button>
-            </DialogActions>
-          </Dialog>
+                  open={modal === 'deleteTask' && open}
+                  onClose={handleClose}
+                  aria-labelledby="responsive-dialog-title"
+                >
+                  <DialogTitle
+                    sx={{ bgcolor: 'lightgray' }}
+                    id="responsive-dialog-title"
+                    variant="h5"
+                    component="h2"
+                  >
+                    {'Confirm delete a task'}
+                  </DialogTitle>
+                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
+                    <DialogContentText>Delete a task permanently?</DialogContentText>
+                  </DialogContent>
+                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
+                    <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
+                      DELETE
+                    </Button>
+                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                      CANCEL
+                    </Button>
+                  </DialogActions>
+                </Dialog>
 
-          <Modal
-            open={modal === 'editTask' && open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={modalStyle}>
-              <Typography
-                id="modal-modal-title"
-                variant="h6"
-                component="h2"
-                fontWeight="bold"
-                color="primary"
-              >
-                EDIT TASK
-              </Typography>
-              <Box component="form" onSubmit={handleEditTask}>
-                <TextField
-                  margin="normal"
-                  type="text"
-                  placeholder="Title"
-                  fullWidth
-                  label="Title"
-                  autoComplete="off"
-                  {...register('title', {
-                    required: {
-                      value: true,
-                      message: '*this field must be filled in',
-                    },
-                    minLength: {
-                      value: 3,
-                      message: '*at least 3 characters',
-                    },
-                    maxLength: {
-                      value: 30,
-                      message: '*maximum of 30 characters',
-                    },
-                  })}
-                />
-                <TextField
-                  margin="normal"
-                  type="text"
-                  placeholder="Description"
-                  fullWidth
-                  label="Description"
-                  autoComplete="off"
-                  multiline={true}
-                  rows="5"
-                  {...register('description', {
-                    required: {
-                      value: true,
-                      message: '*this field must be filled in',
-                    },
-                    maxLength: {
-                      value: 500,
-                      message: '*maximum of 500 characters',
-                    },
-                  })}
-                />
+                <Modal
+                  open={modal === 'editTask' && open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={modalStyle}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h6"
+                      component="h2"
+                      fontWeight="bold"
+                      color="primary"
+                    >
+                      EDIT TASK
+                    </Typography>
+                    <Box component="form" onSubmit={handleEditTask}>
+                      <TextField
+                        margin="normal"
+                        type="text"
+                        placeholder="Title"
+                        fullWidth
+                        label="Title"
+                        autoComplete="off"
+                        {...register('title', {
+                          required: {
+                            value: true,
+                            message: '*this field must be filled in',
+                          },
+                          minLength: {
+                            value: 3,
+                            message: '*at least 3 characters',
+                          },
+                          maxLength: {
+                            value: 30,
+                            message: '*maximum of 30 characters',
+                          },
+                        })}
+                      />
+                      <TextField
+                        margin="normal"
+                        type="text"
+                        placeholder="Description"
+                        fullWidth
+                        label="Description"
+                        autoComplete="off"
+                        multiline={true}
+                        rows="5"
+                        {...register('description', {
+                          required: {
+                            value: true,
+                            message: '*this field must be filled in',
+                          },
+                          maxLength: {
+                            value: 500,
+                            message: '*maximum of 500 characters',
+                          },
+                        })}
+                      />
 
                       <Box sx={{ display: 'flex' }}>
                         <Button sx={{ ml: 'auto' }} color="primary" type="submit">
