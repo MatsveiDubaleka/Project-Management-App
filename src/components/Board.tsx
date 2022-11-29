@@ -231,7 +231,7 @@ const BoardElement = ({
         </Board>
       </NavLink>
       <Dialog
-        open={modal === 'deleteBoardOnBoardPage' ? open : false}
+        open={modal === 'deleteBoardOnBoardPage' && open}
         onClose={handleClickClose}
         aria-labelledby="responsive-dialog-title"
       >
@@ -250,7 +250,7 @@ const BoardElement = ({
       </Dialog>
 
       <Modal
-        open={modal === 'editBoardOnBoardPage' ? open : false}
+        open={modal === 'editBoardOnBoardPage' && open}
         onClose={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleClickClose(e)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
