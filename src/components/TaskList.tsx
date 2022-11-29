@@ -104,16 +104,14 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   useEffect(() => {
     (async () => {
       const data = await getTasks(boardId, columnId, token);
-      if (data && data.length > 0) {
-        const users = await getAllUsers(token);
-        const sorted = data.sort((a: IItem, b: IItem) => b.order - a.order);
-        sorted.reverse();
-        setTaskList(sorted);
-        setUsers((state) => {
-          state = [...users];
-          return state;
-        });
-      }
+      const users = await getAllUsers(token);
+      const sorted = data.sort((a: IItem, b: IItem) => b.order - a.order);
+      sorted.reverse();
+      setTaskList(sorted);
+      setUsers((state) => {
+        state = [...users];
+        return state;
+      });
     })();
   }, [tasks]);
 
@@ -166,7 +164,8 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   taskDescription={task.description}
                   columnId={task.columnId}
                   taskUsers={task.users}
-                  userId={
+                  userId={task.userId}
+                  userName={
                     users.find((user) => user._id === task.userId)
                       ? users.find((user) => user._id === task.userId).name
                       : ''
