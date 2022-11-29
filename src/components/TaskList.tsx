@@ -11,13 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import {
-  IBoardColumns,
-  IBoardColumnTasks,
-  IItem,
-  ITaskOutputData,
-  ITaskPutData,
-} from 'types/types';
+import { IBoardColumns, IBoardColumnTasks, IItem, ITaskOutputData } from 'types/types';
 import Task from './Task';
 import { deleteTask, getTasks, updateTaskColumn } from 'api/taskService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
@@ -25,8 +19,6 @@ import { setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
 import { useDrop } from 'react-dnd';
 import { useForm } from 'react-hook-form';
-import { getColumns } from 'api/columnService';
-import columnSlice from 'store/slices/columnSlice';
 import taskSlice from 'store/slices/taskSlice';
 
 const modalStyle = {
@@ -110,42 +102,79 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
       const data = await getTasks(boardId, columnId, token);
       if (data && data.length > 0) {
         const users = await getAllUsers(token);
-        setTaskList(data);
+        const sorted = data.sort((a: IItem, b: IItem) => b.order - a.order);
+        sorted.reverse();
+        setTaskList(sorted);
         setUsers((state) => {
           state = [...users];
           return state;
         });
       }
     })();
-  }, [dispatch, tasks, setUsers]);
+  }, [tasks]);
 
   const [, drop] = useDrop({
     accept: 'Our first type',
     drop: () => ({ name: columnId }),
   });
 
-  const returnItemsForColumn = (columnId: string) => {
-    const tasks = taskList.filter((task) => task.columnId === columnId);
-    return [...tasks].map((task, i) => {
-      return (
-        <>
-          <Task
-            key={i}
-            taskTitle={task.title}
-            taskDescription={task.description}
-            columnId={task.columnId}
-            taskUsers={task.users}
-            userId={
-              users.find((user) => user._id === task.userId)
-                ? users.find((user) => user._id === task.userId).name
-                : ''
-            }
-            taskOrder={task.order}
-            taskId={task._id}
-            editItem={async () => handleClickEdit(task, task.userId)}
-            deleteItem={async () => handleClickDelete(task)}
-          />
-          <Dialog
+  const moveCardHandler = async (dragIndex: number, hoverIndex: number) => {
+    const dragItem = taskList[dragIndex];
+
+    if (dragItem) {
+      setTaskList((prevState) => {
+        const coppiedStateArray = [...prevState];
+        const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragItem);
+
+        coppiedStateArray.splice(dragIndex, 1, prevItem[0]);
+        return coppiedStateArray;
+      });
+
+      await updateTaskColumn(boardId, columnId, dragItem._id, {
+        title: dragItem.title,
+        order: hoverIndex,
+        description: dragItem.description,
+        columnId: dragItem.columnId,
+        userId: dragItem.userId,
+        users: dragItem.users,
+      });
+    }
+  };
+
+  return (
+    <Box
+      ref={drop}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        width: '100%',
+        minHeight: '25vh',
+      }}
+    >
+      {taskList.length > 0
+        ? taskList.map((task, index: number) => {
+            return (
+              <>
+                <Task
+                  key={Date.now()}
+                  taskTitle={task.title}
+                  taskDescription={task.description}
+                  columnId={task.columnId}
+                  taskUsers={task.users}
+                  userId={
+                    users.find((user) => user._id === task.userId)
+                      ? users.find((user) => user._id === task.userId).name
+                      : ''
+                  }
+                  taskOrder={task.order}
+                  taskId={task._id}
+                  editItem={async () => handleClickEdit(task._id, task.userId)} // Dont work user id
+                  deleteItem={async () => handleClickDelete()}
+                  index={index}
+                  moveCardHandler={moveCardHandler}
+                />
+                <Dialog
             open={modal === 'deleteTask' && open}
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
@@ -231,34 +260,21 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   })}
                 />
 
-                <Box sx={{ display: 'flex' }}>
-                  <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                    SUBMIT
-                  </Button>
-                  <Button color="warning" onClick={handleClose}>
-                    CANCEL
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Modal>
-        </>
-      );
-    });
-  };
-
-  return (
-    <Box
-      ref={drop}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        width: '100%',
-        minHeight: '25vh',
-      }}
-    >
-      {taskList.length > 0 ? returnItemsForColumn(columnId) : null}
+                      <Box sx={{ display: 'flex' }}>
+                        <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                          SUBMIT
+                        </Button>
+                        <Button color="warning" onClick={handleClose}>
+                          CANCEL
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Modal>
+              </>
+            );
+          })
+        : null}
     </Box>
   );
 };
