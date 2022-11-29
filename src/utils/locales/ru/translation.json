@@ -1,0 +1,9 @@
+{
+  "common": {
+    "titleBoardsPage": "ДОСКИ",
+    "boardDescription": "Описание",
+    "boardOwner": "Владелец",
+    "boardEdit": "Изменить",
+    "boardDelete": "Удалить"
+  }
+}

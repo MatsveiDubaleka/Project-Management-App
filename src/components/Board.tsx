@@ -16,6 +16,8 @@ import { Box, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { NavLink } from 'react-router-dom';
 import { Endpoint } from 'constants/endpoints';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const Board = styled.div`
   cursor: pointer;
@@ -143,6 +145,8 @@ const BoardElement = ({
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -215,17 +219,19 @@ const BoardElement = ({
         <Board id={_id}>
           <h3 className="board-title">{title}</h3>
           <div className="info">
-            <div className="description-title">Description</div>
+            <div className="description-title">{t('boardDescription')}</div>
             <div className="description">{description}</div>
-            <div className="owner">Owner: {owner}</div>
+            <div className="owner">
+              {t('boardOwner')}: {owner}
+            </div>
             <div className="users">{users}</div>
           </div>
           <div className="button-block">
             <button id="editBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              Change
+              {t('boardEdit')}
             </button>
             <button id="deleteBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              Delete
+              {t('boardDelete')}
             </button>
           </div>
         </Board>

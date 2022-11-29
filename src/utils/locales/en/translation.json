@@ -1,0 +1,9 @@
+{
+  "common": {
+    "titleBoardsPage": "BOARDS",
+    "boardDescription": "Description",
+    "boardOwner": "Owner",
+    "boardEdit": "Edit",
+    "boardDelete": "Delete"
+  }
+}
