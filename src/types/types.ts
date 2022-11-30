@@ -23,6 +23,9 @@ export interface IItem {
   setTaskList?: Dispatch<SetStateAction<ITaskOutputData[]>>;
   taskUsers?: string[];
   taskOrder?: number;
+  order?: number;
+  index?: number;
+  moveCardHandler?: (dragIndex: number, hoverIndex: number) => void;
 }
 export interface IFormInputs {
   name?: string;

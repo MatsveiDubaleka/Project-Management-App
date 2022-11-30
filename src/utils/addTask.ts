@@ -10,7 +10,7 @@ export const addTask = async (
   const columnId = e.currentTarget.id;
   await createTask(task.boardId, columnId, {
     title: addTaskData.title,
-    order: 1, // TODO Надо придумать как порядок назначать
+    order: 0, // TODO Надо придумать как порядок назначать
     description: addTaskData.description,
     userId: task.userId,
     users: [], // TODO Надо реализовать добавление связанных юзеров

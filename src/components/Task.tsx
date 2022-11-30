@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IItem } from 'types/types';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { DragSourceMonitor } from 'react-dnd/dist/types';
 import { updateTaskColumn } from 'api/taskService';
 import { ITaskPutData } from '../types/types';
@@ -79,6 +79,8 @@ const Task: React.FC<IItem> = ({
   taskId,
   taskUsers,
   taskOrder,
+  index,
+  moveCardHandler,
 }) => {
   const renderTaskColumn = async (newColumnId: string) => {
     dispatch(setLoading(true));
@@ -91,24 +93,60 @@ const Task: React.FC<IItem> = ({
       userId: userId,
       users: taskUsers,
     };
-    const response = await updateTaskColumn(boardId, columnId, taskId, data);
-    console.log(response);
+    await updateTaskColumn(boardId, columnId, taskId, data);
 
     dispatch(setLoading(false));
   };
 
   const dispatch = useAppDispatch();
 
+  const ref = useRef(null);
+
+  const [, drop] = useDrop({
+    accept: 'Our first type',
+    hover(item: { index: number }, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      const clientOffset = monitor.getClientOffset();
+
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      console.log(item);
+      console.log(dragIndex, hoverIndex);
+      moveCardHandler(dragIndex, hoverIndex);
+
+      item.index = hoverIndex;
+    },
+  });
+
   const [{ isDragging }, drag] = useDrag({
     type: 'Our first type',
     item: { name: taskTitle, type: 'Our first type' },
     end: (item, monitor: DragSourceMonitor) => {
       const dropResult: { name: string } = monitor.getDropResult();
-      console.log(`Drop result`, dropResult);
       if (dropResult.name === columnId) {
-        console.log('1 column', columnId);
+        return;
       } else {
-        console.log('2 column', dropResult.name);
         renderTaskColumn(dropResult.name);
       }
     },
@@ -119,8 +157,10 @@ const Task: React.FC<IItem> = ({
 
   const opacity = isDragging ? 0.4 : 1;
 
+  drag(drop(ref));
+
   return (
-    <TaskItem className="movable-item" ref={drag} style={{ opacity }}>
+    <TaskItem className="movable-item" ref={ref} style={{ opacity }}>
       <TaskTitle>{taskTitle}</TaskTitle>
       <TaskDescription>{taskDescription}</TaskDescription>
       <TaskFooter>
