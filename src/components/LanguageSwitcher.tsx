@@ -1,64 +1,47 @@
 import LanguageIcon from '@mui/icons-material/Language';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Button, FormControl, MenuItem, Select } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n';
 import { availableLanguages } from '../utils/i18n';
 
-const LangSwitcher = () => {
-  const [item, setItem] = useState<null | HTMLElement>(null);
-  const [lang, setLang] = useState<string>('EN');
-  const open = Boolean(item);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setItem(event.currentTarget);
-  };
+const LangSwitcher: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+
   const { t, i18n } = useTranslation();
 
-  const handleClose = () => {
-    setItem(null);
-  };
-
-  // const handleCloseEn = () => {
-  //   setItem(null);
-  //   setLang('EN');
-  // };
-
-  // const handleCloseRu = () => {
-  //   setItem(null);
-  //   setLang('RU');
-  // };
-
   return (
-    <div>
+    <>
       <Button
         id="basic-button"
+        sx={{ position: 'absolute', zIndex: 100, ml: '10px' }}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         color="inherit"
         startIcon={<LanguageIcon />}
-        onClick={handleClick}
+        onClick={handleOpen}
       >
-        {lang}
+        {i18n.language}
       </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={item}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        {/* <MenuItem onClick={handleCloseEn}>EN</MenuItem>
-        <MenuItem onClick={handleCloseRu}>RU</MenuItem> */}
-        <select defaultValue={i18n.language} onChange={(e) => i18n.changeLanguage(e.target.value)}>
+      <FormControl sx={{ minWidth: 120 }}>
+        <Select
+          id="basic-select"
+          open={open}
+          onClose={handleClose}
+          value=""
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+        >
           {availableLanguages.map((language) => (
-            <option key={language}>{language}</option>
+            <MenuItem value={language} key={language}>
+              {language}
+            </MenuItem>
           ))}
-        </select>
-      </Menu>
-    </div>
+        </Select>
+      </FormControl>
+    </>
   );
 };
 

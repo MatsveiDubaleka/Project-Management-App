@@ -3,6 +3,8 @@ import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { IAddBoardForm, ITaskOutputData } from 'types/types';
 import { createTask, getTasks } from 'api/taskService';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 interface IModalTask {
   open: boolean;
@@ -29,6 +31,8 @@ const ModalWindow: FC<IModalTask> = ({
     reset,
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IAddBoardForm>();
+
+  const { t } = useTranslation();
 
   const onSubmit = handleSubmit(async (data) => {
     const inputData = {
@@ -62,7 +66,7 @@ const ModalWindow: FC<IModalTask> = ({
           fontWeight="bold"
           color="primary"
         >
-          ADD TASK
+          {t('addTask')}
         </Typography>
         <Box component="form" onSubmit={onSubmit}>
           <TextField
@@ -75,15 +79,15 @@ const ModalWindow: FC<IModalTask> = ({
             {...register('title', {
               required: {
                 value: true,
-                message: '*this field must be filled in',
+                message: t('thisFieldMustBe'),
               },
               minLength: {
                 value: 3,
-                message: '*at least 3 characters',
+                message: t('atLeast'),
               },
               maxLength: {
                 value: 30,
-                message: '*maximum of 30 characters',
+                message: t('maximum30'),
               },
             })}
           />
@@ -99,21 +103,21 @@ const ModalWindow: FC<IModalTask> = ({
             {...register('description', {
               required: {
                 value: true,
-                message: '*this field must be filled in',
+                message: t('thisFieldMustBe'),
               },
               maxLength: {
                 value: 500,
-                message: '*maximum of 500 characters',
+                message: t('maximum500'),
               },
             })}
           />
 
           <Box sx={{ display: 'flex' }}>
             <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-              SUBMIT
+              {t('submit')}
             </Button>
             <Button color="warning" onClick={() => handleClose()}>
-              CANCEL
+              {t('cancel')}
             </Button>
           </Box>
         </Box>

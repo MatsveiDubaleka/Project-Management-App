@@ -28,6 +28,8 @@ import { useForm } from 'react-hook-form';
 import { getColumns } from 'api/columnService';
 import columnSlice from 'store/slices/columnSlice';
 import taskSlice from 'store/slices/taskSlice';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const modalStyle = {
   position: 'absolute',
@@ -60,6 +62,8 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const [users, setUsers] = useState([]);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -156,17 +160,17 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
               variant="h5"
               component="h2"
             >
-              {'Confirm delete a task'}
+              {t('confirmDeleteTask')}
             </DialogTitle>
             <DialogContent sx={{ bgcolor: 'lightgray' }}>
-              <DialogContentText>Delete a task permanently?</DialogContentText>
+              <DialogContentText>{t('confirmDeleteTaskMessage')}</DialogContentText>
             </DialogContent>
             <DialogActions sx={{ bgcolor: 'lightgray' }}>
               <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
-                DELETE
+                {t('delete')}
               </Button>
               <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                CANCEL
+                {t('cancel')}
               </Button>
             </DialogActions>
           </Dialog>

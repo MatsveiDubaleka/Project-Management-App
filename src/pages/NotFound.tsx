@@ -1,11 +1,14 @@
 import React from 'react';
 import notFound from './../assets/img/error.png';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 export const NotFound = () => {
+  const { t } = useTranslation();
   return (
     <Wrapper>
-      Page not found: Error 404
+      {t('page404')}
       <div>
         <img src={notFound} alt="404" />
       </div>

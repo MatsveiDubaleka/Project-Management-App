@@ -111,7 +111,7 @@ export function Boards() {
           <Wrapper>
             <Container sx={{ paddingTop: 6 }}>
               {!store.isLoaded ? (
-                <Loader>Loading...</Loader>
+                <Loader>{t('loader')}</Loader>
               ) : (
                 <Grid container spacing={3}>
                   {Array.isArray(store.boards)

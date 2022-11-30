@@ -228,10 +228,10 @@ const BoardElement = ({
           </div>
           <div className="button-block">
             <button id="editBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              {t('boardEdit')}
+              {t('edit')}
             </button>
             <button id="deleteBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              {t('boardDelete')}
+              {t('delete')}
             </button>
           </div>
         </Board>
@@ -241,16 +241,16 @@ const BoardElement = ({
         onClose={handleClickClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{t('confirmDeleteBoard')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Delete a board permanently?</DialogContentText>
+          <DialogContentText>{t('confirmDeleteBoardMessage')}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
-            DELETE
+            {t('delete')}
           </Button>
           <Button variant="contained" autoFocus onClick={(e) => handleClickClose(e)}>
-            CANCEL
+            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -269,7 +269,7 @@ const BoardElement = ({
             fontWeight="bold"
             color="primary"
           >
-            EDIT BOARD
+            {t('editBoard')}
           </Typography>
           <Box component="form" onSubmit={editBoard}>
             <TextField
@@ -308,21 +308,21 @@ const BoardElement = ({
               {...register('description', {
                 required: {
                   value: true,
-                  message: '*this field must be filled in',
+                  message: t('thisFieldMustBe'),
                 },
                 maxLength: {
                   value: 500,
-                  message: '*maximum of 500 characters',
+                  message: t('maximum500'),
                 },
               })}
             />
 
             <Box sx={{ display: 'flex' }}>
               <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                SUBMIT
+                {t('submit')}
               </Button>
               <Button color="warning" onClick={(e) => handleClickClose(e)}>
-                CANCEL
+                {t('cancel')}
               </Button>
             </Box>
           </Box>

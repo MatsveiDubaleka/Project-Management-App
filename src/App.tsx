@@ -5,7 +5,7 @@ import LogIn from 'pages/LogIn';
 import { NotFound } from 'pages/NotFound';
 import { SignUp } from 'pages/SignUp';
 import { Welcome } from 'pages/Welcome';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken, setValidation } from 'store/slices/authSlice';
@@ -60,19 +60,17 @@ function App() {
     <div className="App">
       {isLoading ? (
         <>
-          <Suspense fallback="loading">
-            <GlobalStyle />
-            <Header />
-            <Routes>
-              <Route path="/" element={<Welcome />} />
-              <Route path="/login" element={<LogIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/boards" element={<Boards />} />
-              <Route path="*" element={<NotFound />} />
-              <Route path="/bord_:index" element={<BoardPage />} />
-            </Routes>
-            <Footer />
-          </Suspense>
+          <GlobalStyle />
+          <Header />
+          <Routes>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/boards" element={<Boards />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/bord_:index" element={<BoardPage />} />
+          </Routes>
+          <Footer />
         </>
       ) : (
         <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />
