@@ -122,52 +122,6 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
     drop: () => ({ name: columnId }),
   });
 
-  const returnItemsForColumn = (columnId: string) => {
-    const tasks = taskList.filter((task) => task.columnId === columnId);
-    return [...tasks].map((task, i) => {
-      return (
-        <>
-          <Task
-            key={i}
-            taskTitle={task.title}
-            taskDescription={task.description}
-            columnId={task.columnId}
-            taskUsers={task.users}
-            userId={
-              users.find((user) => user._id === task.userId)
-                ? users.find((user) => user._id === task.userId).name
-                : ''
-            }
-            taskOrder={task.order}
-            taskId={task._id}
-            editItem={async () => handleClickEdit(task, task.userId)}
-            deleteItem={async () => handleClickDelete(task)}
-          />
-          <Dialog
-            open={modal === 'deleteTask' && open}
-            onClose={handleClose}
-            aria-labelledby="responsive-dialog-title"
-          >
-            <DialogTitle
-              sx={{ bgcolor: 'lightgray' }}
-              id="responsive-dialog-title"
-              variant="h5"
-              component="h2"
-            >
-              {t('confirmDeleteTask')}
-            </DialogTitle>
-            <DialogContent sx={{ bgcolor: 'lightgray' }}>
-              <DialogContentText>{t('confirmDeleteTaskMessage')}</DialogContentText>
-            </DialogContent>
-            <DialogActions sx={{ bgcolor: 'lightgray' }}>
-              <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
-                {t('delete')}
-              </Button>
-              <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                {t('cancel')}
-              </Button>
-            </DialogActions>
-          </Dialog>
   const moveCardHandler = async (dragIndex: number, hoverIndex: number) => {
     const dragItem = taskList[dragIndex];
 
@@ -219,7 +173,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   }
                   taskOrder={task.order}
                   taskId={task._id}
-                  editItem={async () => handleClickEdit(task, task.userId)} // Dont work user id
+                  editItem={async () => handleClickEdit(task, task.userId)}
                   deleteItem={async () => handleClickDelete(task)}
                   index={index}
                   moveCardHandler={moveCardHandler}
@@ -235,17 +189,17 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                     variant="h5"
                     component="h2"
                   >
-                    {'Confirm delete a task'}
+                    {t('confirmDeleteTask')}
                   </DialogTitle>
                   <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>Delete a task permanently?</DialogContentText>
+                    <DialogContentText>{t('confirmDeleteTaskMessage')}</DialogContentText>
                   </DialogContent>
                   <DialogActions sx={{ bgcolor: 'lightgray' }}>
                     <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
-                      DELETE
+                      {t('delete')}
                     </Button>
                     <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                      CANCEL
+                      {t('cancel')}
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -277,15 +231,15 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                         {...register('title', {
                           required: {
                             value: true,
-                            message: '*this field must be filled in',
+                            message: t('thisFieldMustBe'),
                           },
                           minLength: {
                             value: 3,
-                            message: '*at least 3 characters',
+                            message: t('atLeast'),
                           },
                           maxLength: {
                             value: 30,
-                            message: '*maximum of 30 characters',
+                            message: t('maximum30'),
                           },
                         })}
                       />
@@ -301,21 +255,21 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                         {...register('description', {
                           required: {
                             value: true,
-                            message: '*this field must be filled in',
+                            message: t('thisFieldMustBe'),
                           },
                           maxLength: {
                             value: 500,
-                            message: '*maximum of 500 characters',
+                            message: t('maximum500'),
                           },
                         })}
                       />
 
                       <Box sx={{ display: 'flex' }}>
                         <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                          SUBMIT
+                          {t('submit')}
                         </Button>
                         <Button color="warning" onClick={handleClose}>
-                          CANCEL
+                          {t('cancel')}
                         </Button>
                       </Box>
                     </Box>
