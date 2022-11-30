@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import LockPersonIcon from '@mui/icons-material/LockPerson';
 import LockIcon from '@mui/icons-material/Lock';
-
 import styled from 'styled-components';
 import { IAuthorizationResult, IFormInputs } from 'types/types';
 import { LOCAL_STORAGE_DATA, nameRegex, passwordRegex } from 'constants/registration';
@@ -11,6 +10,8 @@ import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setToken } from 'store/slices/authSlice';
 import { Navigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
+import '../utils/i18n';
+import { useTranslation } from 'react-i18next';
 
 interface IRegForm {
   type: string;
@@ -25,6 +26,8 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
     clearErrors,
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IFormInputs>();
+
+  const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
   const isValidated = useAppSelector((state) => state.auth.isValidated);
@@ -94,7 +97,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
 
         {type === 'signup' ? (
           <>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t('username')}</label>
             <input
               type="text"
               placeholder="Name"
@@ -102,15 +105,15 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
               {...register('name', {
                 required: {
                   value: true,
-                  message: '*this field must be filled in',
+                  message: t('thisFieldMustBe'),
                 },
                 minLength: {
                   value: 3,
-                  message: '*at least 3 characters',
+                  message: t('atLeast'),
                 },
                 maxLength: {
                   value: 30,
-                  message: '*maximum of 30 characters',
+                  message: t('maximum30'),
                 },
               })}
             />
@@ -119,7 +122,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
         {type === 'signup' ? errors.name && <Tip>{errors.name.message}</Tip> : null}
 
         <label htmlFor="login">
-          Login
+          {t('login')}
           {type === 'signup'
             ? errors.exist && <span style={{ color: 'red' }}>{errors.exist.message}</span>
             : null}
@@ -132,25 +135,25 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             onChange: () => clearErrors('exist'),
             required: {
               value: true,
-              message: '*this field must be filled in',
+              message: t('thisFieldMustBe'),
             },
             minLength: {
               value: 3,
-              message: '*at least 3 characters',
+              message: t('atLeast'),
             },
             maxLength: {
               value: 30,
-              message: '*maximum of 30 characters',
+              message: t('maximum30'),
             },
             pattern: {
               value: nameRegex,
-              message: '*login must contain only Latin characters',
+              message: t('latin'),
             },
           })}
         />
         {errors.login && <Tip>{errors.login.message}</Tip>}
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">{t('password')}</label>
         <input
           type="password"
           placeholder="Password"
@@ -159,20 +162,19 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             onChange: () => clearErrors('wrong'),
             required: {
               value: true,
-              message: '*this field must be filled in',
+              message: t('thisFieldMustBe'),
             },
             pattern: {
               value: passwordRegex,
-              message:
-                '*at least one number, one letter (latin only) and one character such as !@#$%',
+              message: t('oneNumberOneLetter'),
             },
             minLength: {
               value: 8,
-              message: '*at least 8 characters',
+              message: t('atLeastPassword'),
             },
             maxLength: {
               value: 30,
-              message: '*maximum of 30 characters',
+              message: t('maximum30'),
             },
           })}
         />
@@ -183,9 +185,9 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
         {errors.password && <Tip>{errors.password.message}</Tip>}
         {!isLoading ? (
           type === 'signup' ? (
-            <button>Sign Up</button>
+            <button>{t('signup')}</button>
           ) : (
-            <button>Log In</button>
+            <button>{t('signin')}</button>
           )
         ) : (
           <CircularProgress sx={{ alignSelf: 'center' }} />

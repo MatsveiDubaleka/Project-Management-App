@@ -20,6 +20,8 @@ import { getAllUsers } from 'api/usersServices';
 import { useDrop } from 'react-dnd';
 import { useForm } from 'react-hook-form';
 import taskSlice from 'store/slices/taskSlice';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const modalStyle = {
   position: 'absolute',
@@ -52,6 +54,8 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const [users, setUsers] = useState([]);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -118,6 +122,52 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
     drop: () => ({ name: columnId }),
   });
 
+  const returnItemsForColumn = (columnId: string) => {
+    const tasks = taskList.filter((task) => task.columnId === columnId);
+    return [...tasks].map((task, i) => {
+      return (
+        <>
+          <Task
+            key={i}
+            taskTitle={task.title}
+            taskDescription={task.description}
+            columnId={task.columnId}
+            taskUsers={task.users}
+            userId={
+              users.find((user) => user._id === task.userId)
+                ? users.find((user) => user._id === task.userId).name
+                : ''
+            }
+            taskOrder={task.order}
+            taskId={task._id}
+            editItem={async () => handleClickEdit(task, task.userId)}
+            deleteItem={async () => handleClickDelete(task)}
+          />
+          <Dialog
+            open={modal === 'deleteTask' && open}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle
+              sx={{ bgcolor: 'lightgray' }}
+              id="responsive-dialog-title"
+              variant="h5"
+              component="h2"
+            >
+              {t('confirmDeleteTask')}
+            </DialogTitle>
+            <DialogContent sx={{ bgcolor: 'lightgray' }}>
+              <DialogContentText>{t('confirmDeleteTaskMessage')}</DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{ bgcolor: 'lightgray' }}>
+              <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
+                {t('delete')}
+              </Button>
+              <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                {t('cancel')}
+              </Button>
+            </DialogActions>
+          </Dialog>
   const moveCardHandler = async (dragIndex: number, hoverIndex: number) => {
     const dragItem = taskList[dragIndex];
 

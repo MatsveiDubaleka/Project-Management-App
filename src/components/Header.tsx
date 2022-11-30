@@ -18,6 +18,8 @@ import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
 import { IAddBoardForm, IBoardsOfUser } from 'types/types';
 import Navigation from '../constants/navigation';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
@@ -31,6 +33,8 @@ function Header() {
     threshold: 1,
     disableHysteresis: true,
   });
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -75,18 +79,18 @@ function Header() {
           <RegisterBlock>
             <Link to="/" end>
               <HomeIcon />
-              Home
+              {t('home')}
             </Link>
             {isValidated ? (
               <>
                 {' '}
                 <Link to="/boards">
                   <TableChartIcon />
-                  Boards
+                  {t('titleBoardsPage')}
                 </Link>
                 <Link to="#" onClick={handleOpen}>
                   <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
-                  Add Board
+                  {t('addBoard')}
                 </Link>
               </>
             ) : null}
@@ -100,22 +104,22 @@ function Header() {
               <>
                 <Link to="/boards">
                   <HomeIcon />
-                  Go to Main Page
+                  {t('goToMain')}
                 </Link>
                 <Link to="/" onClick={handleClickLogOut}>
                   <LogoutIcon />
-                  Log Out
+                  {t('logout')}
                 </Link>
               </>
             ) : (
               <>
                 <Link to="logIn">
                   <LoginIcon />
-                  Login
+                  {t('login')}
                 </Link>
                 <Link to="signUp">
                   <HowToRegIcon />
-                  Sign Up
+                  {t('signup')}
                 </Link>
               </>
             )}
@@ -139,7 +143,7 @@ function Header() {
             fontWeight="bold"
             color="primary"
           >
-            ADD BOARD
+            {t('addBoard')}
           </Typography>
           <Box component="form" onSubmit={onSubmit}>
             <TextField
@@ -152,15 +156,15 @@ function Header() {
               {...register('title', {
                 required: {
                   value: true,
-                  message: '*title must be filled in',
+                  message: t('thisFieldMustBe'),
                 },
                 minLength: {
                   value: 3,
-                  message: '*at least 3 characters',
+                  message: t('atLeast'),
                 },
                 maxLength: {
                   value: 30,
-                  message: '*maximum of 30 characters',
+                  message: t('maximum30'),
                 },
               })}
             />
@@ -177,11 +181,11 @@ function Header() {
               {...register('description', {
                 required: {
                   value: true,
-                  message: '*description must be filled in',
+                  message: t('thisFieldMustBe'),
                 },
                 maxLength: {
                   value: 500,
-                  message: '*maximum of 500 characters',
+                  message: t('maximum500'),
                 },
               })}
             />
@@ -191,10 +195,10 @@ function Header() {
 
             <Box sx={{ display: 'flex' }}>
               <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                SUBMIT
+                {t('submit')}
               </Button>
               <Button color="warning" onClick={() => handleClose()}>
-                CANCEL
+                {t('cancel')}
               </Button>
             </Box>
           </Box>

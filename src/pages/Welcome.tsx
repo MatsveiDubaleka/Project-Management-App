@@ -1,59 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
 import kanban from '../assets/img/kanban.png';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 export function Welcome() {
+  const { t } = useTranslation();
   return (
     <main>
       <RowContainer>
         <KunbanImg src={kanban} alt="kunban" />
         <ColumnContainer>
-          <Title>Kankan - secret Jedi techniques</Title>
-          <Paragraph>
-            Manage workflows and team interactions at a professional level. Reach new heights of
-            productivity with application Kankan.
-          </Paragraph>
+          <Title>{t('kankanTitle1')}</Title>
+          <Paragraph>{t('kankanParagraph1')}</Paragraph>
         </ColumnContainer>
       </RowContainer>
       <RowContainer>
         <ColumnContainer>
-          <Title>What is Kankan?</Title>
-          <Paragraph>
-            KanKan is a simple Kanban board application. Its also an application that helps a team
-            or group of developers achieve their goals.
-          </Paragraph>
+          <Title>{t('kankanTitle2')}</Title>
+          <Paragraph>{t('kankanParagraph2')}</Paragraph>
         </ColumnContainer>
         <ColumnContainer>
-          <Title>Why Kankan?</Title>
-          <Paragraph>
-            Kankan is the best way to organize your teams work. Its simple, powerful, and flexible.
-            Its the best way to manage your projects, your team, and your work.
-          </Paragraph>
+          <Title>{t('kankanTitle3')}</Title>
+          <Paragraph>{t('kankanParagraph3')}</Paragraph>
         </ColumnContainer>
       </RowContainer>
       <RowContainer>
         <ColumnContainer>
-          <Title>How to use Kankan?</Title>
-          <Paragraph>
-            Kankan is easy to use. At first you need to Sign up. After you can just create a new
-            board, add some columns, and start adding cards.
-          </Paragraph>
+          <Title>{t('kankanTitle4')}</Title>
+          <Paragraph>{t('kankanParagraph4')}</Paragraph>
         </ColumnContainer>
       </RowContainer>
       <RowContainer>
         <ColumnContainer>
-          <Title>Course</Title>
-          <Paragraph>
-            We are a team of Front-end Developers. We are studying in The Rolling Scopes School, and
-            we are learning React library. You can follow this course using link in Footer.
-          </Paragraph>
+          <Title>{t('kankanTitle5')}</Title>
+          <Paragraph>{t('kankanParagraph5')}</Paragraph>
         </ColumnContainer>
         <ColumnContainer>
-          <Title>Our Team</Title>
-          <Paragraph>
-            We are a team of Front-end Developers. We are studying in The Rolling Scopes School, and
-            we are learning React library. Our consists of 3 members: Pasha, Alexander and Matsvei.
-          </Paragraph>
+          <Title>{t('kankanTitle6')}</Title>
+          <Paragraph>{t('kankanParagraph6')}</Paragraph>
         </ColumnContainer>
       </RowContainer>
       <RowContainer></RowContainer>

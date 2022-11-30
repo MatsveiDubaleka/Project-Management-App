@@ -30,6 +30,8 @@ import columnSlice from 'store/slices/columnSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { setBoards, setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const BoardItem = styled.div`
   min-height: max-content;
@@ -96,6 +98,8 @@ const BoardPage = () => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -199,7 +203,7 @@ const BoardPage = () => {
                   startIcon={<PageviewIcon />}
                   color="warning"
                 >
-                  Description
+                  {t('boardDescription')}
                 </Button>
                 <ButtonGroup>
                   <Button
@@ -209,7 +213,7 @@ const BoardPage = () => {
                     color="warning"
                     onClick={(e) => handleClickOpen(e)}
                   >
-                    Edit
+                    {t('edit')}
                   </Button>
                   <Button
                     id="deleteBoard"
@@ -218,7 +222,7 @@ const BoardPage = () => {
                     color="warning"
                     onClick={(e) => handleClickOpen(e)}
                   >
-                    Delete
+                    {t('delete')}
                   </Button>
                 </ButtonGroup>
                 <Button
@@ -228,7 +232,7 @@ const BoardPage = () => {
                   color="warning"
                   onClick={(e) => handleClickOpen(e)}
                 >
-                  Add List
+                  {t('addList')}
                 </Button>
               </Box>
               <ColumnsList boardId={boardData._id} token={token} />
@@ -249,7 +253,7 @@ const BoardPage = () => {
               fontWeight="bold"
               color="primary"
             >
-              ADD LIST
+              {t('addList')}
             </Typography>
             <Box component="form" onSubmit={onSubmit}>
               <TextField
@@ -262,15 +266,15 @@ const BoardPage = () => {
                 {...register('title', {
                   required: {
                     value: true,
-                    message: '*this field must be filled in',
+                    message: t('thisFieldMustBe'),
                   },
                   minLength: {
                     value: 3,
-                    message: '*at least 3 characters',
+                    message: t('atList'),
                   },
                   maxLength: {
                     value: 30,
-                    message: '*maximum of 30 characters',
+                    message: t('maximum30'),
                   },
                 })}
               />
@@ -286,11 +290,11 @@ const BoardPage = () => {
                 {...register('description', {
                   required: {
                     value: true,
-                    message: '*this field must be filled in',
+                    message: t('thisFieldMustBe'),
                   },
                   maxLength: {
                     value: 500,
-                    message: '*maximum of 500 characters',
+                    message: t('maximum500'),
                   },
                 })}
               />
@@ -301,10 +305,10 @@ const BoardPage = () => {
                   ' '
                 )}
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                  SUBMIT
+                  {t('submit')}
                 </Button>
                 <Button color="warning" onClick={() => handleClose()}>
-                  CANCEL
+                  {t('cancel')}
                 </Button>
               </Box>
             </Box>
@@ -319,7 +323,7 @@ const BoardPage = () => {
         >
           <Box sx={modalStyle}>
             <Typography id="modal-modal-title" variant="h4" component="h2">
-              BOARD
+              {t('titleBoard')}
             </Typography>
             <Typography id="modal-modal-subtitle" variant="h6">
               <div>{boardData.title}</div>
@@ -341,17 +345,17 @@ const BoardPage = () => {
             variant="h5"
             component="h2"
           >
-            {'Confirm delete a board'}
+            {t('confirmDeleteBoard')}
           </DialogTitle>
           <DialogContent sx={{ bgcolor: 'lightgray' }}>
-            <DialogContentText>Delete a board permanently?</DialogContentText>
+            <DialogContentText>{t('confirmDeleteBoardMessage')}</DialogContentText>
           </DialogContent>
           <DialogActions sx={{ bgcolor: 'lightgray' }}>
             <Button variant="contained" onClick={handleDelete} autoFocus>
-              DELETE
+              {t('delete')}
             </Button>
             <Button color="warning" variant="contained" autoFocus onClick={handleClickClose}>
-              CANCEL
+              {t('cancel')}
             </Button>
           </DialogActions>
         </Dialog>
@@ -370,7 +374,7 @@ const BoardPage = () => {
               fontWeight="bold"
               color="primary"
             >
-              EDIT BOARD
+              {t('editBoard')}
             </Typography>
             <Box id="edit" component="form" onSubmit={editBoard}>
               <TextField
@@ -384,15 +388,15 @@ const BoardPage = () => {
                 {...register('title', {
                   required: {
                     value: true,
-                    message: '*this field must be filled in',
+                    message: t('thisFieldMustBe'),
                   },
                   minLength: {
                     value: 3,
-                    message: '*at least 3 characters',
+                    message: t('atLeast'),
                   },
                   maxLength: {
                     value: 30,
-                    message: '*maximum of 30 characters',
+                    message: t('maximum30'),
                   },
                 })}
               />
@@ -409,21 +413,21 @@ const BoardPage = () => {
                 {...register('description', {
                   required: {
                     value: true,
-                    message: '*this field must be filled in',
+                    message: t('thisFieldMustBe'),
                   },
                   maxLength: {
                     value: 500,
-                    message: '*maximum of 500 characters',
+                    message: t('maximum500'),
                   },
                 })}
               />
 
               <Box sx={{ display: 'flex' }}>
                 <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                  SUBMIT
+                  {t('submit')}
                 </Button>
                 <Button color="warning" onClick={() => handleClickClose()}>
-                  CANCEL
+                  {t('cancel')}
                 </Button>
               </Box>
             </Box>

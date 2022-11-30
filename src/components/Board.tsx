@@ -16,6 +16,8 @@ import { Box, Modal, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { NavLink } from 'react-router-dom';
 import { Endpoint } from 'constants/endpoints';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const Board = styled.div`
   cursor: pointer;
@@ -143,6 +145,8 @@ const BoardElement = ({
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -215,17 +219,19 @@ const BoardElement = ({
         <Board id={_id}>
           <h3 className="board-title">{title}</h3>
           <div className="info">
-            <div className="description-title">Description</div>
+            <div className="description-title">{t('boardDescription')}</div>
             <div className="description">{description}</div>
-            <div className="owner">Owner: {owner}</div>
+            <div className="owner">
+              {t('boardOwner')}: {owner}
+            </div>
             <div className="users">{users}</div>
           </div>
           <div className="button-block">
             <button id="editBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              Change
+              {t('edit')}
             </button>
             <button id="deleteBoardOnBoardPage" onClick={(e) => handleClickOpen(e)}>
-              Delete
+              {t('delete')}
             </button>
           </div>
         </Board>
@@ -235,16 +241,16 @@ const BoardElement = ({
         onClose={handleClickClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{'Confirm delete a board'}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{t('confirmDeleteBoard')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Delete a board permanently?</DialogContentText>
+          <DialogContentText>{t('confirmDeleteBoardMessage')}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={(e) => handleDelete(e)} autoFocus>
-            DELETE
+            {t('delete')}
           </Button>
           <Button variant="contained" autoFocus onClick={(e) => handleClickClose(e)}>
-            CANCEL
+            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -263,7 +269,7 @@ const BoardElement = ({
             fontWeight="bold"
             color="primary"
           >
-            EDIT BOARD
+            {t('editBoard')}
           </Typography>
           <Box component="form" onSubmit={editBoard}>
             <TextField
@@ -302,21 +308,21 @@ const BoardElement = ({
               {...register('description', {
                 required: {
                   value: true,
-                  message: '*this field must be filled in',
+                  message: t('thisFieldMustBe'),
                 },
                 maxLength: {
                   value: 500,
-                  message: '*maximum of 500 characters',
+                  message: t('maximum500'),
                 },
               })}
             />
 
             <Box sx={{ display: 'flex' }}>
               <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                SUBMIT
+                {t('submit')}
               </Button>
               <Button color="warning" onClick={(e) => handleClickClose(e)}>
-                CANCEL
+                {t('cancel')}
               </Button>
             </Box>
           </Box>

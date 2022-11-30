@@ -9,6 +9,8 @@ import { setBoards, setIsLoaded } from 'store/slices/authSlice';
 import { IBoardsOfUser } from 'types/types';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { getAllUsers } from 'api/usersServices';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 export const BoardBackground = styled.div`
   margin: 0 auto;
@@ -77,6 +79,8 @@ export function Boards() {
 
   const store = useAppSelector((state) => state.auth);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     async function dispatchBoards() {
       const data: IBoardsOfUser[] = await getAllBoardsOfServer(token);
@@ -97,7 +101,7 @@ export function Boards() {
   return (
     <>
       <main>
-        <Title>Boards</Title>
+        <Title>{t('titleBoardsPage')}</Title>
         <BoardBackground>
           <div className="background">
             {Array.from(Array(4)).map((_, index) => (
@@ -107,7 +111,7 @@ export function Boards() {
           <Wrapper>
             <Container sx={{ paddingTop: 6 }}>
               {!store.isLoaded ? (
-                <Loader>Loading...</Loader>
+                <Loader>{t('loader')}</Loader>
               ) : (
                 <Grid container spacing={3}>
                   {Array.isArray(store.boards)

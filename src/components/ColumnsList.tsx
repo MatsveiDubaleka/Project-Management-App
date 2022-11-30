@@ -22,6 +22,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const modalStyle = {
   position: 'absolute',
@@ -51,6 +53,8 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -121,10 +125,10 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                     variant="h5"
                     component="h2"
                   >
-                    {'Confirm delete a column'}
+                    {t('confirmDeleteColumn')}
                   </DialogTitle>
                   <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>Delete a column permanently?</DialogContentText>
+                    <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
                   </DialogContent>
                   <DialogActions sx={{ bgcolor: 'lightgray' }}>
                     <Button
@@ -132,10 +136,10 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                       onClick={() => handleDeleteColumn(column._id)}
                       autoFocus
                     >
-                      DELETE
+                      {t('delete')}
                     </Button>
                     <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                      CANCEL
+                      {t('cancel')}
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -154,7 +158,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                       fontWeight="bold"
                       color="primary"
                     >
-                      EDIT COLUMN
+                      {t('editColumn')}
                     </Typography>
                     <Box component="form" onSubmit={handleEditColumn}>
                       <TextField
@@ -167,25 +171,25 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                         {...register('title', {
                           required: {
                             value: true,
-                            message: '*this field must be filled in',
+                            message: t('thisFieldMustBe'),
                           },
                           minLength: {
                             value: 3,
-                            message: '*at least 3 characters',
+                            message: t('atLeast'),
                           },
                           maxLength: {
                             value: 30,
-                            message: '*maximum of 30 characters',
+                            message: t('maximum30'),
                           },
                         })}
                       />
 
                       <Box sx={{ display: 'flex' }}>
                         <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                          SUBMIT
+                          {t('submit')}
                         </Button>
                         <Button color="warning" onClick={handleClose}>
-                          CANCEL
+                          {t('cancel')}
                         </Button>
                       </Box>
                     </Box>
@@ -195,7 +199,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
             );
           })
         ) : (
-          'The board does not have lists yet'
+          t('notHaveLists')
         )}
       </DndProvider>
     </Box>

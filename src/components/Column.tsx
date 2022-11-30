@@ -11,6 +11,8 @@ import ModalWindow from './Modal';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { useDrop } from 'react-dnd';
 import { DropTargetMonitor } from 'react-dnd/dist/types';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const ColumnItem = styled.div`
   cursor: pointer;
@@ -65,7 +67,6 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, e
   const userId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))._id;
   const token = useAppSelector((state) => state.auth.token);
   const [taskList, setTaskList] = useState([]);
-
   const [open, setOpen] = useState(false);
   const [clickedButtonId, setClickedButtonId] = useState('');
   const handleClose = () => setOpen(false);
@@ -73,6 +74,8 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, e
     setOpen(true);
     setClickedButtonId(e.currentTarget.id);
   };
+
+  const { t } = useTranslation();
 
   return (
     <ColumnItem>
@@ -92,7 +95,7 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, e
       />
       <Button id={columnId} onClick={(e) => handleOpen(e)}>
         <AddIcon />
-        Add Task
+        {t('addTask')}
       </Button>
       <ModalWindow
         open={open}
