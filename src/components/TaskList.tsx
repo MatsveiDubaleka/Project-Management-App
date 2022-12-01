@@ -218,7 +218,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                       fontWeight="bold"
                       color="primary"
                     >
-                      EDIT TASK
+                      {t('editTask')}
                     </Typography>
                     <Box component="form" onSubmit={handleEditTask}>
                       <TextField
