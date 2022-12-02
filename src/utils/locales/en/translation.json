@@ -48,7 +48,8 @@
     "atLeastPassword": "*at least 8 characters",
     "signup": "Sign Up",
     "signin": "Sign In",
-    "login": "Log In",
+    "login": "Login",
+    "logIn": "Log In",
     "logout": "Log Out"
   }
 }

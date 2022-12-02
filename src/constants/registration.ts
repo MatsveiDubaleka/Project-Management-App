@@ -1,4 +1,4 @@
-export const API_URL = 'https://projectmanagementappbackend.herokuapp.com';
+export const API_URL = 'https://project-management-app-production.up.railway.app';
 
 export const nameRegex = /^[a-zA-Z]+$/;
 

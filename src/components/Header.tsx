@@ -115,7 +115,7 @@ function Header() {
               <>
                 <Link to="logIn">
                   <LoginIcon />
-                  {t('login')}
+                  {t('logIn')}
                 </Link>
                 <Link to="signUp">
                   <HowToRegIcon />
