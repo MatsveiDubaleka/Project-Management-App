@@ -78,54 +78,59 @@ function Header() {
     <AppHeader style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
       <Wrapper style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
         <Navigator>
-          <RegisterBlock>
-            <Link to="/" end>
-              <HomeIcon />
-              {mediaTrigger ? t('home') : ''}
-            </Link>
-            {isValidated ? (
-              <>
-                {' '}
-                <Link to="/boards">
-                  <TableChartIcon />
-                  {mediaTrigger ? t('titleBoardsPage') : ''}
-                </Link>
-                <Link to="#" onClick={handleOpen}>
-                  <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
-                  {mediaTrigger ? t('addBoard') : ''}
-                </Link>
-              </>
-            ) : null}
-          </RegisterBlock>
-          <Logo>
-            <ViewKanbanIcon />
-            kanKan
-          </Logo>
-          <RegisterBlock>
-            {isValidated ? (
-              <>
-                <Link to="/boards">
-                  <HomeIcon />
-                  {mediaTrigger ? t('goToMain') : ''}
-                </Link>
-                <Link to="/" onClick={handleClickLogOut}>
-                  <LogoutIcon />
-                  {mediaTrigger ? t('logout') : ''}
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="logIn">
-                  <LoginIcon />
-                  {mediaTrigger ? t('logIn') : ''}
-                </Link>
-                <Link to="signUp">
-                  <HowToRegIcon />
-                  {mediaTrigger ? t('signup') : ''}
-                </Link>
-              </>
-            )}
-          </RegisterBlock>
+          <WrapperLeft>
+            <Logo>
+              <ViewKanbanIcon />
+              kanKan
+            </Logo>
+          </WrapperLeft>
+          <WrapperRight>
+            <RegisterBlock>
+              <Link to="/" end>
+                <HomeIcon />
+                {mediaTrigger ? t('home') : ''}
+              </Link>
+              {isValidated ? (
+                <>
+                  {' '}
+                  <Link to="/boards">
+                    <TableChartIcon />
+                    {mediaTrigger ? t('titleBoardsPage') : ''}
+                  </Link>
+                  <Link to="#" onClick={handleOpen}>
+                    <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
+                    {mediaTrigger ? t('addBoard') : ''}
+                  </Link>
+                </>
+              ) : null}
+            </RegisterBlock>
+
+            <RegisterBlock>
+              {isValidated ? (
+                <>
+                  <Link to="/boards">
+                    {mediaTrigger && <HomeIcon />}
+                    {mediaTrigger ? t('goToMain') : ''}
+                  </Link>
+                  <Link to="/" onClick={handleClickLogOut}>
+                    <LogoutIcon />
+                    {mediaTrigger ? t('logout') : ''}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="logIn">
+                    <LoginIcon />
+                    {mediaTrigger ? t('logIn') : ''}
+                  </Link>
+                  <Link to="signUp">
+                    <HowToRegIcon />
+                    {mediaTrigger ? t('signup') : ''}
+                  </Link>
+                </>
+              )}
+            </RegisterBlock>
+          </WrapperRight>
         </Navigator>
         <div className="box">
           <LanguageSwitcher />
@@ -250,11 +255,25 @@ const Wrapper = styled.div`
   color: #61dafb;
   height: max-content;
 `;
+const WrapperLeft = styled.div`
+  width: max-content;
+  display: flex;
+  justify-content: center;
+`;
+const WrapperRight = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 
 const RegisterBlock = styled.div`
   display: flex;
   gap: 25px;
   padding: 0 10px;
+  @media (max-width: 400px) {
+    gap: 10px;
+    padding: 0 0;
+  }
 `;
 
 const Logo = styled.div`
