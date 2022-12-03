@@ -18,6 +18,7 @@ import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
 import { IAddBoardForm, IBoardsOfUser } from 'types/types';
 import Navigation from '../constants/navigation';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -33,6 +34,7 @@ function Header() {
     threshold: 1,
     disableHysteresis: true,
   });
+  const mediaTrigger = useMediaQuery('(min-width: 768px)');
 
   const { t } = useTranslation();
 
@@ -76,54 +78,59 @@ function Header() {
     <AppHeader style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
       <Wrapper style={trigger ? { background: '#282c34', opacity: '0.95' } : null}>
         <Navigator>
-          <RegisterBlock>
-            <Link to="/" end>
-              <HomeIcon />
-              {t('home')}
-            </Link>
-            {isValidated ? (
-              <>
-                {' '}
-                <Link to="/boards">
-                  <TableChartIcon />
-                  {t('titleBoardsPage')}
-                </Link>
-                <Link to="#" onClick={handleOpen}>
-                  <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
-                  {t('addBoard')}
-                </Link>
-              </>
-            ) : null}
-          </RegisterBlock>
-          <Logo>
-            <ViewKanbanIcon />
-            kanKan
-          </Logo>
-          <RegisterBlock>
-            {isValidated ? (
-              <>
-                <Link to="/boards">
-                  <HomeIcon />
-                  {t('goToMain')}
-                </Link>
-                <Link to="/" onClick={handleClickLogOut}>
-                  <LogoutIcon />
-                  {t('logout')}
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="logIn">
-                  <LoginIcon />
-                  {t('logIn')}
-                </Link>
-                <Link to="signUp">
-                  <HowToRegIcon />
-                  {t('signup')}
-                </Link>
-              </>
-            )}
-          </RegisterBlock>
+          <WrapperLeft>
+            <Logo>
+              <ViewKanbanIcon />
+              kanKan
+            </Logo>
+          </WrapperLeft>
+          <WrapperRight>
+            <RegisterBlock>
+              <Link to="/" end>
+                <HomeIcon />
+                {mediaTrigger ? t('home') : ''}
+              </Link>
+              {isValidated ? (
+                <>
+                  {' '}
+                  <Link to="/boards">
+                    <TableChartIcon />
+                    {mediaTrigger ? t('titleBoardsPage') : ''}
+                  </Link>
+                  <Link to="#" onClick={handleOpen}>
+                    <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
+                    {mediaTrigger ? t('addBoard') : ''}
+                  </Link>
+                </>
+              ) : null}
+            </RegisterBlock>
+
+            <RegisterBlock>
+              {isValidated ? (
+                <>
+                  <Link to="/boards">
+                    {mediaTrigger && <HomeIcon />}
+                    {mediaTrigger ? t('goToMain') : ''}
+                  </Link>
+                  <Link to="/" onClick={handleClickLogOut}>
+                    <LogoutIcon />
+                    {mediaTrigger ? t('logout') : ''}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="logIn">
+                    <LoginIcon />
+                    {mediaTrigger ? t('logIn') : ''}
+                  </Link>
+                  <Link to="signUp">
+                    <HowToRegIcon />
+                    {mediaTrigger ? t('signup') : ''}
+                  </Link>
+                </>
+              )}
+            </RegisterBlock>
+          </WrapperRight>
         </Navigator>
         <div className="box">
           <LanguageSwitcher />
@@ -211,7 +218,7 @@ function Header() {
 const AppHeader = styled.header`
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 20000;
   box-shadow: 0px 3px 3px black;
   .box {
     display: flex;
@@ -227,6 +234,9 @@ const Navigator = styled.nav`
   justify-content: space-between;
   list-style: none;
   width: 1280px;
+  @media (max-width: 1280px) {
+    flex-wrap: wrap;
+  }
 `;
 const Link = styled(NavLink)`
   color: #61dafb;
@@ -243,13 +253,27 @@ const Wrapper = styled.div`
   gap: 20px;
   font-size: 1.25em;
   color: #61dafb;
-  height: 70px;
+  height: max-content;
+`;
+const WrapperLeft = styled.div`
+  width: max-content;
+  display: flex;
+  justify-content: center;
+`;
+const WrapperRight = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
 const RegisterBlock = styled.div`
   display: flex;
   gap: 25px;
   padding: 0 10px;
+  @media (max-width: 400px) {
+    gap: 10px;
+    padding: 0 0;
+  }
 `;
 
 const Logo = styled.div`
