@@ -106,7 +106,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const isMobile = window.innerWidth < 600;
 
   return (
-    <Box sx={boxStyles}}>
+    <Box sx={boxStyles}>
       <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         {isLoading ? (
           <CircularProgress />
