@@ -112,6 +112,6 @@ const Title = styled.p`
   @media (max-width: 470px) {
     flex-wrap: wrap;
     padding: 0px 100px;
-    font-size: 1.2em;
+    font-size: 1em;
   }
 `;
