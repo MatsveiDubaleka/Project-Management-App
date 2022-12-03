@@ -20,6 +20,7 @@ import { IBoardColumns, IItem } from 'types/types';
 import Column from './Column';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -102,9 +103,11 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
 
   useEffect(() => {}, [columns]);
 
+  const isMobile = window.innerWidth < 600;
+
   return (
-    <Box sx={boxStyles}>
-      <DndProvider backend={HTML5Backend}>
+    <Box sx={boxStyles}}>
+      <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         {isLoading ? (
           <CircularProgress />
         ) : columns.length > 0 ? (
