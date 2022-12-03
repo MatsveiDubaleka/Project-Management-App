@@ -49,6 +49,12 @@ const ColumnItem = styled.div`
     border-radius: 5px;
     cursor: pointer;
   }
+  @media (max-width: 1080px) {
+    width: 25vw;
+  }
+  @media (max-width: 800px) {
+    min-width: 100vw;
+  }
 `;
 
 const ColumnTitle = styled.div`

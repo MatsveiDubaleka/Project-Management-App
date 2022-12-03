@@ -22,6 +22,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -53,6 +54,11 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+  const mediaTrigger = useMediaQuery('(min-width: 800px)');
+
+  const boxStyles = mediaTrigger
+    ? { display: 'flex', gap: '10px' }
+    : { display: 'flex', gap: '10px', flexDirection: 'column' };
 
   const { t } = useTranslation();
 
@@ -97,7 +103,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   useEffect(() => {}, [columns]);
 
   return (
-    <Box sx={{ display: 'flex', gap: '10px' }}>
+    <Box sx={boxStyles}>
       <DndProvider backend={HTML5Backend}>
         {isLoading ? (
           <CircularProgress />
@@ -106,7 +112,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
             return (
               <>
                 <Column
-                  key={i}
+                  key={`column-${i}`}
                   boardId={column.boardId}
                   columnId={column._id}
                   columnTitle={column.title}
@@ -115,6 +121,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                   deleteItem={async () => handleClickDelete()}
                 />
                 <Dialog
+                  key={`deleteColumn-${i}`}
                   open={modal === 'deleteColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="responsive-dialog-title"
@@ -145,6 +152,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                 </Dialog>
 
                 <Modal
+                  key={`editColumn-${i}`}
                   open={modal === 'editColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"

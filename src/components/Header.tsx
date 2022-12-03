@@ -18,6 +18,7 @@ import { getAllUsers } from 'api/usersServices';
 import { addNewBoard, getAllBoardsOfServer } from 'api/boardsService';
 import { IAddBoardForm, IBoardsOfUser } from 'types/types';
 import Navigation from '../constants/navigation';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -33,6 +34,7 @@ function Header() {
     threshold: 1,
     disableHysteresis: true,
   });
+  const mediaTrigger = useMediaQuery('(min-width: 768px)');
 
   const { t } = useTranslation();
 
@@ -79,18 +81,18 @@ function Header() {
           <RegisterBlock>
             <Link to="/" end>
               <HomeIcon />
-              {t('home')}
+              {mediaTrigger ? t('home') : ''}
             </Link>
             {isValidated ? (
               <>
                 {' '}
                 <Link to="/boards">
                   <TableChartIcon />
-                  {t('titleBoardsPage')}
+                  {mediaTrigger ? t('titleBoardsPage') : ''}
                 </Link>
                 <Link to="#" onClick={handleOpen}>
                   <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
-                  {t('addBoard')}
+                  {mediaTrigger ? t('addBoard') : ''}
                 </Link>
               </>
             ) : null}
@@ -104,22 +106,22 @@ function Header() {
               <>
                 <Link to="/boards">
                   <HomeIcon />
-                  {t('goToMain')}
+                  {mediaTrigger ? t('goToMain') : ''}
                 </Link>
                 <Link to="/" onClick={handleClickLogOut}>
                   <LogoutIcon />
-                  {t('logout')}
+                  {mediaTrigger ? t('logout') : ''}
                 </Link>
               </>
             ) : (
               <>
                 <Link to="logIn">
                   <LoginIcon />
-                  {t('logIn')}
+                  {mediaTrigger ? t('logIn') : ''}
                 </Link>
                 <Link to="signUp">
                   <HowToRegIcon />
-                  {t('signup')}
+                  {mediaTrigger ? t('signup') : ''}
                 </Link>
               </>
             )}
@@ -211,7 +213,7 @@ function Header() {
 const AppHeader = styled.header`
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 20000;
   box-shadow: 0px 3px 3px black;
   .box {
     display: flex;
@@ -227,6 +229,9 @@ const Navigator = styled.nav`
   justify-content: space-between;
   list-style: none;
   width: 1280px;
+  @media (max-width: 1280px) {
+    flex-wrap: wrap;
+  }
 `;
 const Link = styled(NavLink)`
   color: #61dafb;
@@ -243,7 +248,7 @@ const Wrapper = styled.div`
   gap: 20px;
   font-size: 1.25em;
   color: #61dafb;
-  height: 70px;
+  height: max-content;
 `;
 
 const RegisterBlock = styled.div`

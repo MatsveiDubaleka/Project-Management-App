@@ -30,6 +30,7 @@ import columnSlice from 'store/slices/columnSlice';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { setBoards, setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -94,10 +95,20 @@ const BoardPage = () => {
   const token = useAppSelector((state) => state.auth.token);
   const storeBoards: IBoardsOfUser[] = useAppSelector((store) => store.auth.boards);
   const boardData: IBoardsOfUser = storeBoards.find((board) => board._id === index);
-  // const [modal, setModal] = useState('');
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+  const mediaTrigger = useMediaQuery('(min-width: 768px)');
+  const boardBoxStyles = mediaTrigger
+    ? { display: 'flex', gap: '10px', height: '2em' }
+    : {
+        display: 'flex',
+        gap: '10px',
+        width: '100vw',
+        height: 'max-content',
+        flexDirection: 'column',
+        alignItems: 'center',
+      };
 
   const { t } = useTranslation();
 
@@ -187,14 +198,15 @@ const BoardPage = () => {
     <>
       <BoardBackground>
         <div className="background">
-          {Array.from(Array(4)).map((_, index) => (
-            <div className="shape" key={index}></div>
-          ))}
+          {mediaTrigger ? <div className="shape"></div> : null}
+          {mediaTrigger ? <div className="shape"></div> : null}
+          {mediaTrigger ? <div className="shape"></div> : null}
+          {mediaTrigger ? <div className="shape"></div> : null}
         </div>
         <Wrapper>
           {boardData ? (
             <BoardItem id={boardData._id}>
-              <Box component="div" sx={{ display: 'flex', gap: '10px', height: '2em' }}>
+              <Box component="div" sx={boardBoxStyles}>
                 <h3 className="board-title">{boardData.title}</h3>
                 <Button
                   id="showDescription"
