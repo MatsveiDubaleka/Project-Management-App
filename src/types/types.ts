@@ -26,6 +26,7 @@ export interface IItem {
   order?: number;
   index?: number;
   moveCardHandler?: (dragIndex: number, hoverIndex: number) => void;
+  changeColumnOrder?: (dragColumnID: string, dropColumnID: string) => void;
 }
 export interface IFormInputs {
   name?: string;
