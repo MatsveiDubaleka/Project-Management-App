@@ -124,12 +124,13 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                   deleteItem={async () => handleClickDelete()}
                 />
                 <Dialog
-                  key={`deleteColumn${column._id}`}
+                  key={`DialogColumn${column._id}${i}`}
                   open={modal === 'deleteColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="responsive-dialog-title"
                 >
                   <DialogTitle
+                    key={`DialogTitleColumn${column._id}${i}`}
                     sx={{ bgcolor: 'lightgray' }}
                     id="responsive-dialog-title"
                     variant="h5"
@@ -137,32 +138,48 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                   >
                     {t('confirmDeleteColumn')}
                   </DialogTitle>
-                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
+                  <DialogContent
+                    key={`DialogContentColumn${column._id}${i}`}
+                    sx={{ bgcolor: 'lightgray' }}
+                  >
+                    <DialogContentText key={`DialogContentTextColumn${column._id}${i}`}>
+                      {t('confirmDeleteColumnMessage')}
+                    </DialogContentText>
                   </DialogContent>
-                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
+                  <DialogActions
+                    key={`DialogActionsColumn${column._id}${i}`}
+                    sx={{ bgcolor: 'lightgray' }}
+                  >
                     <Button
+                      key={`ButtonDeleteColumn${column._id}${i}`}
                       variant="contained"
                       onClick={() => handleDeleteColumn(column._id)}
                       autoFocus
                     >
                       {t('delete')}
                     </Button>
-                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                    <Button
+                      key={`ButtonCancelColumn${column._id}${i}`}
+                      color="warning"
+                      variant="contained"
+                      autoFocus
+                      onClick={handleClose}
+                    >
                       {t('cancel')}
                     </Button>
                   </DialogActions>
                 </Dialog>
 
                 <Modal
-                  key={`editColumn${column._id}`}
+                  key={`ModalColumn${column._id}${i}`}
                   open={modal === 'editColumn' && open}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
-                  <Box sx={modalStyle}>
+                  <Box key={`boxColumn${column._id}${i}`} sx={modalStyle}>
                     <Typography
+                      key={`TypographyColumn${column._id}${i}`}
                       id="modal-modal-title"
                       variant="h6"
                       component="h2"
@@ -171,8 +188,13 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                     >
                       {t('editColumn')}
                     </Typography>
-                    <Box component="form" onSubmit={handleEditColumn}>
+                    <Box
+                      key={`boxFormColumn${column._id}${i}`}
+                      component="form"
+                      onSubmit={handleEditColumn}
+                    >
                       <TextField
+                        key={`TextFieldColumn${column._id}${i}`}
                         margin="normal"
                         type="text"
                         placeholder="Title"
@@ -195,11 +217,20 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                         })}
                       />
 
-                      <Box sx={{ display: 'flex' }}>
-                        <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                      <Box key={`boxButtonsColumn${column._id}${i}`} sx={{ display: 'flex' }}>
+                        <Button
+                          key={`buttonSubmitColumn${column._id}${i}`}
+                          sx={{ ml: 'auto' }}
+                          color="primary"
+                          type="submit"
+                        >
                           {t('submit')}
                         </Button>
-                        <Button color="warning" onClick={handleClose}>
+                        <Button
+                          key={`buttonCancelColumn${column._id}${i}`}
+                          color="warning"
+                          onClick={handleClose}
+                        >
                           {t('cancel')}
                         </Button>
                       </Box>

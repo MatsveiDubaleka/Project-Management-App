@@ -179,12 +179,13 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   moveCardHandler={moveCardHandler}
                 />
                 <Dialog
-                  key={`deleteTask${task._id}`}
+                  key={`Dialog${task._id}${index}`}
                   open={modal === 'deleteTask' && open}
                   onClose={handleClose}
                   aria-labelledby="responsive-dialog-title"
                 >
                   <DialogTitle
+                    key={`DialogTitle${task._id}${index}`}
                     sx={{ bgcolor: 'lightgray' }}
                     id="responsive-dialog-title"
                     variant="h5"
@@ -192,28 +193,48 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   >
                     {t('confirmDeleteTask')}
                   </DialogTitle>
-                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>{t('confirmDeleteTaskMessage')}</DialogContentText>
+                  <DialogContent
+                    key={`DialogContent${task._id}${index}`}
+                    sx={{ bgcolor: 'lightgray' }}
+                  >
+                    <DialogContentText key={`DialogContentText${task._id}${index}`}>
+                      {t('confirmDeleteTaskMessage')}
+                    </DialogContentText>
                   </DialogContent>
-                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
-                    <Button variant="contained" onClick={() => handleDeleteTask()} autoFocus>
+                  <DialogActions
+                    key={`DialogActions${task._id}${index}`}
+                    sx={{ bgcolor: 'lightgray' }}
+                  >
+                    <Button
+                      key={`delete${task._id}${index}`}
+                      variant="contained"
+                      onClick={() => handleDeleteTask()}
+                      autoFocus
+                    >
                       {t('delete')}
                     </Button>
-                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                    <Button
+                      key={`cancel${task._id}${index}`}
+                      color="warning"
+                      variant="contained"
+                      autoFocus
+                      onClick={handleClose}
+                    >
                       {t('cancel')}
                     </Button>
                   </DialogActions>
                 </Dialog>
 
                 <Modal
-                  key={`editTask${task._id}`}
+                  key={`modalTask${task._id}${index}`}
                   open={modal === 'editTask' && open}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
-                  <Box sx={modalStyle}>
+                  <Box key={`modalBox${task._id}${index}`} sx={modalStyle}>
                     <Typography
+                      key={`modalTypography${task._id}${index}`}
                       id="modal-modal-title"
                       variant="h6"
                       component="h2"
@@ -222,8 +243,13 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                     >
                       {t('editTask')}
                     </Typography>
-                    <Box component="form" onSubmit={handleEditTask}>
+                    <Box
+                      key={`modalBoxForm${task._id}${index}`}
+                      component="form"
+                      onSubmit={handleEditTask}
+                    >
                       <TextField
+                        key={`modalTextFieldTitle${task._id}${index}`}
                         margin="normal"
                         type="text"
                         placeholder="Title"
@@ -246,6 +272,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                         })}
                       />
                       <TextField
+                        key={`modalTextFieldDesc${task._id}${index}`}
                         margin="normal"
                         type="text"
                         placeholder="Description"
@@ -266,11 +293,20 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                         })}
                       />
 
-                      <Box sx={{ display: 'flex' }}>
-                        <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                      <Box key={`modalBoxButt${task._id}${index}`} sx={{ display: 'flex' }}>
+                        <Button
+                          key={`modalButtonSubm${task._id}${index}`}
+                          sx={{ ml: 'auto' }}
+                          color="primary"
+                          type="submit"
+                        >
                           {t('submit')}
                         </Button>
-                        <Button color="warning" onClick={handleClose}>
+                        <Button
+                          key={`modalButtonCanc${task._id}${index}`}
+                          color="warning"
+                          onClick={handleClose}
+                        >
                           {t('cancel')}
                         </Button>
                       </Box>
