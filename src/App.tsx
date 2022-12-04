@@ -35,19 +35,11 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('rerender');
     checkTokenValidation().then((res) => {
       if (res) {
         const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)!);
         dispatch(setToken(data.token));
         dispatch(setValidation(true));
-      }
-
-      if (!res && location.pathname === '/boards') {
-        console.log(location.pathname);
-        navigate(Navigation.HOME);
-      } else if (location.pathname === ('/signUp' || '/login')) {
-        console.log('here');
       }
 
       setTimeout(() => {
