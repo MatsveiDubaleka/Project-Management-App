@@ -21,10 +21,13 @@ import Navigation from '../constants/navigation';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+interface IHeaderProp {
+  isValidated: boolean;
+}
 
-function Header() {
+function Header({ isValidated }: IHeaderProp) {
   const token = useAppSelector((state) => state.auth.token);
-  const isValidated = useAppSelector((state) => state.auth.isValidated);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -101,6 +104,10 @@ function Header() {
                     <AddchartIcon sx={{ transform: 'scaleY(-1)' }} />
                     {mediaTrigger ? t('addBoard') : ''}
                   </Link>
+                  <Link to="/profile">
+                    <AccountCircleIcon />
+                    Profile
+                  </Link>
                 </>
               ) : null}
             </RegisterBlock>
@@ -108,10 +115,7 @@ function Header() {
             <RegisterBlock>
               {isValidated ? (
                 <>
-                  <Link to="/boards">
-                    {mediaTrigger && <HomeIcon />}
-                    {mediaTrigger ? t('goToMain') : ''}
-                  </Link>
+                  <Link to="/boards">{mediaTrigger ? t('goToMain') : ''}</Link>
                   <Link to="/" onClick={handleClickLogOut}>
                     <LogoutIcon />
                     {mediaTrigger ? t('logout') : ''}

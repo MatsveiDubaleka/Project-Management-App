@@ -37,6 +37,7 @@ export interface IFormInputs {
 }
 
 export interface INewUserResponse {
+  [index: string]: string;
   _id: string;
   name: string;
   login: string;

@@ -16,6 +16,7 @@ import BoardPage from 'pages/BoardPage';
 import { checkTokenValidation } from 'api/checkTokenValidation';
 import { CircularProgress } from '@mui/material';
 import Navigation from 'constants/navigation';
+import Profile from 'pages/Profile';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -35,7 +36,6 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('rerender');
     checkTokenValidation().then((res) => {
       if (res) {
         const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)!);
@@ -46,8 +46,6 @@ function App() {
       if (!res && location.pathname === '/boards') {
         console.log(location.pathname);
         navigate(Navigation.HOME);
-      } else if (location.pathname === ('/signUp' || '/login')) {
-        console.log('here');
       }
 
       setTimeout(() => {
@@ -61,12 +59,13 @@ function App() {
       {isLoading ? (
         <>
           <GlobalStyle />
-          <Header />
+          <Header isValidated={isValidated} />
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/boards" element={<Boards />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/bord_:index" element={<BoardPage />} />
           </Routes>

@@ -7,4 +7,5 @@ export enum Endpoint {
   TASKS = '/tasks',
   USERS = '/users',
   HOME = '/',
+  PROFILE = '/profile',
 }

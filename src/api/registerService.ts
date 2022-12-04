@@ -34,6 +34,7 @@ export async function getAllBoardOfUser(
 export async function createUser(newuser: IFormInputs): Promise<INewUserResponse | undefined> {
   const response = await fetch(`${API_URL}${Endpoint.SIGN_UP}`, {
     method: 'POST',
+    mode: 'no-cors',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',

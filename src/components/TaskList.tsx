@@ -47,7 +47,6 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const modal: string = useAppSelector((store) => store.auth.modal);
   const tasks: IBoardColumns[] = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
-  const [taskId, setTaskId] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [currentTask, setCurrentTask] = useState('');
   const [open, setOpen] = useState(false);
