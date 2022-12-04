@@ -22,12 +22,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-interface IHeaderProp {
-  isValidated: boolean;
-}
 
-function Header({ isValidated }: IHeaderProp) {
+function Header() {
   const token = useAppSelector((state) => state.auth.token);
+  const isValidated = useAppSelector((state) => state.auth.isValidated);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
