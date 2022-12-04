@@ -9,8 +9,8 @@ import TaskList from './TaskList';
 import { useAppSelector } from 'store/hook';
 import ModalWindow from './Modal';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
-import { useDrop } from 'react-dnd';
-import { DropTargetMonitor } from 'react-dnd/dist/types';
+import { useDrag, useDrop } from 'react-dnd';
+import { DragSourceMonitor, DropTargetMonitor } from 'react-dnd/dist/types';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -63,7 +63,14 @@ const ColumnTitle = styled.div`
   padding: 0 5px;
 `;
 
-const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, editItem }) => {
+const Column: React.FC<IItem> = ({
+  boardId,
+  columnId,
+  columnTitle,
+  deleteItem,
+  editItem,
+  changeColumnOrder,
+}) => {
   const userId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))._id;
   const token = useAppSelector((state) => state.auth.token);
   const [taskList, setTaskList] = useState([]);
@@ -77,8 +84,21 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, e
 
   const { t } = useTranslation();
 
+  const [{ isDragging }, drag] = useDrag({
+    type: 'Our second type',
+    end: (item, monitor: DragSourceMonitor) => {
+      const dropResult: { name: string } = monitor.getDropResult();
+      changeColumnOrder(columnId, dropResult.name);
+    },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0.7 : 1;
+
   return (
-    <ColumnItem>
+    <ColumnItem ref={drag} style={{ opacity }}>
       <ColumnTitle>
         {columnTitle}
         <div>
