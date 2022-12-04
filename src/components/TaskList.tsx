@@ -161,7 +161,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
             return (
               <>
                 <Task
-                  key={`task-${index}`}
+                  key={`task${task._id}`}
                   taskTitle={task.title}
                   taskDescription={task.description}
                   columnId={task.columnId}
@@ -179,7 +179,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   moveCardHandler={moveCardHandler}
                 />
                 <Dialog
-                  key={`deleteTask-${index}`}
+                  key={`deleteTask${task._id}`}
                   open={modal === 'deleteTask' && open}
                   onClose={handleClose}
                   aria-labelledby="responsive-dialog-title"
@@ -206,7 +206,7 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                 </Dialog>
 
                 <Modal
-                  key={`editTask-${index}`}
+                  key={`editTask${task._id}`}
                   open={modal === 'editTask' && open}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"

@@ -120,7 +120,7 @@ export function Boards() {
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
                         <Grid item xs={12} md={3} sm={6} key={index}>
                           <BoardElement
-                            key={`board-${index}`}
+                            key={`board${board._id}`}
                             _id={board._id}
                             title={board.title}
                             description={board.description}
