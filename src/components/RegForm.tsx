@@ -7,13 +7,14 @@ import { IAuthorizationResult, IFormInputs } from 'types/types';
 import { LOCAL_STORAGE_DATA, nameRegex, passwordRegex } from 'constants/registration';
 import { createUser, getUserDataByLogin, loginUser } from 'api/registerService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setToken } from 'store/slices/authSlice';
+import { setToken, setValidation } from 'store/slices/authSlice';
 import '../utils/i18n';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
 import { updateUser } from 'api/usersServices';
 import { Endpoint } from 'constants/endpoints';
+import store from 'store';
 
 interface IRegForm {
   type: string;
@@ -66,6 +67,7 @@ const RegForm: React.FC<IRegForm> = ({
             currentUserWithToken.token = authUser.token;
             localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUserWithToken));
             dispatch(setToken(authUser.token));
+            dispatch(setValidation(true));
           }
           reset();
         } else if (user && user.login === 'Login already exist') {
@@ -91,6 +93,7 @@ const RegForm: React.FC<IRegForm> = ({
       (async () => {
         setLoading(true);
         const authUser = await loginUser(data);
+        console.log('Login', authUser);
         if (authUser && authUser.token) {
           const currentUserData =
             localStorage.getItem(LOCAL_STORAGE_DATA) &&
@@ -100,6 +103,7 @@ const RegForm: React.FC<IRegForm> = ({
           currentUserData.token = authUser.token;
           localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(currentUserData));
           dispatch(setToken(authUser.token));
+          dispatch(setValidation(true));
           reset();
         } else if (authUser.error.message) {
           setError('wrong', { message: `Login or password is not correct` });
@@ -131,7 +135,7 @@ const RegForm: React.FC<IRegForm> = ({
               placeholder="Name"
               id="username"
               defaultValue={modal !== '' ? userName : ''}
-              autoFocus={modal === 'updateName' ? true : false}
+              // autoFocus={modal === 'updateName' ? true : false}
               {...register('name', {
                 required: {
                   value: true,
@@ -162,7 +166,7 @@ const RegForm: React.FC<IRegForm> = ({
           placeholder="Login"
           id="login"
           defaultValue={modal !== '' ? login : ''}
-          autoFocus={modal === 'updateLogin' ? true : false}
+          // autoFocus={modal === 'updateLogin' ? true : false}
           {...register('login', {
             onChange: () => clearErrors('exist'),
             required: {

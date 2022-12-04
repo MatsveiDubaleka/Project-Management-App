@@ -75,7 +75,7 @@ const Profile: React.FC = () => {
       dispatchBoards();
       dispatch(setIsLoaded(false));
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, store.userBoards]);
 
   return (
     <Wrapper>
