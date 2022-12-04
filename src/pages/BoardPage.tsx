@@ -32,6 +32,8 @@ import { setBoards, setModal } from 'store/slices/authSlice';
 import { getAllUsers } from 'api/usersServices';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const BoardItem = styled.div`
   min-height: max-content;
@@ -192,52 +194,54 @@ const BoardPage = () => {
           ))}
         </div>
         <Wrapper>
-          {boardData ? (
-            <BoardItem id={boardData._id}>
-              <Box component="div" sx={{ display: 'flex', gap: '10px', height: '2em' }}>
-                <h3 className="board-title">{boardData.title}</h3>
-                <Button
-                  id="showDescription"
-                  variant="contained"
-                  onClick={(e) => handleClickOpen(e)}
-                  startIcon={<PageviewIcon />}
-                  color="warning"
-                >
-                  {t('boardDescription')}
-                </Button>
-                <ButtonGroup>
+          <DndProvider backend={HTML5Backend}>
+            {boardData ? (
+              <BoardItem id={boardData._id}>
+                <Box component="div" sx={{ display: 'flex', gap: '10px', height: '2em' }}>
+                  <h3 className="board-title">{boardData.title}</h3>
                   <Button
-                    id="editBoard"
+                    id="showDescription"
                     variant="contained"
-                    startIcon={<EditIcon />}
+                    onClick={(e) => handleClickOpen(e)}
+                    startIcon={<PageviewIcon />}
+                    color="warning"
+                  >
+                    {t('boardDescription')}
+                  </Button>
+                  <ButtonGroup>
+                    <Button
+                      id="editBoard"
+                      variant="contained"
+                      startIcon={<EditIcon />}
+                      color="warning"
+                      onClick={(e) => handleClickOpen(e)}
+                    >
+                      {t('edit')}
+                    </Button>
+                    <Button
+                      id="deleteBoard"
+                      variant="contained"
+                      startIcon={<DeleteIcon />}
+                      color="warning"
+                      onClick={(e) => handleClickOpen(e)}
+                    >
+                      {t('delete')}
+                    </Button>
+                  </ButtonGroup>
+                  <Button
+                    id="addColumn"
+                    variant="contained"
+                    startIcon={<PlaylistAddIcon />}
                     color="warning"
                     onClick={(e) => handleClickOpen(e)}
                   >
-                    {t('edit')}
+                    {t('addList')}
                   </Button>
-                  <Button
-                    id="deleteBoard"
-                    variant="contained"
-                    startIcon={<DeleteIcon />}
-                    color="warning"
-                    onClick={(e) => handleClickOpen(e)}
-                  >
-                    {t('delete')}
-                  </Button>
-                </ButtonGroup>
-                <Button
-                  id="addColumn"
-                  variant="contained"
-                  startIcon={<PlaylistAddIcon />}
-                  color="warning"
-                  onClick={(e) => handleClickOpen(e)}
-                >
-                  {t('addList')}
-                </Button>
-              </Box>
-              <ColumnsList boardId={boardData._id} token={token} />
-            </BoardItem>
-          ) : null}
+                </Box>
+                <ColumnsList boardId={boardData._id} token={token} />
+              </BoardItem>
+            ) : null}
+          </DndProvider>
         </Wrapper>
         <Modal
           open={modal === 'addColumn' && open}
