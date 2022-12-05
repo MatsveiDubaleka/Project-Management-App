@@ -104,7 +104,7 @@ function Header() {
                   </Link>
                   <Link to="/profile">
                     <AccountCircleIcon />
-                    Profile
+                    {t('profile')}
                   </Link>
                 </>
               ) : null}

@@ -14,8 +14,11 @@ import { getAllBoardsOfUser } from 'api/boardsService';
 import ModalProfile from 'components/ModalProfile';
 import { DialogProfile } from '../components/DialogProfile';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 const Profile: React.FC = () => {
+  const { t } = useTranslation();
   const {
     name,
     login,
@@ -80,16 +83,16 @@ const Profile: React.FC = () => {
   return (
     <Wrapper>
       {!store.isValidated && <Navigate to="/" />}
-      <h3>USER PROFILE</h3>
+      <h3>{t('userProfile')}</h3>
       <UserData>
         <p>
-          Name:{' '}
+          {t('username')}:{' '}
           <Info>
             {name} <EditIcon sx={editIconStyle} onClick={handleEditName} />
           </Info>
         </p>
         <p>
-          Login:{' '}
+          {t('login')}:{' '}
           <Info>
             {login} <EditIcon sx={editIconStyle} onClick={handleEditLogin} />
           </Info>
@@ -103,7 +106,7 @@ const Profile: React.FC = () => {
           color="warning"
           sx={{ width: '22%' }}
         >
-          Delete Account
+          {t('deleteAcc')}
         </Button>
         <Container sx={{ paddingTop: 3, paddingBottom: 3 }}>
           {store.isLoaded ? (

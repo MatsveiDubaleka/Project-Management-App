@@ -214,15 +214,6 @@ const BoardPage = () => {
               <BoardItem id={boardData._id}>
                 <Box component="div" sx={boardBoxStyles}>
                   <h3 className="board-title">{boardData.title}</h3>
-                  <Button
-                    id="showDescription"
-                    variant="contained"
-                    onClick={(e) => handleClickOpen(e)}
-                    startIcon={<PageviewIcon />}
-                    color="warning"
-                  >
-                    {t('boardDescription')}
-                  </Button>
                   <ButtonGroup>
                     <Button
                       id="showDescription"

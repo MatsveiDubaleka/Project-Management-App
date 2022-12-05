@@ -50,6 +50,10 @@
     "signin": "Sign In",
     "login": "Login",
     "logIn": "Log In",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "deleteAccount": "Delete your account permanently?",
+    "deleteAcc": "Delete Account",
+    "profile": "Profile",
+    "userProfile": "USER PROFILE"
   }
 }

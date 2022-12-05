@@ -13,6 +13,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store/hook';
 import { setModal, setValidation } from 'store/slices/authSlice';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n.ts';
 
 interface IUpdateUserDialog {
   userId: string;
@@ -27,6 +29,7 @@ export const DialogProfile: React.FC<IUpdateUserDialog> = ({
   open,
   handleClose,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleDeleteUser = async () => {
@@ -47,14 +50,14 @@ export const DialogProfile: React.FC<IUpdateUserDialog> = ({
         {'Confirm delete an account'}
       </DialogTitle>
       <DialogContent sx={{ bgcolor: 'lightgray' }}>
-        <DialogContentText>Delete your account permanently?</DialogContentText>
+        <DialogContentText>{t('deleteAccount')}</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ bgcolor: 'lightgray' }}>
         <Button variant="contained" onClick={handleDeleteUser}>
-          DELETE
+          {t('delete')}
         </Button>
         <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-          CANCEL
+          {t('cancel')}
         </Button>
       </DialogActions>
     </Dialog>
