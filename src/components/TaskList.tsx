@@ -47,7 +47,6 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   const modal: string = useAppSelector((store) => store.auth.modal);
   const tasks: IBoardColumns[] = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
-  const [taskId, setTaskId] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [currentTask, setCurrentTask] = useState('');
   const [open, setOpen] = useState(false);
@@ -104,16 +103,14 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
   useEffect(() => {
     (async () => {
       const data = await getTasks(boardId, columnId, token);
-      if (data && data.length > 0) {
-        const users = await getAllUsers(token);
-        const sorted = data.sort((a: IItem, b: IItem) => b.order - a.order);
-        sorted.reverse();
-        setTaskList(sorted);
-        setUsers((state) => {
-          state = [...users];
-          return state;
-        });
-      }
+      const users = await getAllUsers(token);
+      const sorted = data.sort((a: IItem, b: IItem) => b.order - a.order);
+      sorted.reverse();
+      setTaskList(sorted);
+      setUsers((state) => {
+        state = [...users];
+        return state;
+      });
     })();
   }, [tasks]);
 
@@ -166,7 +163,8 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
                   taskDescription={task.description}
                   columnId={task.columnId}
                   taskUsers={task.users}
-                  userId={
+                  userId={task.userId}
+                  userName={
                     users.find((user) => user._id === task.userId)
                       ? users.find((user) => user._id === task.userId).name
                       : ''
