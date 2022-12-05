@@ -22,7 +22,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
-function Header() {
+const Header: React.FC = () => {
   const token = useAppSelector((state) => state.auth.token);
   const isValidated = useAppSelector((state) => state.auth.isValidated);
   const dispatch = useAppDispatch();
@@ -213,7 +213,7 @@ function Header() {
       </Modal>
     </AppHeader>
   );
-}
+};
 
 const AppHeader = styled.header`
   position: sticky;

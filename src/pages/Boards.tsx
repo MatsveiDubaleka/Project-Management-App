@@ -69,7 +69,7 @@ const Loader = styled.div`
   margin: 10% 33%;
 `;
 
-export function Boards() {
+export const Boards = () => {
   const dispatch = useAppDispatch();
   const [users, setUsers] = useState([]);
   let token: string;
@@ -142,4 +142,4 @@ export function Boards() {
       </main>
     </>
   );
-}
+};

@@ -4,7 +4,7 @@ import kanban from '../assets/img/kanban.png';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
-export function Welcome() {
+export const Welcome = () => {
   const { t } = useTranslation();
 
   return (
@@ -45,7 +45,7 @@ export function Welcome() {
       <RowContainer></RowContainer>
     </main>
   );
-}
+};
 
 const Paragraph = styled.p`
   max-width: 1280px;

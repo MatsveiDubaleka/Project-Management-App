@@ -16,7 +16,7 @@ interface IModalTask {
   userId: string;
 }
 
-const ModalWindow: FC<IModalTask> = ({
+const ModalWindow: React.FC<IModalTask> = ({
   open,
   boardId,
   columnId,
@@ -24,7 +24,7 @@ const ModalWindow: FC<IModalTask> = ({
   setTaskList,
   token,
   userId,
-}) => {
+}: IModalTask) => {
   const {
     register,
     handleSubmit,

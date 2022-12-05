@@ -32,7 +32,7 @@ const StyledLink = styled.a`
   }
 `;
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const mediaTrigger = useMediaQuery('(max-width: 930px)');
   return (
     <StyledFooter>

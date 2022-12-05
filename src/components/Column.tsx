@@ -1,18 +1,48 @@
-import { Button } from '@mui/material';
 import styled from 'styled-components';
-import React, { useState } from 'react';
-import { IItem } from 'types/types';
+import React, { useEffect, useState } from 'react';
+import { IBoardColumns, IItem } from 'types/types';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import TaskList from './TaskList';
-import { useAppSelector } from 'store/hook';
-import ModalWindow from './Modal';
+import { useAppDispatch, useAppSelector } from 'store/hook';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
+import { setModal } from 'store/slices/authSlice';
+import columnSlice from 'store/slices/columnSlice';
 import { useDrop } from 'react-dnd';
+import { useForm } from 'react-hook-form';
 import { DropTargetMonitor } from 'react-dnd/dist/types';
+import { setLoading } from 'store/slices/loadingSlice';
+import { deleteColumn, getColumns, updateColumn } from 'api/columnService';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Modal,
+  Typography,
+  TextField,
+} from '@mui/material';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '30vw',
+  minWidth: '300px',
+  minHeight: '200px',
+  bgcolor: 'lightgray',
+  border: '2px solid #000',
+  borderRadius: '7px',
+  boxShadow: '2px 2px 2px #433f39',
+  p: 4,
+};
 
 const ColumnItem = styled.div`
   cursor: pointer;
@@ -69,27 +99,73 @@ const ColumnTitle = styled.div`
   padding: 0 5px;
 `;
 
-const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, editItem }) => {
+interface IEditColumnForm {
+  title: string;
+}
+
+const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle }: IItem) => {
   const userId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA))._id;
+
   const token = useAppSelector((state) => state.auth.token);
   const [taskList, setTaskList] = useState([]);
   const [open, setOpen] = useState(false);
   const [clickedButtonId, setClickedButtonId] = useState('');
+  const dispatch = useAppDispatch();
   const handleClose = () => setOpen(false);
-  const handleOpen = (e: React.MouseEvent) => {
+  const handleOpen = () => {
     setOpen(true);
-    setClickedButtonId(e.currentTarget.id);
+  };
+  const modal: string = useAppSelector((store) => store.auth.modal);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid, isSubmitted },
+  } = useForm<IEditColumnForm>();
+  const { t } = useTranslation();
+
+  const handleClickDelete = () => {
+    dispatch(setModal('deleteColumn'));
+    handleOpen();
   };
 
-  const { t } = useTranslation();
+  const handleClickEdit = (columnId: string) => {
+    setClickedButtonId(columnId);
+    dispatch(setModal('editColumn'));
+    handleOpen();
+  };
+
+  const handleDeleteColumn = async (columnId: string) => {
+    dispatch(setLoading(true));
+    await deleteColumn(boardId, columnId);
+    const data: IBoardColumns[] = await getColumns(boardId, token);
+    dispatch(columnSlice.actions.setColumns(data));
+    handleClose();
+    dispatch(setLoading(false));
+  };
+
+  const handleEditColumn = handleSubmit(async (data) => {
+    dispatch(setLoading(true));
+    const exitData = Object.assign(data, { order: 0 });
+
+    await updateColumn(boardId, clickedButtonId, exitData);
+    const columnData: IBoardColumns[] = await getColumns(boardId, token);
+    dispatch(columnSlice.actions.setColumns(columnData));
+    handleClose();
+    dispatch(setLoading(false));
+  });
 
   return (
     <ColumnItem>
       <ColumnTitle>
         {columnTitle}
         <div>
-          <EditIcon id="editColumn" sx={{ fontSize: '1.25em' }} onClick={editItem} />
-          <DeleteIcon id="deleteColumn" sx={{ fontSize: '1.25em' }} onClick={deleteItem} />
+          <EditIcon
+            id="editColumn"
+            sx={{ fontSize: '1.25em' }}
+            onClick={() => handleClickEdit(columnId)}
+          />
+          <DeleteIcon id="deleteColumn" sx={{ fontSize: '1.25em' }} onClick={handleClickDelete} />
         </div>
       </ColumnTitle>
       <TaskList
@@ -99,19 +175,86 @@ const Column: React.FC<IItem> = ({ boardId, columnId, columnTitle, deleteItem, e
         taskList={taskList}
         setTaskList={setTaskList}
       />
-      <Button id={columnId} onClick={(e) => handleOpen(e)}>
+      <Button id={columnId} onClick={handleOpen}>
         <AddIcon />
         {t('addTask')}
       </Button>
-      <ModalWindow
-        open={open}
-        boardId={boardId}
-        columnId={clickedButtonId}
-        handleClose={handleClose}
-        setTaskList={setTaskList}
-        token={token}
-        userId={userId}
-      />
+
+      <Dialog
+        open={modal === 'deleteColumn' && open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle
+          sx={{ bgcolor: 'lightgray' }}
+          id="responsive-dialog-title"
+          variant="h5"
+          component="h2"
+        >
+          {t('confirmDeleteColumn')}
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: 'lightgray' }}>
+          <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: 'lightgray' }}>
+          <Button variant="contained" onClick={() => handleDeleteColumn(columnId)} autoFocus>
+            {t('delete')}
+          </Button>
+          <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+            {t('cancel')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Modal
+        open={modal === 'editColumn' && open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            fontWeight="bold"
+            color="primary"
+          >
+            {t('editColumn')}
+          </Typography>
+          <Box component="form" onSubmit={handleEditColumn}>
+            <TextField
+              margin="normal"
+              type="text"
+              placeholder="Title"
+              fullWidth
+              label="Title"
+              autoComplete="off"
+              {...register('title', {
+                required: {
+                  value: true,
+                  message: t('thisFieldMustBe'),
+                },
+                minLength: {
+                  value: 3,
+                  message: t('atLeast'),
+                },
+                maxLength: {
+                  value: 30,
+                  message: t('maximum30'),
+                },
+              })}
+            />
+            <Box sx={{ display: 'flex' }}>
+              <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                {t('submit')}
+              </Button>
+              <Button color="warning" onClick={handleClose}>
+                {t('cancel')}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </ColumnItem>
   );
 };

@@ -128,7 +128,7 @@ interface IEditBoardForm {
   description?: string;
 }
 
-const BoardElement = ({
+const BoardElement: React.FC<IBoardElement> = ({
   _id = '1',
   title = 'Board Title',
   description = 'Description',
@@ -215,7 +215,7 @@ const BoardElement = ({
 
   return (
     <>
-      <NavLink style={{ textDecoration: 'none' }} key={_id} to={`/bord_${_id}`}>
+      <NavLink style={{ textDecoration: 'none' }} to={`/bord_${_id}`}>
         <Board id={_id}>
           <h3 className="board-title">{title}</h3>
           <div className="info">
