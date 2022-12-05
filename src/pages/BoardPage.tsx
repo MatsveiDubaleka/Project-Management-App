@@ -35,6 +35,7 @@ import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 
 const BoardItem = styled.div`
   min-height: max-content;
@@ -196,6 +197,8 @@ const BoardPage = () => {
     })();
   }, []);
 
+  const isMobile = window.innerWidth < 600;
+
   return (
     <>
       <BoardBackground>
@@ -206,21 +209,11 @@ const BoardPage = () => {
           {mediaTrigger ? <div className="shape"></div> : null}
         </div>
         <Wrapper>
-          <DndProvider backend={HTML5Backend}>
-          {boardData ? (
-            <BoardItem id={boardData._id}>
-              <Box component="div" sx={boardBoxStyles}>
-                <h3 className="board-title">{boardData.title}</h3>
-                <Button
-                  id="showDescription"
-                  variant="contained"
-                  onClick={(e) => handleClickOpen(e)}
-                  startIcon={<PageviewIcon />}
-                  color="warning"
-                >
-                  {t('boardDescription')}
-                </Button>
-                <ButtonGroup>
+          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+            {boardData ? (
+              <BoardItem id={boardData._id}>
+                <Box component="div" sx={boardBoxStyles}>
+                  <h3 className="board-title">{boardData.title}</h3>
                   <Button
                     id="showDescription"
                     variant="contained"
@@ -232,33 +225,44 @@ const BoardPage = () => {
                   </Button>
                   <ButtonGroup>
                     <Button
-                      id="editBoard"
+                      id="showDescription"
                       variant="contained"
-                      startIcon={<EditIcon />}
-                      color="warning"
                       onClick={(e) => handleClickOpen(e)}
+                      startIcon={<PageviewIcon />}
+                      color="warning"
                     >
-                      {t('edit')}
+                      {t('boardDescription')}
                     </Button>
+                    <ButtonGroup>
+                      <Button
+                        id="editBoard"
+                        variant="contained"
+                        startIcon={<EditIcon />}
+                        color="warning"
+                        onClick={(e) => handleClickOpen(e)}
+                      >
+                        {t('edit')}
+                      </Button>
+                      <Button
+                        id="deleteBoard"
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        color="warning"
+                        onClick={(e) => handleClickOpen(e)}
+                      >
+                        {t('delete')}
+                      </Button>
+                    </ButtonGroup>
                     <Button
-                      id="deleteBoard"
+                      id="addColumn"
                       variant="contained"
-                      startIcon={<DeleteIcon />}
+                      startIcon={<PlaylistAddIcon />}
                       color="warning"
                       onClick={(e) => handleClickOpen(e)}
                     >
-                      {t('delete')}
+                      {t('addList')}
                     </Button>
                   </ButtonGroup>
-                  <Button
-                    id="addColumn"
-                    variant="contained"
-                    startIcon={<PlaylistAddIcon />}
-                    color="warning"
-                    onClick={(e) => handleClickOpen(e)}
-                  >
-                    {t('addList')}
-                  </Button>
                 </Box>
                 <ColumnsList boardId={boardData._id} token={token} />
               </BoardItem>
