@@ -28,6 +28,11 @@ const LangSwitcher: React.FC = () => {
       </Button>
       <FormControl sx={{ minWidth: 120 }}>
         <Select
+          IconComponent={() => null}
+          sx={{
+            boxShadow: 'none',
+            '.MuiOutlinedInput-notchedOutline': { border: 0 },
+          }}
           id="basic-select"
           open={open}
           onClose={handleClose}

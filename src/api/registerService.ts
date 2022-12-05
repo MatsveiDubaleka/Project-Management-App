@@ -22,13 +22,7 @@ export async function getAllBoardOfUser(
   try {
     const boards = await response.json();
     return boards;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function createUser(newuser: IFormInputs): Promise<INewUserResponse | undefined> {
@@ -48,9 +42,7 @@ export async function createUser(newuser: IFormInputs): Promise<INewUserResponse
       newUser = { login: 'Login already exist' };
     }
     return newUser;
-  } catch (error) {
-    console.log('Some error');
-  }
+  } catch (error) {}
 }
 
 export async function loginUser(user: IFormInputs): Promise<IAuthorizationResult | undefined> {
@@ -70,9 +62,7 @@ export async function loginUser(user: IFormInputs): Promise<IAuthorizationResult
       authUser = { error: await response.json() };
     }
     return authUser;
-  } catch (error) {
-    console.log('Some error');
-  }
+  } catch (error) {}
 }
 
 export async function getUserDataByLogin(
@@ -91,13 +81,7 @@ export async function getUserDataByLogin(
     const users = await response.json();
     const userData = users.find((user: INewUserResponse) => user.login === login);
     return userData;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function getUserDataById(

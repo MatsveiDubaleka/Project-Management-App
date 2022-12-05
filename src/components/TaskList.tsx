@@ -94,7 +94,6 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
       userId: currentUserId,
       users: [''],
     };
-    console.log(updatedData.userId);
     await updateTaskColumn(boardId, columnId, currentTask, updatedData);
     const taskData: IBoardColumns[] = await getTasks(boardId, columnId, token);
     dispatch(taskSlice.actions.setTasks(taskData));

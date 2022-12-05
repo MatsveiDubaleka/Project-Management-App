@@ -32,13 +32,7 @@ export async function getAllBoardsOfUser(
   try {
     const boards = await response.json();
     return boards;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function getBoardById(
@@ -56,15 +50,8 @@ export async function getBoardById(
   });
   try {
     const board = await response.json();
-    console.log(board);
     return board;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function getAllBoardsOfServer(token: string): Promise<IBoardsOfUser[] | undefined> {
@@ -79,13 +66,7 @@ export async function getAllBoardsOfServer(token: string): Promise<IBoardsOfUser
   try {
     const boards = await response.json();
     return boards;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function addNewBoard(
@@ -105,13 +86,7 @@ export async function addNewBoard(
   try {
     const board = await response.json();
     return board;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function deleteBoard(boardId: string, token: string): Promise<void> {
@@ -126,14 +101,7 @@ export async function deleteBoard(boardId: string, token: string): Promise<void>
   });
   try {
     const deletedBoard = await response.text();
-    console.log(deletedBoard);
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function updateBoard(
@@ -154,11 +122,5 @@ export async function updateBoard(
   try {
     const board = await response.json();
     return board;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }

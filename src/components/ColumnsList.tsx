@@ -117,8 +117,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
     const element = newColumns.splice(dragIndex, 1)[0];
     newColumns.splice(dropIndex, 0, element);
 
-    console.log(newColumns);
-    console.log(columns);
+    dispatch(columnSlice.actions.setColumns(newColumns));
   };
 
   return (

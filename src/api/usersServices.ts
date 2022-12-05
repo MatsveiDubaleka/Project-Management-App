@@ -14,11 +14,5 @@ export async function getAllUsers(token: string): Promise<INewUserResponse[] | u
   try {
     const users = await response.json();
     return users;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }

@@ -131,8 +131,6 @@ const Task: React.FC<IItem> = ({
         return;
       }
 
-      console.log(item);
-      console.log(dragIndex, hoverIndex);
       moveCardHandler(dragIndex, hoverIndex);
 
       item.index = hoverIndex;
