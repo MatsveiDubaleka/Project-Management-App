@@ -9,8 +9,8 @@ import TaskList from './TaskList';
 import { useAppSelector } from 'store/hook';
 import ModalWindow from './Modal';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
-import { useDrag, useDrop } from 'react-dnd';
-import { DragSourceMonitor, DropTargetMonitor } from 'react-dnd/dist/types';
+import { useDrag } from 'react-dnd';
+import { DragSourceMonitor } from 'react-dnd/dist/types';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 

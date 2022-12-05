@@ -91,7 +91,6 @@ const RegForm: React.FC<IRegForm> = ({
       (async () => {
         setLoading(true);
         const authUser = await loginUser(data);
-        console.log('Login', authUser);
         if (authUser && authUser.token) {
           const currentUserData =
             localStorage.getItem(LOCAL_STORAGE_DATA) &&

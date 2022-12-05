@@ -12,14 +12,13 @@ import {
   TextField,
 } from '@mui/material';
 import { deleteColumn, getColumns, updateColumn } from 'api/columnService';
-import React, { DragEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setModal } from 'store/slices/authSlice';
 import columnSlice from 'store/slices/columnSlice';
 import { IBoardColumns, IItem } from 'types/types';
 import Column from './Column';
-import { DndProvider, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDrop } from 'react-dnd';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
 import useMediaQuery from '@mui/material/useMediaQuery';

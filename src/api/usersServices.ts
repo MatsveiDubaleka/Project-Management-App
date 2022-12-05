@@ -30,13 +30,7 @@ export async function deleteUser(userId: string, token: string): Promise<INewUse
   try {
     const deletedUser = await response.json();
     return deletedUser;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }
 
 export async function updateUser(
@@ -57,11 +51,5 @@ export async function updateUser(
   try {
     const user = await response.json();
     return user;
-  } catch (error) {
-    if (response.status === 403) {
-      console.log('Access token is missing or invalid');
-    } else {
-      console.log('Some error');
-    }
-  }
+  } catch (error) {}
 }

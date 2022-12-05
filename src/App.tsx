@@ -31,7 +31,6 @@ function App() {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const isValidated = useAppSelector((state) => state.auth.isValidated);
-  console.log(isValidated);
   const [isLoading, setLoading] = useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +38,6 @@ function App() {
   useEffect(() => {
     checkTokenValidation().then((res) => {
       if (res) {
-        console.log('Here');
         const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)!);
         dispatch(setToken(data.token));
         dispatch(setValidation(true));
@@ -49,7 +47,6 @@ function App() {
         setLoading(true);
       }, 2000);
     });
-    console.log(isValidated);
   }, [dispatch, token, isLoading, isValidated, navigate, location.pathname]);
 
   return (
