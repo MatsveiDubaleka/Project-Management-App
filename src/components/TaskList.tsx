@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import taskSlice from 'store/slices/taskSlice';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
+import './TaskList.css';
 
 const modalStyle = {
   position: 'absolute',
@@ -149,7 +150,9 @@ const TaskList: React.FC<IItem> = ({ boardId, columnId, token, taskList, setTask
         flexDirection: 'column',
         gap: '10px',
         width: '100%',
-        minHeight: '25vh',
+        height: 'max-content',
+        maxHeight: '100%',
+        overflowY: 'auto',
       }}
     >
       {taskList.length > 0

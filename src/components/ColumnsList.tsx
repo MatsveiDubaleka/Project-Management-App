@@ -127,7 +127,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
 
   const isMobile = window.innerWidth < 600;
   return (
-    <Box ref={drop} sx={{ display: 'flex', gap: '10px' }}>
+    <Box ref={drop} sx={{ display: 'flex', gap: '10px', maxHeight: '80vh' }}>
       {isLoading ? (
         <CircularProgress />
       ) : columns.length > 0 ? (
