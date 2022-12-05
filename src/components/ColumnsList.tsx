@@ -97,16 +97,10 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
 
   useEffect(() => {}, [columns]);
 
-  const [{ canDrop, isOver }, drop] = useDrop({
+  const [, drop] = useDrop({
     accept: 'Our second type',
     drop: () => ({ name: dropColumn }),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
   });
-
-  console.log('options', { canDrop, isOver });
 
   const handleDrop = (id: string) => {
     setDropColumn(id);
