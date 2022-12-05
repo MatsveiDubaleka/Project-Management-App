@@ -191,74 +191,39 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                     fontWeight="bold"
                     color="primary"
                   >
-                    {t('confirmDeleteColumn')}
-                  </DialogTitle>
-                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
-                    <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
-                  </DialogContent>
-                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleDeleteColumn(column._id)}
-                      autoFocus
-                    >
-                      {t('delete')}
-                    </Button>
-                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
-                      {t('cancel')}
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                    {t('editColumn')}
+                  </Typography>
+                  <Box component="form" onSubmit={handleEditColumn}>
+                    <TextField
+                      margin="normal"
+                      type="text"
+                      placeholder="Title"
+                      fullWidth
+                      label="Title"
+                      autoComplete="off"
+                      {...register('title', {
+                        required: {
+                          value: true,
+                          message: t('thisFieldMustBe'),
+                        },
+                        minLength: {
+                          value: 3,
+                          message: t('atLeast'),
+                        },
+                        maxLength: {
+                          value: 30,
+                          message: t('maximum30'),
+                        },
+                      })}
+                    />
 
-                <Modal
-                  key={`editColumn${column._id}`}
-                  open={modal === 'editColumn' && open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={modalStyle}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h6"
-                      component="h2"
-                      fontWeight="bold"
-                      color="primary"
-                    >
-                      {t('editColumn')}
-                    </Typography>
-                    <Box component="form" onSubmit={handleEditColumn}>
-                      <TextField
-                        margin="normal"
-                        type="text"
-                        placeholder="Title"
-                        fullWidth
-                        label="Title"
-                        autoComplete="off"
-                        {...register('title', {
-                          required: {
-                            value: true,
-                            message: t('thisFieldMustBe'),
-                          },
-                          minLength: {
-                            value: 3,
-                            message: t('atLeast'),
-                          },
-                          maxLength: {
-                            value: 30,
-                            message: t('maximum30'),
-                          },
-                        })}
-                      />
-
-                      <Box sx={{ display: 'flex' }}>
-                        <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                          {t('submit')}
-                        </Button>
-                        <Button color="warning" onClick={handleClose}>
-                          {t('cancel')}
-                        </Button>
-                      </Box>
+                    <Box sx={{ display: 'flex' }}>
+                      <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                        {t('submit')}
+                      </Button>
+                      <Button color="warning" onClick={handleClose}>
+                        {t('cancel')}
+                      </Button>
                     </Box>
                   </Box>
                 </Box>
