@@ -12,13 +12,13 @@ import {
   TextField,
 } from '@mui/material';
 import { deleteColumn, getColumns, updateColumn } from 'api/columnService';
-import React, { useEffect, useState } from 'react';
+import React, { DragEventHandler, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hook';
 import { setModal } from 'store/slices/authSlice';
 import columnSlice from 'store/slices/columnSlice';
 import { IBoardColumns, IItem } from 'types/types';
 import Column from './Column';
-import { DndProvider } from 'react-dnd';
+import { DndProvider, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
@@ -54,6 +54,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+  const [dropColumn, setDropColumn] = useState<string>('');
   const mediaTrigger = useMediaQuery('(min-width: 800px)');
 
   const boxStyles = mediaTrigger
@@ -102,37 +103,93 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
 
   useEffect(() => {}, [columns]);
 
-  const isMobile = window.innerWidth < 600;
+  const [, drop] = useDrop({
+    accept: 'Our second type',
+    drop: () => ({ name: dropColumn }),
+  });
 
+  const handleDrop = (id: string) => {
+    setDropColumn(id);
+  };
+
+  const changeColumnOrder = (dragColumnID: string, dropColumnID: string) => {
+    const newColumns = [...columns];
+    const idArray: string[] = [];
+
+    newColumns.map((column) => idArray.push(column._id));
+    const dragIndex = idArray.indexOf(dragColumnID);
+    const dropIndex = idArray.indexOf(dropColumnID);
+
+    const element = newColumns.splice(dragIndex, 1)[0];
+    newColumns.splice(dropIndex, 0, element);
+
+    dispatch(columnSlice.actions.setColumns(newColumns));
+  };
+
+  const isMobile = window.innerWidth < 600;
   return (
-    <Box sx={boxStyles}>
-      <DndProvider backend={HTML5Backend}>
-        {isLoading ? (
-          <CircularProgress />
-        ) : columns.length > 0 ? (
-          [...columns].map((column, i) => {
-            return (
-              <>
-                <Column
-                  key={`column${column._id}`}
-                  boardId={column.boardId}
-                  columnId={column._id}
-                  columnTitle={column.title}
-                  token={token}
-                  editItem={async () => handleClickEdit(column._id)}
-                  deleteItem={async () => handleClickDelete()}
-                />
-                <Dialog
-                  key={`deleteColumn${column._id}`}
-                  open={modal === 'deleteColumn' && open}
-                  onClose={handleClose}
-                  aria-labelledby="responsive-dialog-title"
+    <Box ref={drop} sx={{ display: 'flex', gap: '10px' }}>
+      {isLoading ? (
+        <CircularProgress />
+      ) : columns.length > 0 ? (
+        [...columns].map((column) => {
+          return (
+            <div onDrop={() => handleDrop(column._id)} key={`div-column-${column._id}`}>
+              <Column
+                key={`column-${column._id}`}
+                boardId={column.boardId}
+                columnId={column._id}
+                columnTitle={column.title}
+                token={token}
+                editItem={async () => handleClickEdit(column._id)}
+                deleteItem={async () => handleClickDelete()}
+                changeColumnOrder={changeColumnOrder}
+              />
+              <Dialog
+                key={`deleteColumn${column._id}`}
+                open={modal === 'deleteColumn' && open}
+                onClose={handleClose}
+                aria-labelledby="responsive-dialog-title"
+              >
+                <DialogTitle
+                  sx={{ bgcolor: 'lightgray' }}
+                  id="responsive-dialog-title"
+                  variant="h5"
+                  component="h2"
                 >
-                  <DialogTitle
-                    sx={{ bgcolor: 'lightgray' }}
-                    id="responsive-dialog-title"
-                    variant="h5"
+                  {t('confirmDeleteColumn')}
+                </DialogTitle>
+                <DialogContent sx={{ bgcolor: 'lightgray' }}>
+                  <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ bgcolor: 'lightgray' }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleDeleteColumn(column._id)}
+                    autoFocus
+                  >
+                    {t('delete')}
+                  </Button>
+                  <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                    {t('cancel')}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              <Modal
+                key={`editColumn${column._id}`}
+                open={modal === 'editColumn' && open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={modalStyle}>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
                     component="h2"
+                    fontWeight="bold"
+                    color="primary"
                   >
                     {t('confirmDeleteColumn')}
                   </DialogTitle>
@@ -204,14 +261,14 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                       </Box>
                     </Box>
                   </Box>
-                </Modal>
-              </>
-            );
-          })
-        ) : (
-          t('notHaveLists')
-        )}
-      </DndProvider>
+                </Box>
+              </Modal>
+            </div>
+          );
+        })
+      ) : (
+        t('notHaveLists')
+      )}
     </Box>
   );
 }

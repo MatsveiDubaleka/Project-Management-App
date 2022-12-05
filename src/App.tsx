@@ -45,11 +45,6 @@ function App() {
         dispatch(setValidation(true));
       }
 
-      if (!res && location.pathname === '/boards') {
-        console.log(location.pathname);
-        navigate(Navigation.HOME);
-      }
-
       setTimeout(() => {
         setLoading(true);
       }, 2000);

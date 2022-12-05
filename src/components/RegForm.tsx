@@ -72,8 +72,6 @@ const RegForm: React.FC<IRegForm> = ({
           reset();
         } else if (user && user.login === 'Login already exist') {
           setError('exist', { message: ' already exists' }, { shouldFocus: true });
-        } else {
-          console.log('Something went wrong.');
         }
         setLoading(false);
       })();
@@ -107,8 +105,6 @@ const RegForm: React.FC<IRegForm> = ({
           reset();
         } else if (authUser.error.message) {
           setError('wrong', { message: `Login or password is not correct` });
-        } else {
-          console.log('Something went wrong.');
         }
         setLoading(false);
       })();
