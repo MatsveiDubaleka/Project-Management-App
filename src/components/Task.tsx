@@ -81,6 +81,7 @@ const Task: React.FC<IItem> = ({
   taskOrder,
   index,
   moveCardHandler,
+  userName,
 }) => {
   const renderTaskColumn = async (newColumnId: string) => {
     dispatch(setLoading(true));
@@ -164,7 +165,7 @@ const Task: React.FC<IItem> = ({
       <TaskFooter>
         <div>
           <ManageAccountsIcon />
-          {userId}
+          {userName}
         </div>
         <div>
           <EditIcon id="editTask" sx={{ fontSize: '1.25em' }} onClick={editItem} />

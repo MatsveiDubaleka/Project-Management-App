@@ -7,38 +7,55 @@ import { IAuthorizationResult, IFormInputs } from 'types/types';
 import { LOCAL_STORAGE_DATA, nameRegex, passwordRegex } from 'constants/registration';
 import { createUser, getUserDataByLogin, loginUser } from 'api/registerService';
 import { useAppDispatch, useAppSelector } from 'store/hook';
-import { setToken } from 'store/slices/authSlice';
-import { Navigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { setToken, setValidation } from 'store/slices/authSlice';
 import '../utils/i18n';
 import { useTranslation } from 'react-i18next';
+import { Navigate, useLocation } from 'react-router-dom';
+import { Button, CircularProgress } from '@mui/material';
+import { updateUser } from 'api/usersServices';
+import { Endpoint } from 'constants/endpoints';
+import store from 'store';
 
 interface IRegForm {
   type: string;
+  handleClose?: () => void;
+  userId?: string;
+  token?: string;
+  userName?: string;
+  login?: string;
 }
 
-const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
+const RegForm: React.FC<IRegForm> = ({
+  type,
+  handleClose,
+  userId,
+  token,
+  userName,
+  login,
+}: IRegForm) => {
   const {
     register,
     handleSubmit,
     reset,
     setError,
     clearErrors,
-    formState: { errors, isDirty, isValid, isSubmitted },
+    formState: { errors },
   } = useForm<IFormInputs>();
 
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
   const isValidated = useAppSelector((state) => state.auth.isValidated);
+  const modal = useAppSelector((store) => store.auth.modal);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const location = useLocation();
 
   const onFormSubmit = handleSubmit((data: IFormInputs) => {
-    if (type === 'signup') {
+    if (type === 'signup' && modal === '') {
       (async () => {
         setLoading(true);
         const user = await createUser(data);
-        if (user._id) {
+        if (user && user._id) {
           const currentUser = Object.assign(user, { token: '' });
           localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUser));
           const authUser = (await loginUser({
@@ -50,18 +67,32 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
             currentUserWithToken.token = authUser.token;
             localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(currentUserWithToken));
             dispatch(setToken(authUser.token));
+            dispatch(setValidation(true));
           }
           reset();
-        } else if (user.login === 'Login already exist') {
+        } else if (user && user.login === 'Login already exist') {
           setError('exist', { message: ' already exists' }, { shouldFocus: true });
         }
         setLoading(false);
+      })();
+    } else if (type === 'signup' && modal !== '') {
+      (async () => {
+        setLoading(true);
+        const user = await updateUser(userId, token, data);
+        if (user && user._id) {
+          const updatedUserWithToken = Object.assign(user, { token });
+          localStorage.setItem(`${LOCAL_STORAGE_DATA}`, JSON.stringify(updatedUserWithToken));
+        }
+        reset();
+        setLoading(false);
+        handleClose();
       })();
     } else {
       (async () => {
         setLoading(true);
         const authUser = await loginUser(data);
-        if (authUser.token) {
+        console.log('Login', authUser);
+        if (authUser && authUser.token) {
           const currentUserData =
             localStorage.getItem(LOCAL_STORAGE_DATA) &&
             JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA)).token !== ''
@@ -70,6 +101,7 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
           currentUserData.token = authUser.token;
           localStorage.setItem(LOCAL_STORAGE_DATA, JSON.stringify(currentUserData));
           dispatch(setToken(authUser.token));
+          dispatch(setValidation(true));
           reset();
         } else if (authUser.error.message) {
           setError('wrong', { message: `Login or password is not correct` });
@@ -98,6 +130,8 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
               type="text"
               placeholder="Name"
               id="username"
+              defaultValue={modal !== '' ? userName : ''}
+              // autoFocus={modal === 'updateName' ? true : false}
               {...register('name', {
                 required: {
                   value: true,
@@ -127,6 +161,8 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
           type="text"
           placeholder="Login"
           id="login"
+          defaultValue={modal !== '' ? login : ''}
+          // autoFocus={modal === 'updateLogin' ? true : false}
           {...register('login', {
             onChange: () => clearErrors('exist'),
             required: {
@@ -177,10 +213,19 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
         {type === 'login'
           ? errors.wrong && <p style={{ color: 'red' }}>{errors.wrong.message}</p>
           : null}
-
         {errors.password && <Tip>{errors.password.message}</Tip>}
+        {type === 'signup' && modal !== '' ? (
+          <Tip>You can input old password or change it now</Tip>
+        ) : null}
         {!isLoading ? (
-          type === 'signup' ? (
+          type === 'signup' && modal !== '' ? (
+            <ButtonBox>
+              <button className="change-submit">{t('submit')}</button>
+              <Button className="change-cancel" onClick={handleClose}>
+                CANCEL
+              </Button>
+            </ButtonBox>
+          ) : type === 'signup' ? (
             <button>{t('signup')}</button>
           ) : (
             <button>{t('signin')}</button>
@@ -189,7 +234,9 @@ const RegForm: React.FC<IRegForm> = ({ type }: IRegForm) => {
           <CircularProgress sx={{ alignSelf: 'center' }} />
         )}
       </form>
-      {isValidated ? <Navigate to="/boards" /> : null}
+      {isValidated && modal === '' && location.pathname !== Endpoint.PROFILE ? (
+        <Navigate to="/boards" />
+      ) : null}
     </Register>
   );
 };
@@ -292,11 +339,21 @@ const Register = styled.div`
     width: 100%;
     background-color: #23a2f6;
     color: white;
-    padding: 15px 0;
+    padding: 10px 0;
     font-size: 18px;
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #f5f8fa;
+    color: #23a2f6;
+  }
+
+  button:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px 2px darkgray;
   }
 
   p {
@@ -308,4 +365,15 @@ const Tip = styled.span`
   color: #383434 !important;
   font-size: 14px;
   font-weight: 200;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  gap: 10px;
+  width: 80%;
+  margin: 0 auto;
+  .change-submit,
+  .change-cancel {
+    width: 50%;
+  }
 `;

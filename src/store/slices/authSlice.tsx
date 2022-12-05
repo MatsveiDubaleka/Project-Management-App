@@ -4,6 +4,7 @@ import { IBoardsOfUser } from 'types/types';
 const initialState = {
   token: '',
   boards: [] as IBoardsOfUser[],
+  userBoards: [] as IBoardsOfUser[],
   isLoaded: false,
   board: [] as IBoardsOfUser,
   isValidated: false,
@@ -26,6 +27,9 @@ const slices = createSlice({
     setBoard(state: Record<string, unknown>, action: PayloadAction<IBoardsOfUser>) {
       state.board = action.payload;
     },
+    setUserBoards(state: Record<string, unknown>, action: PayloadAction<IBoardsOfUser>) {
+      state.userBoards = action.payload;
+    },
     setValidation(state: Record<string, unknown>, action: PayloadAction<boolean>) {
       state.isValidated = action.payload;
     },
@@ -35,7 +39,14 @@ const slices = createSlice({
   },
 });
 
-export const { setToken, setBoards, setIsLoaded, setBoard, setValidation, setModal } =
-  slices.actions;
+export const {
+  setToken,
+  setBoards,
+  setUserBoards,
+  setIsLoaded,
+  setBoard,
+  setValidation,
+  setModal,
+} = slices.actions;
 
 export default slices.reducer;

@@ -6,6 +6,7 @@ import '../utils/i18n.ts';
 
 export function Welcome() {
   const { t } = useTranslation();
+
   return (
     <main>
       <RowContainer>
@@ -53,6 +54,16 @@ const Paragraph = styled.p`
   font-size: 1.25em;
   text-align: center;
   color: white;
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    padding: 0px 100px;
+    word-wrap: break-word;
+  }
+  @media (max-width: 470px) {
+    flex-wrap: wrap;
+    padding: 0px 130px;
+    font-size: 0.8em;
+  }
 `;
 
 const KunbanImg = styled.img`
@@ -69,6 +80,12 @@ const RowContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 30px 20px;
+  @media (max-width: 1280px) {
+    padding: 20px 0px;
+    gap: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 `;
 
 const ColumnContainer = styled.div`
@@ -79,7 +96,7 @@ const ColumnContainer = styled.div`
   gap: 20px;
   margin: 0 0;
   padding: 10px 20px;
-  width: 600px;
+  max-width: 600px;
 `;
 
 const Title = styled.p`
@@ -88,4 +105,13 @@ const Title = styled.p`
   text-align: center;
   color: white;
   width: 600px;
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    padding: 0px 50px;
+  }
+  @media (max-width: 470px) {
+    flex-wrap: wrap;
+    padding: 0px 100px;
+    font-size: 1em;
+  }
 `;

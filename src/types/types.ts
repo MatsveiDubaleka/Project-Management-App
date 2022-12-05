@@ -27,6 +27,7 @@ export interface IItem {
   index?: number;
   moveCardHandler?: (dragIndex: number, hoverIndex: number) => void;
   changeColumnOrder?: (dragColumnID: string, dropColumnID: string) => void;
+  userName?: string;
 }
 export interface IFormInputs {
   name?: string;
@@ -37,6 +38,7 @@ export interface IFormInputs {
 }
 
 export interface INewUserResponse {
+  [index: string]: string;
   _id: string;
   name: string;
   login: string;

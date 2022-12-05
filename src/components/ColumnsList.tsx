@@ -22,6 +22,7 @@ import { DndProvider, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { setLoading } from 'store/slices/loadingSlice';
 import { useForm } from 'react-hook-form';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -54,6 +55,11 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
   const [dropColumn, setDropColumn] = useState<string>('');
+  const mediaTrigger = useMediaQuery('(min-width: 800px)');
+
+  const boxStyles = mediaTrigger
+    ? { display: 'flex', gap: '10px' }
+    : { display: 'flex', gap: '10px', flexDirection: 'column' };
 
   const { t } = useTranslation();
 
@@ -120,6 +126,7 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
     dispatch(columnSlice.actions.setColumns(newColumns));
   };
 
+  const isMobile = window.innerWidth < 600;
   return (
     <Box ref={drop} sx={{ display: 'flex', gap: '10px' }}>
       {isLoading ? (
@@ -184,39 +191,74 @@ function ColumnsList({ boardId, token }: IItem): JSX.Element {
                     fontWeight="bold"
                     color="primary"
                   >
-                    {t('editColumn')}
-                  </Typography>
-                  <Box component="form" onSubmit={handleEditColumn}>
-                    <TextField
-                      margin="normal"
-                      type="text"
-                      placeholder="Title"
-                      fullWidth
-                      label="Title"
-                      autoComplete="off"
-                      {...register('title', {
-                        required: {
-                          value: true,
-                          message: t('thisFieldMustBe'),
-                        },
-                        minLength: {
-                          value: 3,
-                          message: t('atLeast'),
-                        },
-                        maxLength: {
-                          value: 30,
-                          message: t('maximum30'),
-                        },
-                      })}
-                    />
+                    {t('confirmDeleteColumn')}
+                  </DialogTitle>
+                  <DialogContent sx={{ bgcolor: 'lightgray' }}>
+                    <DialogContentText>{t('confirmDeleteColumnMessage')}</DialogContentText>
+                  </DialogContent>
+                  <DialogActions sx={{ bgcolor: 'lightgray' }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleDeleteColumn(column._id)}
+                      autoFocus
+                    >
+                      {t('delete')}
+                    </Button>
+                    <Button color="warning" variant="contained" autoFocus onClick={handleClose}>
+                      {t('cancel')}
+                    </Button>
+                  </DialogActions>
+                </Dialog>
 
-                    <Box sx={{ display: 'flex' }}>
-                      <Button sx={{ ml: 'auto' }} color="primary" type="submit">
-                        {t('submit')}
-                      </Button>
-                      <Button color="warning" onClick={handleClose}>
-                        {t('cancel')}
-                      </Button>
+                <Modal
+                  key={`editColumn${column._id}`}
+                  open={modal === 'editColumn' && open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={modalStyle}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h6"
+                      component="h2"
+                      fontWeight="bold"
+                      color="primary"
+                    >
+                      {t('editColumn')}
+                    </Typography>
+                    <Box component="form" onSubmit={handleEditColumn}>
+                      <TextField
+                        margin="normal"
+                        type="text"
+                        placeholder="Title"
+                        fullWidth
+                        label="Title"
+                        autoComplete="off"
+                        {...register('title', {
+                          required: {
+                            value: true,
+                            message: t('thisFieldMustBe'),
+                          },
+                          minLength: {
+                            value: 3,
+                            message: t('atLeast'),
+                          },
+                          maxLength: {
+                            value: 30,
+                            message: t('maximum30'),
+                          },
+                        })}
+                      />
+
+                      <Box sx={{ display: 'flex' }}>
+                        <Button sx={{ ml: 'auto' }} color="primary" type="submit">
+                          {t('submit')}
+                        </Button>
+                        <Button color="warning" onClick={handleClose}>
+                          {t('cancel')}
+                        </Button>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>

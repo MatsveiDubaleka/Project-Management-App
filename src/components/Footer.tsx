@@ -2,15 +2,17 @@ import React from 'react';
 import { Flex } from 'styles/Flex';
 import Logo from 'assets/svg/course-logo.svg';
 import styled from 'styled-components';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const StyledFlex = styled(Flex)`
   max-width: 1280px;
   margin: 0 auto;
   width: 100%;
-  height: 100px;
+  height: max-content;
   text-align: center;
   background-color: #282c34;
   color: #fff;
+  flex-wrap: wrap;
 `;
 
 const StyledFooter = styled.footer`
@@ -25,14 +27,18 @@ const StyledFooter = styled.footer`
 const StyledLink = styled.a`
   text-decoration: none;
   color: #fff;
+  @media (max-width: 400px) {
+    font-size: 16px;
+  }
 `;
 
 const Footer = () => {
+  const mediaTrigger = useMediaQuery('(max-width: 930px)');
   return (
     <StyledFooter>
-      <StyledFlex justify="space-between">
+      <StyledFlex justify={mediaTrigger ? 'center' : 'space-between'}>
         <div className="creation-year">2022 &#169;</div>
-        <Flex gap="50px" className="authors">
+        <Flex gap={mediaTrigger ? '5px' : '50px'} className="authors">
           <StyledLink href="https://github.com/aibolit666" target="_blank" rel="noreferrer">
             Pavel Priladyshev
           </StyledLink>

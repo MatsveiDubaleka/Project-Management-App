@@ -9,6 +9,7 @@ import { setBoards, setIsLoaded } from 'store/slices/authSlice';
 import { IBoardsOfUser } from 'types/types';
 import { LOCAL_STORAGE_DATA } from 'constants/registration';
 import { getAllUsers } from 'api/usersServices';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import '../utils/i18n.ts';
 
@@ -50,7 +51,7 @@ export const BoardBackground = styled.div`
     right: 380px;
     top: 150px;
   }
-  .shape:last-child {
+  .shape:nth-child(4) {
     opacity: 0.8;
     background: linear-gradient(to right, #ff512f, #f09819);
     right: -30px;
@@ -59,7 +60,7 @@ export const BoardBackground = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 `;
 
 const Loader = styled.div`
@@ -75,8 +76,8 @@ export function Boards() {
   const tokenFromState = useAppSelector((state) => state.auth.token);
   JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token !== null
     ? (token = JSON.parse(localStorage.getItem(`${LOCAL_STORAGE_DATA}`)).token)
-    : tokenFromState; // Validate token from localStorage or from store (when page reload)
-
+    : tokenFromState;
+  const mediaTrigger = useMediaQuery('(min-width: 768px)');
   const store = useAppSelector((state) => state.auth);
 
   const { t } = useTranslation();
@@ -104,9 +105,10 @@ export function Boards() {
         <Title>{t('titleBoardsPage')}</Title>
         <BoardBackground>
           <div className="background">
-            {Array.from(Array(4)).map((_, index) => (
-              <div className="shape" key={index}></div>
-            ))}
+            {mediaTrigger ? <div className="shape"></div> : null}
+            {mediaTrigger ? <div className="shape"></div> : null}
+            {mediaTrigger ? <div className="shape"></div> : null}
+            {mediaTrigger ? <div className="shape"></div> : null}
           </div>
           <Wrapper>
             <Container sx={{ paddingTop: 6 }}>
@@ -116,8 +118,9 @@ export function Boards() {
                 <Grid container spacing={3}>
                   {Array.isArray(store.boards)
                     ? store.boards.map((board: IBoardsOfUser, index: number) => (
-                        <Grid item xs={6} md={3} sm={5} key={index}>
+                        <Grid item xs={12} md={3} sm={6} key={index}>
                           <BoardElement
+                            key={`board${board._id}`}
                             _id={board._id}
                             title={board.title}
                             description={board.description}
