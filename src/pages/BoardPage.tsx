@@ -188,6 +188,7 @@ const BoardPage = () => {
   });
 
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
     if (!boardData) {
       navigate('/notFound');
     }
@@ -195,6 +196,9 @@ const BoardPage = () => {
       const columns = await getColumns(boardData._id, token);
       dispatch(columnSlice.actions.setColumns(columns));
     })();
+    return function () {
+      document.body.style.overflow = 'visible';
+    };
   }, []);
 
   const isMobile = window.innerWidth < 600;

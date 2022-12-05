@@ -16,8 +16,8 @@ import '../utils/i18n.ts';
 
 const ColumnItem = styled.div`
   cursor: pointer;
-  height: max-content;
   width: 20vw;
+  max-height: 100%;
   max-width: 300px;
   background-color: rgba(255, 255, 255, 0.13);
   position: relative;
